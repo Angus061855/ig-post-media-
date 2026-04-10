@@ -454,7 +454,7 @@ const stat=m=>E('st').textContent=m;
 
 /* ─── init theme chips ─── */
   function resetKey(){
-  localStorage.getItem('ig_api_key')
+  localStorage.removeItem('ig_api_key');
   location.reload();
 }
 
@@ -873,7 +873,7 @@ if(!KEY){
   if(KEY)localStorage.setItem('ig_api_key',KEY);
 }
   
-  const MODEL='gemma-4-31b-it';
+  const MODEL='gemini-2.0-flash';
   const r=await fetch(
     `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${KEY}`,
     {
