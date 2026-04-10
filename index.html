@@ -869,7 +869,7 @@ const FSYS=`你是版面填充機器，只輸出JSON，從{開始，不輸出任
 async function callAPI(inp,sys,max){
   let KEY=localStorage.getItem('ig_api_key')||'';
 if(!KEY){
-  KEY=prompt('AIzaSyDo1VxmdzWrtC6sr3PSCc7lxrON37TCoDg：')||'';
+  KEY=prompt('請輸入你的 Gemini API Key：')||'';
   if(KEY)localStorage.setItem('ig_api_key',KEY);
 }
   
