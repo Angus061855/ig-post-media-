@@ -24,6 +24,8 @@ body{background:#0d0d0d;font-family:'CKS','STSong','SimSun','Noto Serif CJK TC',
 #db:hover{border-color:var(--gd);color:var(--g)}
 #bb{background:transparent;color:rgba(200,175,120,.4);border:1px solid #2a2a2a;font-size:11px}
 #bb:hover{border-color:var(--gd);color:var(--g)}
+<button class="tb" id="kb" onclick="resetKey()" style="font-size:11px;background:transparent;color:rgba(200,175,120,.4);border:1px solid #2a2a2a;border-radius:2px;padding:7px 13px;cursor:pointer;letter-spacing:.15em">⚙ 換Key</button>
+  
 #bgf{display:none}
 #st{font-size:11px;letter-spacing:.1em;color:rgba(200,175,120,.4);white-space:nowrap}
 
@@ -451,6 +453,11 @@ const SG=(id,v)=>{E(id).value=v};
 const stat=m=>E('st').textContent=m;
 
 /* ─── init theme chips ─── */
+  function resetKey(){
+  localStorage.removeItem('ig_api_key');
+  location.reload();
+}
+
 function buildChips(){
   const c=E('chips');c.innerHTML='';
   THEMES.forEach(t=>{
