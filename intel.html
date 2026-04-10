@@ -355,8 +355,7 @@ body{background:#0d0d0d;font-family:'CKS','STSong','SimSun','Noto Serif CJK TC',
 
 <div id="topbar">
   <h1>IG 產生器</h1>
-  <input id="apikey" type="password" placeholder="Google AI API Key" style="background:#111;border:1px solid #282828;color:#e0d8c8;font-family:inherit;font-size:11px;letter-spacing:.06em;padding:6px 10px;outline:none;width:180px;flex-shrink:0;border-radius:2px;"/>
-  <input id="ai" type="text" placeholder="@帳號" value="@industry.insight.tw"/>
+  <input id="ai" type="text" placeholder="@帳號" value="@angus061855"/>
   <textarea id="it" placeholder="輸入主題或貼上文章…"></textarea>
   <button class="tb" id="gb" onclick="doGen()">✦ 產生</button>
   <button class="tb" id="bb" onclick="document.getElementById('bgf').click()">⊕ 換背景</button>
@@ -859,8 +858,7 @@ const FSYS=`你是版面填充機器，只輸出JSON，從{開始，不輸出任
 {"cover":{"eyebrow":"TOPIC · INSIGHT · ANALYSIS","title":"主題標題","subtitle":"副標第一行\\n副標第二行"},"content":[{"tag":"背景","heading":"背景\\n概述","points":[{"title":"重點一","desc":"說明二十字以內"},{"title":"重點二","desc":"說明二十字"},{"title":"重點三","desc":"說明二十字"}]},{"tag":"現況","heading":"現況\\n分析","points":[{"title":"現況一","desc":"說明"},{"title":"現況二","desc":"說明"},{"title":"現況三","desc":"說明"}]},{"tag":"觀察","heading":"深度\\n觀察","points":[{"title":"觀察一","desc":"說明"},{"title":"觀察二","desc":"說明"},{"title":"觀察三","desc":"說明"}]}],"cta":{"main":"深入了解\\n更多內容","sub":"每週更新深度內容\\n追蹤掌握第一手資訊","follow":"追蹤帳號獲取最新資訊"}}`;
 
 async function callAPI(inp,sys,max){
-  const KEY=document.getElementById('apikey')?.value?.trim()||'';
-  if(!KEY){stat('⚠ 請先輸入 Google AI API Key');throw new Error('No API Key');}
+  const KEY='AIzaSyDlDxmgfVbksAR_avprCL7XcPgoeay3MKg';
   const MODEL='gemma-3-27b-it';
   const r=await fetch(
     `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${KEY}`,
