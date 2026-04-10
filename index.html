@@ -859,7 +859,7 @@ const FSYS=`你是版面填充機器，只輸出JSON，從{開始，不輸出任
 
 async function callAPI(inp,sys,max){
   const KEY='AIzaSyDlDxmgfVbksAR_avprCL7XcPgoeay3MKg';
-  const MODEL='gemma-3-27b-it';
+  const MODEL='gemma-4-31b-it';
   const r=await fetch(
     `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${KEY}`,
     {
