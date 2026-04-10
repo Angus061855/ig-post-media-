@@ -24,7 +24,6 @@ body{background:#0d0d0d;font-family:'CKS','STSong','SimSun','Noto Serif CJK TC',
 #db:hover{border-color:var(--gd);color:var(--g)}
 #bb{background:transparent;color:rgba(200,175,120,.4);border:1px solid #2a2a2a;font-size:11px}
 #bb:hover{border-color:var(--gd);color:var(--g)}
-<button class="tb" id="kb" onclick="resetKey()" style="font-size:11px;background:transparent;color:rgba(200,175,120,.4);border:1px solid #2a2a2a;border-radius:2px;padding:7px 13px;cursor:pointer;letter-spacing:.15em">⚙ 換Key</button>
   
 #bgf{display:none}
 #st{font-size:11px;letter-spacing:.1em;color:rgba(200,175,120,.4);white-space:nowrap}
@@ -363,6 +362,7 @@ body{background:#0d0d0d;font-family:'CKS','STSong','SimSun','Noto Serif CJK TC',
   <button class="tb" id="bb" onclick="document.getElementById('bgf').click()">⊕ 換背景</button>
   <input type="file" id="bgf" accept="image/*" onchange="uploadBg(event)"/>
   <button class="tb" id="db" onclick="dlAll()">↓ 下載全部</button>
+<button class="tb" id="kb" onclick="resetKey()" style="font-size:11px;background:transparent;color:rgba(200,175,120,.4);border:1px solid #2a2a2a">⚙ 換Key</button>
   <span id="st"></span>
 </div>
 
@@ -867,7 +867,12 @@ const FSYS=`你是版面填充機器，只輸出JSON，從{開始，不輸出任
 {"cover":{"eyebrow":"TOPIC · INSIGHT · ANALYSIS","title":"主題標題","subtitle":"副標第一行\\n副標第二行"},"content":[{"tag":"背景","heading":"背景\\n概述","points":[{"title":"重點一","desc":"說明二十字以內"},{"title":"重點二","desc":"說明二十字"},{"title":"重點三","desc":"說明二十字"}]},{"tag":"現況","heading":"現況\\n分析","points":[{"title":"現況一","desc":"說明"},{"title":"現況二","desc":"說明"},{"title":"現況三","desc":"說明"}]},{"tag":"觀察","heading":"深度\\n觀察","points":[{"title":"觀察一","desc":"說明"},{"title":"觀察二","desc":"說明"},{"title":"觀察三","desc":"說明"}]}],"cta":{"main":"深入了解\\n更多內容","sub":"每週更新深度內容\\n追蹤掌握第一手資訊","follow":"追蹤帳號獲取最新資訊"}}`;
 
 async function callAPI(inp,sys,max){
-  const KEY='AIzaSyDlDxmgfVbksAR_avprCL7XcPgoeay3MKg';
+  let KEY=localStorage.getItem('ig_api_key')||'';
+if(!KEY){
+  KEY=prompt('請輸入你的 Gemini API Key：')||'';
+  if(KEY)localStorage.setItem('ig_api_key',KEY);
+}
+  
   const MODEL='gemma-4-31b-it';
   const r=await fetch(
     `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${KEY}`,
