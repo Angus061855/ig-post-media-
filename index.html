@@ -875,7 +875,6 @@ async function callAPI(inp,sys,max){
   if(j.error)throw new Error(j.error.message||'API Error');
   return j.candidates?.[0]?.content?.parts?.[0]?.text||'';
 }
-}
 
 function parseJSON(text){
   const s=text.indexOf('{'),e2=text.lastIndexOf('}');
