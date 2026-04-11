@@ -396,22 +396,7 @@ body{background:#0d0d0d;font-family:'CKS','STSong','SimSun','Noto Serif CJK TC',
     oninput="saveKey(this.value)"/>
   <input id="ai" type="text" placeholder="@帳號" value="@industry.insight.tw" style="background:#111;border:1px solid #282828;color:#e0d8c8;font-family:inherit;font-size:12px;letter-spacing:.07em;padding:6px 10px;outline:none;width:148px;flex-shrink:0;border-radius:2px"/>
   <textarea id="it" placeholder="輸入主題或貼上文章…" style="flex:1;background:#111;border:1px solid #282828;color:#e0d8c8;font-family:inherit;font-size:12px;letter-spacing:.06em;padding:6px 10px;outline:none;height:40px;resize:none;line-height:1.6;min-width:160px;border-radius:2px"></textarea>
-  <select id="cfg-mode" style="background:#111;border:1px solid #2a2a2a;color:#e0d8c8;font-family:inherit;font-size:11px;padding:5px 8px;outline:none;border-radius:2px;cursor:pointer;flex-shrink:0">
-    <option value="safe">safe 保守</option>
-    <option value="balance" selected>balance 主力</option>
-    <option value="aggressive">aggressive 打臉</option>
-  </select>
-  <div style="display:flex;align-items:center;gap:4px;flex-shrink:0">
-    <span style="font-size:10px;color:rgba(200,175,120,.4)">衝突</span>
-    <input type="range" id="cfg-int" min="0" max="1" step="0.1" value="0.7" style="width:60px;accent-color:var(--g);height:3px;cursor:pointer"/>
-    <span id="v-int" style="font-size:10px;color:rgba(200,175,120,.5);min-width:18px">0.7</span>
-  </div>
-  <div style="display:flex;align-items:center;gap:4px;flex-shrink:0">
-    <span style="font-size:10px;color:rgba(200,175,120,.4)">揭露</span>
-    <input type="range" id="cfg-rev" min="0" max="1" step="0.1" value="0.5" style="width:60px;accent-color:var(--g);height:3px;cursor:pointer"/>
-    <span id="v-rev" style="font-size:10px;color:rgba(200,175,120,.5);min-width:18px">0.5</span>
-  </div>
-  <button class="tb" id="gb" onclick="doGen()" style="background:var(--g);color:#0a0a0a;border:none">✦ 產生</button>
+  <select id="cfg-mode" style="background:#111;border:1px solid #2a2a2a;color:#e0d8c8;font-family:inherit;font-size:11px;padding:5px 8px;outline:none;border-radius:2px;cursor:pointer;flex-shrink:0"><option value="safe">safe 保守</option><option value="balance" selected>balance 主力</option><option value="aggressive">aggressive 打臉</option></select><div style="display:flex;align-items:center;gap:4px;flex-shrink:0"><span style="font-size:10px;color:rgba(200,175,120,.4)">衝突</span><input type="range" id="cfg-int" min="0" max="1" step="0.1" value="0.7" style="width:60px;accent-color:var(--g);height:3px;cursor:pointer"/><span id="v-int" style="font-size:10px;color:rgba(200,175,120,.5);min-width:18px">0.7</span></div><div style="display:flex;align-items:center;gap:4px;flex-shrink:0"><span style="font-size:10px;color:rgba(200,175,120,.4)">揭露</span><input type="range" id="cfg-rev" min="0" max="1" step="0.1" value="0.5" style="width:60px;accent-color:var(--g);height:3px;cursor:pointer"/><span id="v-rev" style="font-size:10px;color:rgba(200,175,120,.5);min-width:18px">0.5</span></div><button class="tb" id="gb" onclick="doGen()" style="background:var(--g);color:#0a0a0a;border:none">✦ 產生</button>
   <button class="tb" id="rgb" style="display:none;background:transparent;color:rgba(200,175,120,.5);border:1px solid #333;font-size:11px" onclick="reGen()">↻ 換個版本</button>
   <span id="st" style="font-size:11px;letter-spacing:.1em;color:rgba(200,175,120,.4);white-space:nowrap"></span>
 </div>
@@ -539,8 +524,8 @@ function applyGlobalTheme(tid){
   globalTheme=tid;
   buildChips();
 loadKey();
-document.getElementById('cfg-int')?.addEventListener('input',function(){ document.getElementById('v-int').textContent=this.value; });
-document.getElementById('cfg-rev')?.addEventListener('input',function(){ document.getElementById('v-rev').textContent=this.value; });
+document.getElementById('cfg-int')?.addEventListener('input',function(){document.getElementById('v-int').textContent=this.value;});
+document.getElementById('cfg-rev')?.addEventListener('input',function(){document.getElementById('v-rev').textContent=this.value;});
   if(!currentData)return;
   desel();
   // Apply to all slides
@@ -915,8 +900,8 @@ function render(data,account,thm){
   E('tbar').style.display='block';
   buildChips();
 loadKey();
-document.getElementById('cfg-int')?.addEventListener('input',function(){ document.getElementById('v-int').textContent=this.value; });
-document.getElementById('cfg-rev')?.addEventListener('input',function(){ document.getElementById('v-rev').textContent=this.value; });
+document.getElementById('cfg-int')?.addEventListener('input',function(){document.getElementById('v-int').textContent=this.value;});
+document.getElementById('cfg-rev')?.addEventListener('input',function(){document.getElementById('v-rev').textContent=this.value;});
   updateSlideBadges();
 }
 
@@ -942,13 +927,12 @@ async function reGen(){
   ];
   const hint = variations[(regenCount - 1) % variations.length];
   const modifiedInput = lastInput + hint;
-  const cfg = getCfg();
 
   try{
-    let text = await callAPI(modifiedInput, null, 2000);
+    let text = await callAPI(modifiedInput, SYS, 2000);
     let data = parseJSON(text);
     if(!data){
-      text = await callAPI(modifiedInput, buildFallbackPrompt(lastInput, cfg), 1500);
+      text = await callAPI(modifiedInput, FSYS, 1500);
       data = parseJSON(text);
     }
     if(!data){stat('⚠ 重新生成失敗，再試一次');return;}
@@ -958,47 +942,30 @@ async function reGen(){
   finally{btn.disabled=false;E('gb').disabled=false;}
 }
 
-/* ─── generate ─── */
+/* ─── config helpers ─── */
 function getCfg(){
   return {
-    mode:        document.getElementById('cfg-mode')?.value || 'balance',
-    intensity:   parseFloat(document.getElementById('cfg-int')?.value  || 0.7),
-    revealLevel: parseFloat(document.getElementById('cfg-rev')?.value  || 0.5),
+    mode:        document.getElementById('cfg-mode')?.value||'balance',
+    intensity:   parseFloat(document.getElementById('cfg-int')?.value||0.7),
+    revealLevel: parseFloat(document.getElementById('cfg-rev')?.value||0.5),
   };
 }
+function buildPrompt(topic,cfg){
+  const d={safe:'保守語氣，不直接提產業細節，偏觀念引導',balance:'模糊帶出差異，有打臉但不過激（主力版本）',aggressive:'強打臉、強對比、強衝突，每頁讓人不舒服但停不下來'}[cfg.mode]||'平衡版本';
+  return '你是一個做了七年的夜總會經紀人，在寫自己的 IG 圖文。\n受眾：18-30 歲女生，對收入與工作選擇迷惘。\n【內容模式】'+cfg.mode+'：'+d+'\n【衝突強度】'+cfg.intensity+'（0=溫和，1=極度打臉）\n【揭露程度】'+cfg.revealLevel+'（0=不提產業，1=完整揭露真相）\n寫作規則：\n- 用講話的方式寫，不是寫文章\n- 禁止使用：深度、剖析、全方位、精準、洞察\n- 每頁至少 2 個反問句，至少 2 個打臉句\n- 必須有「你以為 vs 其實」的對比\n- 口語化：可用「說真的」「老實說」「我做七年看過的」\n- 數字要具體，寫薪水範圍不說「收入可觀」\n- 每頁都要讓人想滑下一頁，CTA 自然導向私訊\n主題：'+topic+'\n根據主題規劃 5-7 張圖文，content 長度看主題決定（3到5個）。\n輸出純 JSON，直接從 { 開始，不加任何說明：\n{"cover":{"eyebrow":"3~5英文關鍵詞·分隔全大寫","title":"4~8個中文字，有衝擊感","subtitle":"兩行\\n口語直接"},"content":[{"tag":"2~4字直白","heading":"4~8字\\n像在說話","points":[{"title":"5~10字直接講","desc":"15~25字，口語，有打臉或反問"},{"title":"","desc":""},{"title":"","desc":""}]}],"cta":{"main":"3~6字\\n口語行動","sub":"說清楚私訊得到什麼\\n不要曖昧","follow":"10~16字像跟朋友說話"}}';
+}
+function buildFallbackPrompt(topic,cfg){
+  return '你是夜總會經紀人在寫 IG，只輸出JSON從{開始，語氣口語不要AI腔。\n模式：'+cfg.mode+'，衝突：'+cfg.intensity+'，揭露：'+cfg.revealLevel+'，主題：'+topic+'\n{"cover":{"eyebrow":"INCOME · REALITY · INSIDER","title":"主題大標","subtitle":"口語直接\\n點出現實"},"content":[{"tag":"真相","heading":"你以為\\nVS其實","points":[{"title":"直接點誤解","desc":"口語說真實"},{"title":"潛規則","desc":"內行才知道的"},{"title":"關鍵差異","desc":"影響收入的核心"}]},{"tag":"現實","heading":"沒人告訴你\\n的事","points":[{"title":"重點一","desc":"直接講"},{"title":"重點二","desc":"直接講"},{"title":"重點三","desc":"直接講"}]},{"tag":"決策","heading":"怎麼選\\n才不吃虧","points":[{"title":"判斷方式","desc":"具體建議"},{"title":"要避開的","desc":"直接說"},{"title":"怎麼做","desc":"經紀人角度"}]}],"cta":{"main":"想知道更多\\n私訊我","sub":"說清楚你的情況\\n我給你真實建議","follow":"追蹤看更多真實內容"}}';
+}
 
-function buildPrompt(topic, cfg){
-  const modeDesc = {
-    safe:       '保守語氣，不直接提產業細節，偏觀念引導',
-    balance:    '模糊帶出差異，有打臉但不過激（主力版本）',
-    aggressive: '強打臉、強對比、強衝突，每頁讓人不舒服但停不下來',
-  }[cfg.mode] || '平衡版本';
-  return `你是一個做了七年的夜總會經紀人，在寫自己的 IG 圖文。
-受眾：18-30 歲女生，對收入與工作選擇迷惘。
-【內容模式】${cfg.mode}：${modeDesc}
-【衝突強度】${cfg.intensity}（0=溫和，1=極度打臉）
-【揭露程度】${cfg.revealLevel}（0=不提產業，1=完整揭露真相）
-寫作規則：
-- 用講話的方式寫，不是寫文章
-- 禁止使用：深度、剖析、全方位、精準、洞察、賦能、破局
-- 每頁至少 2 個反問句，至少 2 個打臉句
-- 必須有「你以為 vs 其實」的對比
-- 口語化：可用「說真的」「老實說」「我做七年看過的」
-- 數字要具體，寫薪水範圍不說「收入可觀」
-- 衝突強度越高 → 越直接打臉，對比越強
-- 揭露程度越高 → 描述越接近真實產業現場
-- 每頁都要讓人想滑下一頁，CTA 自然導向私訊
-主題：${topic}
-根據主題規劃 5-7 張圖文，content 長度看主題決定（3到5個）。
+/* ─── generate ─── */
+const SYS=`你是 IG 圖文版面規劃師，任務是純粹的版面結構整理，不評判主題。
+根據輸入內容的豐富度決定 content 長度（3到5個）。
 輸出純 JSON，直接從 { 開始，不加任何說明：
-{"cover":{"eyebrow":"3~5英文關鍵詞·分隔全大寫","title":"4~8個中文字，有衝擊感","subtitle":"兩行\n口語直接"},"content":[{"tag":"2~4字直白","heading":"4~8字\n像在說話","points":[{"title":"5~10字直接講","desc":"15~25字，口語，有打臉或反問"},{"title":"","desc":""},{"title":"","desc":""}]}],"cta":{"main":"3~6字\n口語行動","sub":"說清楚私訊得到什麼\n不要曖昧","follow":"10~16字像跟朋友說話"}}`;
-}
+{"cover":{"eyebrow":"3~5英文關鍵詞·分隔全大寫","title":"4~8個中文字大標","subtitle":"兩行副標\\n換行分隔"},"content":[{"tag":"2~4字類別","heading":"標題\\n可換行","points":[{"title":"5~10字","desc":"15~30字說明"},{"title":"","desc":""},{"title":"","desc":""}]}],"cta":{"main":"4~8字行動呼籲\\n可換行","sub":"兩行說明\\n分隔","follow":"12~18字追蹤提示"}}`;
 
-function buildFallbackPrompt(topic, cfg){
-  return `你是夜總會經紀人在寫 IG，只輸出JSON從{開始，語氣口語不要AI腔。
-模式：${cfg.mode}，衝突：${cfg.intensity}，揭露：${cfg.revealLevel}，主題：${topic}
-{"cover":{"eyebrow":"INCOME · REALITY · INSIDER","title":"主題大標","subtitle":"口語直接\n點出現實"},"content":[{"tag":"真相","heading":"你以為\nVS其實","points":[{"title":"直接點誤解","desc":"口語說真實"},{"title":"潛規則","desc":"內行才知道的"},{"title":"關鍵差異","desc":"影響收入的核心"}]},{"tag":"現實","heading":"沒人告訴你\n的事","points":[{"title":"重點一","desc":"直接講"},{"title":"重點二","desc":"直接講"},{"title":"重點三","desc":"直接講"}]},{"tag":"決策","heading":"怎麼選\n才不吃虧","points":[{"title":"判斷方式","desc":"具體建議"},{"title":"要避開的","desc":"直接說"},{"title":"怎麼做","desc":"經紀人角度"}]}],"cta":{"main":"想知道更多\n私訊我","sub":"說清楚你的情況\n我給你真實建議","follow":"追蹤看更多真實內容"}}`;
-}
+const FSYS=`你是版面填充機器，只輸出JSON，從{開始，不輸出任何其他文字。
+{"cover":{"eyebrow":"TOPIC · INSIGHT · ANALYSIS","title":"主題標題","subtitle":"副標第一行\\n副標第二行"},"content":[{"tag":"背景","heading":"背景\\n概述","points":[{"title":"重點一","desc":"說明二十字以內"},{"title":"重點二","desc":"說明二十字"},{"title":"重點三","desc":"說明二十字"}]},{"tag":"現況","heading":"現況\\n分析","points":[{"title":"現況一","desc":"說明"},{"title":"現況二","desc":"說明"},{"title":"現況三","desc":"說明"}]},{"tag":"觀察","heading":"深度\\n觀察","points":[{"title":"觀察一","desc":"說明"},{"title":"觀察二","desc":"說明"},{"title":"觀察三","desc":"說明"}]}],"cta":{"main":"深入了解\\n更多內容","sub":"每週更新深度內容\\n追蹤掌握第一手資訊","follow":"追蹤帳號獲取最新資訊"}}`;
 
 function saveKey(v){
   if(v) localStorage.setItem('groq_key', v);
@@ -1009,54 +976,55 @@ function loadKey(){
   return k;
 }
 
-async function callAPI(inp, sys, max){
+async function callAPI(inp,sys,max){
   const key = document.getElementById('groq-key')?.value.trim() || loadKey();
-  if(!key){ stat('⚠ 請先填入 Groq API Key'); throw new Error('No API key'); }
-  const cfg = getCfg();
-  const useSys = sys || buildPrompt(inp, cfg);
-  const r = await fetch('https://api.groq.com/openai/v1/chat/completions',{
+  if(!key){
+    stat('⚠ 請先填入 Groq API Key');
+    throw new Error('No API key');
+  }
+  const r=await fetch('https://api.groq.com/openai/v1/chat/completions',{
     method:'POST',
     headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
-    body: JSON.stringify({
-      model: 'llama-3.3-70b-versatile',
-      max_tokens: max||2000,
+    body:JSON.stringify({
+      model:'llama-3.3-70b-versatile',
+      max_tokens:max||2000,
       messages:[
-        {role:'system', content: useSys},
-        {role:'user',   content: inp}
+        {role:'system',content:sys||(typeof buildPrompt==='function'?buildPrompt(inp,getCfg()):sys)},
+        {role:'user',content:inp}
       ]
     })
   });
-  const j = await r.json();
+  const j=await r.json();
   if(j.error) throw new Error(j.error.message||'Groq error');
-  return j.choices?.[0]?.message?.content || '';
+  return j.choices?.[0]?.message?.content||'';
 }
 
 function parseJSON(text){
-  const s=text.indexOf('{'), e2=text.lastIndexOf('}');
-  if(s===-1||e2===-1) return null;
-  try{ return JSON.parse(text.slice(s,e2+1)); }catch(e){ return null; }
+  const s=text.indexOf('{'),e2=text.lastIndexOf('}');
+  if(s===-1||e2===-1)return null;
+  try{return JSON.parse(text.slice(s,e2+1))}catch(e){return null}
 }
 
 async function doGen(){
-  const inp     = E('it').value.trim();
-  const account = E('ai').value.trim() || '@your.account';
-  if(!inp){ stat('請輸入主題或文章'); return; }
-  lastInput=inp; lastAccount=account;
-  E('gb').disabled=true; stat('AI 規劃中…'); desel();
+  const inp=E('it').value.trim();
+  const account=E('ai').value.trim()||'@your.account';
+  if(!inp){stat('請輸入主題或文章');return}
+  lastInput=inp;lastAccount=account;
+  E('gb').disabled=true;stat('AI 規劃中…');desel();
   try{
-    const cfg = getCfg();
-    let text = await callAPI(inp, null, 2000);
-    let data = parseJSON(text);
+    const cfg=getCfg();
+    let text=await callAPI(inp,null,2000);
+    let data=parseJSON(text);
     if(!data){
       stat('備用方案中…');
-      text = await callAPI(inp, buildFallbackPrompt(inp, cfg), 1500);
-      data = parseJSON(text);
+      text=await callAPI(inp,buildFallbackPrompt(inp,cfg),1500);
+      data=parseJSON(text);
     }
-    if(!data){ stat('⚠ 生成失敗，請換個說法'); return; }
-    render(data, account, globalTheme);
+    if(!data){stat('⚠ 生成失敗，請換個說法');return;}
+    render(data,account,globalTheme);
     stat('✓ 完成 · 點選元素編輯 · 上方切換整體風格 · 每張右上可單獨換');
-  }catch(e){ stat('錯誤：'+e.message); console.error(e); }
-  finally{ E('gb').disabled=false; }
+  }catch(e){stat('錯誤：'+e.message);console.error(e)}
+  finally{E('gb').disabled=false}
 }
 
 /* ─── download ─── */
@@ -1288,8 +1256,8 @@ function initDefault(){
 /* ─── init ─── */
 buildChips();
 loadKey();
-document.getElementById('cfg-int')?.addEventListener('input',function(){ document.getElementById('v-int').textContent=this.value; });
-document.getElementById('cfg-rev')?.addEventListener('input',function(){ document.getElementById('v-rev').textContent=this.value; });
+document.getElementById('cfg-int')?.addEventListener('input',function(){document.getElementById('v-int').textContent=this.value;});
+document.getElementById('cfg-rev')?.addEventListener('input',function(){document.getElementById('v-rev').textContent=this.value;});
 </script>
 </body>
 </html>
