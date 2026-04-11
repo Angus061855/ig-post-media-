@@ -9,13 +9,13 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{--g:rgba(200,175,120,1);--gd:rgba(200,175,120,.6);--gf:rgba(200,175,120,.18);--cr:#f0ece4}
 body{background:#0d0d0d;font-family:'CKS','STSong','SimSun','Noto Serif CJK TC',serif;display:flex;flex-direction:column;align-items:center;padding:28px 20px 120px;min-height:100vh}
-.t1 .tt,.t2 .tt,.t3 .tt,.t4 .tt,.t5 .tt,.t6 .tt,.t7 .tt,.t8 .tt{font-size:130px!important;line-height:1.0!important}
-.t1 .hd,.t2 .hd,.t3 .hd,.t4 .hd,.t5 .hd,.t6 .hd,.t7 .hd,.t8 .hd{font-size:80px!important}
-.t1 .ph2,.t2 .ph2,.t3 .ph2,.t4 .ph2,.t5 .ph2,.t6 .ph2,.t7 .ph2,.t8 .ph2{font-size:36px!important}
-.t1 .pd,.t2 .pd,.t3 .pd,.t4 .pd,.t5 .pd,.t6 .pd,.t7 .pd,.t8 .pd{font-size:22px!important}
-.t1 .sb,.t2 .sb,.t3 .sb,.t4 .sb,.t5 .sb,.t6 .sb,.t7 .sb,.t8 .sb{font-size:32px!important}
-.t1 .cm,.t2 .cm,.t3 .cm,.t4 .cm,.t5 .cm,.t6 .cm,.t7 .cm,.t8 .cm{font-size:84px!important}
-.t1 .cs,.t2 .cs,.t3 .cs,.t4 .cs,.t5 .cs,.t6 .cs,.t7 .cs,.t8 .cs{font-size:30px!important}
+.t1 .tt,.t2 .tt,.t3 .tt,.t4 .tt,.t5 .tt,.t6 .tt,.t7 .tt,.t8 .tt{font-size:156px!important;line-height:1.0!important}
+.t1 .hd,.t2 .hd,.t3 .hd,.t4 .hd,.t5 .hd,.t6 .hd,.t7 .hd,.t8 .hd{font-size:96px!important}
+.t1 .ph2,.t2 .ph2,.t3 .ph2,.t4 .ph2,.t5 .ph2,.t6 .ph2,.t7 .ph2,.t8 .ph2{font-size:43px!important}
+.t1 .pd,.t2 .pd,.t3 .pd,.t4 .pd,.t5 .pd,.t6 .pd,.t7 .pd,.t8 .pd{font-size:26px!important}
+.t1 .sb,.t2 .sb,.t3 .sb,.t4 .sb,.t5 .sb,.t6 .sb,.t7 .sb,.t8 .sb{font-size:38px!important}
+.t1 .cm,.t2 .cm,.t3 .cm,.t4 .cm,.t5 .cm,.t6 .cm,.t7 .cm,.t8 .cm{font-size:100px!important}
+.t1 .cs,.t2 .cs,.t3 .cs,.t4 .cs,.t5 .cs,.t6 .cs,.t7 .cs,.t8 .cs{font-size:36px!important}
 #mode-bar{width:100%;max-width:1220px;display:flex;align-items:center;gap:8px;margin-bottom:16px}
 .mode-btn{font-family:inherit;font-size:12px;letter-spacing:.18em;padding:8px 20px;cursor:pointer;border-radius:2px;transition:all .15s}
 .mode-btn.on{background:var(--g);color:#0a0a0a;border:none}
@@ -802,8 +802,11 @@ function buildPrompt(topic,cfg){
     aggressive:'非常直接，大量打臉，語氣犀利，讓人不舒服但停不下來'
   };
   const hint=modeHints[cfg.mode]||modeHints.balance;
-  return '【強制換行規則】所有 \\n 只能在語意完整的斷點換行，禁止在同一個詞語中間換行。\n'
-    +'正確："你以為你了解\\n酒店公關"　錯誤："你以為你了\\n解酒店公關"\n\n'
+  return '【強制換行規則】\n'
+    +'1. \\n 只能出現在標點符號後，或完整語意結束後\n'
+    +'2. 禁止在詞語中間、動詞賓語之間換行\n'
+    +'3. 每行至少5個字，不可出現單字孤行\n'
+    +'4. 正確："你以為你了解\\n這個行業"　錯誤："你以為你了\\n解這個行業"\n\n'
     +'你是專業IG輪播文案策略師，只輸出JSON，從 { 開始，不輸出任何其他文字。\n'
     +'語氣要求：'+hint+'\n'
     +'衝突強度：'+cfg.intensity+'（0保守～1最強）\n'
