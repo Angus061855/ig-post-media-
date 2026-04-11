@@ -893,9 +893,11 @@ function render(data,account,thm){
   const wrap=E('wrap');wrap.innerHTML='';
   slideThemes={};
   const cnt=data.content||[];
+  const hasSummary=!!(data.summary&&data.summary.heading);
   wrap.appendChild(bCover(data.cover,account,thm));
   cnt.forEach((c,i)=>wrap.appendChild(bContent(c,i,cnt.length,thm)));
-  wrap.appendChild(bCta(data.cta,account,cnt.length,thm));
+  if(hasSummary) wrap.appendChild(bContent(data.summary,cnt.length,cnt.length+1,thm));
+  wrap.appendChild(bCta(data.cta,account,hasSummary?cnt.length+1:cnt.length,thm));
   E('db').style.display='block';E('db2').style.display='block';E('rgb').style.display='block';
   E('tbar').style.display='block';
   buildChips();
@@ -951,11 +953,44 @@ function getCfg(){
   };
 }
 function buildPrompt(topic,cfg){
-  const d={safe:'保守語氣，不直接提產業細節，偏觀念引導',balance:'模糊帶出差異，有打臉但不過激（主力版本）',aggressive:'強打臉、強對比、強衝突，每頁讓人不舒服但停不下來'}[cfg.mode]||'平衡版本';
-  return '你是一個做了七年的夜總會經紀人，在寫自己的 IG 圖文。\n受眾：18-30 歲女生，對收入與工作選擇迷惘。\n【內容模式】'+cfg.mode+'：'+d+'\n【衝突強度】'+cfg.intensity+'（0=溫和，1=極度打臉）\n【揭露程度】'+cfg.revealLevel+'（0=不提產業，1=完整揭露真相）\n寫作規則：\n- 用講話的方式寫，不是寫文章\n- 禁止使用：深度、剖析、全方位、精準、洞察\n- 每頁至少 2 個反問句，至少 2 個打臉句\n- 必須有「你以為 vs 其實」的對比\n- 口語化：可用「說真的」「老實說」「我做七年看過的」\n- 數字要具體，寫薪水範圍不說「收入可觀」\n- 每頁都要讓人想滑下一頁，CTA 自然導向私訊\n主題：'+topic+'\n根據主題規劃 5-7 張圖文，content 長度看主題決定（3到5個）。\n輸出純 JSON，直接從 { 開始，不加任何說明：\n{"cover":{"eyebrow":"3~5英文關鍵詞·分隔全大寫","title":"4~8個中文字，有衝擊感","subtitle":"兩行\\n口語直接"},"content":[{"tag":"2~4字直白","heading":"4~8字\\n像在說話","points":[{"title":"5~10字直接講","desc":"15~25字，口語，有打臉或反問"},{"title":"","desc":""},{"title":"","desc":""}]}],"cta":{"main":"3~6字\\n口語行動","sub":"說清楚私訊得到什麼\\n不要曖昧","follow":"10~16字像跟朋友說話"}}';
+  return '你是一位專門做高轉換IG輪播的內容策略師，擅長把敏感或灰色產業主題，轉化為「可發佈、可擴散、可轉單」的內容。\n'
+    +'你的任務是根據輸入主題，生成7張IG輪播貼文（封面＋5頁內容＋總結＋CTA）。\n'
+    +'核心策略：\n'
+    +'- 表面在講觀念，實際在篩選受眾\n'
+    +'- 透過打臉與反轉，讓觀眾產生「我是不是搞錯了」\n'
+    +'- 不把話講完，刻意留下空間讓人私訊\n'
+    +'寫作風格要求：\n'
+    +'- 每一頁都要有「衝突感」或「反轉」\n'
+    +'- 至少2頁包含反問句\n'
+    +'- 至少2頁包含打臉句（直接否定常見認知）\n'
+    +'- 多用對比（例如：你以為 vs 其實）\n'
+    +'- 語氣像在講現實，不要像教學\n'
+    +'風控規則（非常重要）：\n'
+    +'- 禁止明確薪資數字（改為模糊描述）\n'
+    +'- 敏感產業詞需弱化（例如：用「工作類型」「環境」取代）\n'
+    +'- 禁止過度招募導向（避免「高薪」「快速賺錢」等字眼）\n'
+    +'- CTA需自然，引導諮詢而非強推\n'
+    +'內容張數規則：\n'
+    +'- content 數量固定3~4個（避免過長）\n'
+    +'- 每個 content 固定3個 points\n'
+    +'- 每一頁字數要短，適合滑動閱讀\n'
+    +'主題：'+topic+'\n'
+    +'輸出純 JSON，直接從 { 開始，不加任何說明文字。\n'
+    +'格式：\n'
+    +'{"cover":{"eyebrow":"3~5英文關鍵詞·用·分隔·全大寫","title":"4~8字大標題\\n可換行","subtitle":"副標第一行\\n副標第二行"},"content":[{"tag":"2~4字類別標籤","heading":"標題第一行\\n標題第二行","points":[{"title":"5~10字重點標題","desc":"20~35字具體說明，要有畫面感＋帶一點情緒"},{"title":"","desc":""},{"title":"","desc":""}]}],"summary":{"tag":"核心觀念","heading":"反轉第一行\\n反轉第二行","points":[{"title":"打臉句","desc":"否定常見錯誤觀念"},{"title":"","desc":""},{"title":"","desc":""}]},"cta":{"main":"4~8字金句\\n可換行","sub":"引導思考第一行\\n引導思考第二行","follow":"12~18字自然引導私訊文字"}}';
 }
+
 function buildFallbackPrompt(topic,cfg){
-  return '你是夜總會經紀人在寫 IG，只輸出JSON從{開始，語氣口語不要AI腔。\n模式：'+cfg.mode+'，衝突：'+cfg.intensity+'，揭露：'+cfg.revealLevel+'，主題：'+topic+'\n{"cover":{"eyebrow":"INCOME · REALITY · INSIDER","title":"主題大標","subtitle":"口語直接\\n點出現實"},"content":[{"tag":"真相","heading":"你以為\\nVS其實","points":[{"title":"直接點誤解","desc":"口語說真實"},{"title":"潛規則","desc":"內行才知道的"},{"title":"關鍵差異","desc":"影響收入的核心"}]},{"tag":"現實","heading":"沒人告訴你\\n的事","points":[{"title":"重點一","desc":"直接講"},{"title":"重點二","desc":"直接講"},{"title":"重點三","desc":"直接講"}]},{"tag":"決策","heading":"怎麼選\\n才不吃虧","points":[{"title":"判斷方式","desc":"具體建議"},{"title":"要避開的","desc":"直接說"},{"title":"怎麼做","desc":"經紀人角度"}]}],"cta":{"main":"想知道更多\\n私訊我","sub":"說清楚你的情況\\n我給你真實建議","follow":"追蹤看更多真實內容"}}';
+  return '你是專業IG輪播文案策略師，只輸出JSON，從 { 開始，不輸出任何其他文字。\n'
+    +'重要規則：\n'
+    +'1. 不得寫成教科書或分析報告\n'
+    +'2. 每一頁都要讓人「想滑下一頁」\n'
+    +'3. 必須包含：對比（你以為 vs 其實）、打臉（直接否定錯誤認知）、至少2個反問句\n'
+    +'4. 禁止出現：明確金額、過度露骨產業描述、明顯招募語句\n'
+    +'語氣要求：像在講現實，有壓迫感但不說教，讓人產生「我是不是搞錯了」\n'
+    +'CTA規則：不要直接賣，用「你可能選錯了」「你該重新想」這種引導\n'
+    +'主題：'+topic+'\n'
+    +'{"cover":{"eyebrow":"REALITY · CHOICE · TRUTH","title":"你以為對的\\n其實錯了","subtitle":"很多人一開始就選錯\\n但自己不知道"},"content":[{"tag":"誤解","heading":"你以為這樣\\n比較安全","points":[{"title":"常見錯誤認知","desc":"多數人一開始就照這樣選，但結果完全不同"},{"title":"你真的了解嗎","desc":"你以為自己知道，但其實只是聽來的"},{"title":"問題不在努力","desc":"而是你一開始就選錯方向"}]}],"summary":{"tag":"核心觀念","heading":"問題不在你\\n在選擇","points":[{"title":"打臉句","desc":"你不是做不起來，是一開始就錯了"},{"title":"","desc":""},{"title":"","desc":""}]},"cta":{"main":"別再亂選\\n先搞清楚","sub":"你現在的狀態\\n適合的方向完全不同","follow":"想知道適合哪種，直接私訊我"}}';
 }
 
 /* ─── generate ─── */
