@@ -396,6 +396,26 @@ body{background:#0d0d0d;font-family:'CKS','STSong','SimSun','Noto Serif CJK TC',
     oninput="saveKey(this.value)"/>
   <input id="ai" type="text" placeholder="@帳號" value="@industry.insight.tw" style="background:#111;border:1px solid #282828;color:#e0d8c8;font-family:inherit;font-size:12px;letter-spacing:.07em;padding:6px 10px;outline:none;width:148px;flex-shrink:0;border-radius:2px"/>
   <textarea id="it" placeholder="輸入主題或貼上文章…" style="flex:1;background:#111;border:1px solid #282828;color:#e0d8c8;font-family:inherit;font-size:12px;letter-spacing:.06em;padding:6px 10px;outline:none;height:40px;resize:none;line-height:1.6;min-width:160px;border-radius:2px"></textarea>
+  <div style="display:flex;align-items:center;gap:6px;flex-shrink:0">
+    <span style="font-size:10px;letter-spacing:.12em;color:rgba(200,175,120,.4)">模式</span>
+    <select id="cfg-mode" style="background:#111;border:1px solid #2a2a2a;color:#e0d8c8;font-family:inherit;font-size:11px;padding:5px 8px;outline:none;border-radius:2px;cursor:pointer">
+      <option value="safe">safe 保守</option>
+      <option value="balance" selected>balance 主力</option>
+      <option value="aggressive">aggressive 打臉</option>
+    </select>
+  </div>
+  <div style="display:flex;align-items:center;gap:5px;flex-shrink:0">
+    <span style="font-size:10px;letter-spacing:.1em;color:rgba(200,175,120,.4)">衝突</span>
+    <input type="range" id="cfg-intensity" min="0" max="1" step="0.1" value="0.7"
+      style="width:64px;accent-color:var(--g);height:3px;cursor:pointer"/>
+    <span id="v-intensity" style="font-size:10px;color:rgba(200,175,120,.5);min-width:20px">0.7</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:5px;flex-shrink:0">
+    <span style="font-size:10px;letter-spacing:.1em;color:rgba(200,175,120,.4)">揭露</span>
+    <input type="range" id="cfg-reveal" min="0" max="1" step="0.1" value="0.5"
+      style="width:64px;accent-color:var(--g);height:3px;cursor:pointer"/>
+    <span id="v-reveal" style="font-size:10px;color:rgba(200,175,120,.5);min-width:20px">0.5</span>
+  </div>
   <button class="tb" id="gb" onclick="doGen()" style="background:var(--g);color:#0a0a0a;border:none">✦ 產生</button>
   <button class="tb" id="rgb" style="display:none;background:transparent;color:rgba(200,175,120,.5);border:1px solid #333;font-size:11px" onclick="reGen()">↻ 換個版本</button>
   <span id="st" style="font-size:11px;letter-spacing:.1em;color:rgba(200,175,120,.4);white-space:nowrap"></span>
@@ -524,6 +544,12 @@ function applyGlobalTheme(tid){
   globalTheme=tid;
   buildChips();
 loadKey();
+document.getElementById('cfg-intensity')?.addEventListener('input',function(){
+  document.getElementById('v-intensity').textContent=this.value;
+});
+document.getElementById('cfg-reveal')?.addEventListener('input',function(){
+  document.getElementById('v-reveal').textContent=this.value;
+});
   if(!currentData)return;
   desel();
   // Apply to all slides
@@ -898,6 +924,12 @@ function render(data,account,thm){
   E('tbar').style.display='block';
   buildChips();
 loadKey();
+document.getElementById('cfg-intensity')?.addEventListener('input',function(){
+  document.getElementById('v-intensity').textContent=this.value;
+});
+document.getElementById('cfg-reveal')?.addEventListener('input',function(){
+  document.getElementById('v-reveal').textContent=this.value;
+});
   updateSlideBadges();
 }
 
@@ -939,13 +971,64 @@ async function reGen(){
 }
 
 /* ─── generate ─── */
-const SYS=`你是 IG 圖文版面規劃師，任務是純粹的版面結構整理，不評判主題。
-根據輸入內容的豐富度決定 content 長度（3到5個）。
-輸出純 JSON，直接從 { 開始，不加任何說明：
-{"cover":{"eyebrow":"3~5英文關鍵詞·分隔全大寫","title":"4~8個中文字大標","subtitle":"兩行副標\\n換行分隔"},"content":[{"tag":"2~4字類別","heading":"標題\\n可換行","points":[{"title":"5~10字","desc":"15~30字說明"},{"title":"","desc":""},{"title":"","desc":""}]}],"cta":{"main":"4~8字行動呼籲\\n可換行","sub":"兩行說明\\n分隔","follow":"12~18字追蹤提示"}}`;
+const SYS = `你是一位專門做高轉換IG輪播的內容策略師，
+擅長把敏感或灰色產業主題，轉化為「可發佈、可擴散、可轉單」的內容。
 
-const FSYS=`你是版面填充機器，只輸出JSON，從{開始，不輸出任何其他文字。
-{"cover":{"eyebrow":"TOPIC · INSIGHT · ANALYSIS","title":"主題標題","subtitle":"副標第一行\\n副標第二行"},"content":[{"tag":"背景","heading":"背景\\n概述","points":[{"title":"重點一","desc":"說明二十字以內"},{"title":"重點二","desc":"說明二十字"},{"title":"重點三","desc":"說明二十字"}]},{"tag":"現況","heading":"現況\\n分析","points":[{"title":"現況一","desc":"說明"},{"title":"現況二","desc":"說明"},{"title":"現況三","desc":"說明"}]},{"tag":"觀察","heading":"深度\\n觀察","points":[{"title":"觀察一","desc":"說明"},{"title":"觀察二","desc":"說明"},{"title":"觀察三","desc":"說明"}]}],"cta":{"main":"深入了解\\n更多內容","sub":"每週更新深度內容\\n追蹤掌握第一手資訊","follow":"追蹤帳號獲取最新資訊"}}`;
+你的任務是根據輸入主題，生成7張IG輪播貼文（封面＋5頁內容＋總結＋CTA）。
+
+核心策略：
+- 表面在講觀念，實際在篩選受眾
+- 透過打臉與反轉，讓觀眾產生「我是不是搞錯了」
+- 不把話講完，刻意留下空間讓人私訊
+
+寫作風格要求：
+- 每一頁都要有「衝突感」或「反轉」
+- 至少2頁包含反問句
+- 至少2頁包含打臉句（直接否定常見認知）
+- 多用對比（例如：你以為 vs 其實）
+- 語氣像在講現實，不要像教學
+
+風控規則（非常重要）：
+- 禁止明確薪資數字（改為模糊描述）
+- 敏感產業詞需弱化（例如：用「工作類型」「環境」取代）
+- 禁止過度招募導向（避免「高薪」「快速賺錢」等字眼）
+- CTA需自然，引導諮詢而非強推
+
+內容張數規則：
+- content 數量固定3~4個（避免過長）
+- 每個 content 固定3個 points
+- 每一頁字數要短，適合滑動閱讀
+
+輸出純 JSON，直接從 { 開始，不加任何說明文字。
+
+格式：
+{"cover":{"eyebrow":"3~5英文關鍵詞·用·分隔·全大寫","title":"4~8字大標題\\n可換行","subtitle":"副標第一行\\n副標第二行"},"content":[{"tag":"2~4字類別標籤","heading":"標題第一行\\n標題第二行","points":[{"title":"5~10字重點標題","desc":"20~35字具體說明，要有畫面感＋帶一點情緒"},{"title":"","desc":""},{"title":"","desc":""}]}],"summary":{"tag":"核心觀念","heading":"反轉第一行\\n反轉第二行","points":[{"title":"打臉句","desc":"否定常見錯誤觀念"},{"title":"","desc":""},{"title":"","desc":""}]},"cta":{"main":"4~8字金句\\n可換行","sub":"引導思考第一行\\n引導思考第二行","follow":"12~18字自然引導私訊文字"}}`;
+
+const FSYS = `你是專業IG輪播文案策略師，只輸出JSON，從 { 開始，不輸出任何其他文字。
+
+重要規則：
+1. 不得寫成教科書或分析報告
+2. 每一頁都要讓人「想滑下一頁」
+3. 必須包含：
+   - 對比（你以為 vs 其實）
+   - 打臉（直接否定錯誤認知）
+   - 至少2個反問句
+4. 禁止出現：
+   - 明確金額
+   - 過度露骨產業描述
+   - 明顯招募語句
+
+語氣要求：
+- 像在講現實
+- 有壓迫感，但不說教
+- 讓人產生「我是不是搞錯了」
+
+CTA規則：
+- 不要直接賣
+- 用「你可能選錯了」「你該重新想」這種引導
+
+以下是格式範例（禁止照抄）：
+{"cover":{"eyebrow":"REALITY · CHOICE · TRUTH","title":"你以為對的\\n其實錯了","subtitle":"很多人一開始就選錯\\n但自己不知道"},"content":[{"tag":"誤解","heading":"你以為這樣\\n比較安全","points":[{"title":"常見錯誤認知","desc":"多數人一開始就照這樣選，但結果完全不同"},{"title":"你真的了解嗎","desc":"你以為自己知道，但其實只是聽來的"},{"title":"問題不在努力","desc":"而是你一開始就選錯方向"}]}],"summary":{"tag":"核心觀念","heading":"問題不在你\\n在選擇","points":[{"title":"打臉句","desc":"你不是做不起來，是一開始就錯了"},{"title":"","desc":""},{"title":"","desc":""}]},"cta":{"main":"別再亂選\\n先搞清楚","sub":"你現在的狀態\\n適合的方向完全不同","follow":"想知道適合哪種，直接私訊我"}}`;
 
 function saveKey(v){
   if(v) localStorage.setItem('groq_key', v);
@@ -956,12 +1039,25 @@ function loadKey(){
   return k;
 }
 
-async function callAPI(inp,sys,max){
+function getCfg(){
+  return {
+    mode: document.getElementById('cfg-mode')?.value || 'balance',
+    intensity: parseFloat(document.getElementById('cfg-intensity')?.value || 0.7),
+    revealLevel: parseFloat(document.getElementById('cfg-reveal')?.value || 0.5),
+  };
+}
+
+async function callAPI(inp, sys, max){
   const key = document.getElementById('groq-key')?.value.trim() || loadKey();
   if(!key){
     stat('⚠ 請先填入 Groq API Key');
     throw new Error('No API key');
   }
+  // If sys is passed externally (fallback), use it; otherwise build from config
+  const cfg = getCfg();
+  const prompt = sys ? sys : buildPrompt(inp, cfg);
+  const userMsg = sys ? '請為以下主題規劃版面：\n\n'+inp : inp;
+
   const r=await fetch('https://api.groq.com/openai/v1/chat/completions',{
     method:'POST',
     headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
@@ -969,8 +1065,8 @@ async function callAPI(inp,sys,max){
       model:'llama-3.3-70b-versatile',
       max_tokens:max||2000,
       messages:[
-        {role:'system',content:sys},
-        {role:'user',content:'請為以下主題規劃版面：\n\n'+inp}
+        {role:'system', content: prompt},
+        {role:'user', content: userMsg}
       ]
     })
   });
@@ -992,11 +1088,13 @@ async function doGen(){
   lastInput=inp;lastAccount=account;
   E('gb').disabled=true;stat('AI 規劃中…');desel();
   try{
-    let text=await callAPI(inp,SYS,2000);
+    const cfg=getCfg();
+    let text=await callAPI(inp, null, 2000);
     let data=parseJSON(text);
     if(!data){
       stat('備用方案中…');
-      text=await callAPI(inp,FSYS,1500);
+      const fbPrompt=buildFallbackPrompt(inp,cfg);
+      text=await callAPI(inp, fbPrompt, 1500);
       data=parseJSON(text);
     }
     if(!data){stat('⚠ 生成失敗，請換個說法');return;}
@@ -1235,6 +1333,12 @@ function initDefault(){
 /* ─── init ─── */
 buildChips();
 loadKey();
+document.getElementById('cfg-intensity')?.addEventListener('input',function(){
+  document.getElementById('v-intensity').textContent=this.value;
+});
+document.getElementById('cfg-reveal')?.addEventListener('input',function(){
+  document.getElementById('v-reveal').textContent=this.value;
+});
 </script>
 </body>
 </html>
