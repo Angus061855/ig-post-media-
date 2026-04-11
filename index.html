@@ -971,7 +971,7 @@ function buildPrompt(topic,cfg){
     +'- 禁止過度招募導向（避免「高薪」「快速賺錢」等字眼）\n'
     +'- CTA需自然，引導諮詢而非強推\n'
     +'內容張數規則：\n'
-    +'- content 數量固定3~4個（避免過長）\n'
+    +'- content 數量固定4~5個（最多5個）\n'
     +'- 每個 content 固定3個 points\n'
     +'- 每一頁字數要短，適合滑動閱讀\n'
     +'主題：'+topic+'\n'
@@ -995,7 +995,7 @@ function buildFallbackPrompt(topic,cfg){
 
 /* ─── generate ─── */
 const SYS=`你是 IG 圖文版面規劃師，任務是純粹的版面結構整理，不評判主題。
-根據輸入內容的豐富度決定 content 長度（3到5個）。
+根據輸入內容的豐富度決定 content 長度（4到5個）。
 輸出純 JSON，直接從 { 開始，不加任何說明：
 {"cover":{"eyebrow":"3~5英文關鍵詞·分隔全大寫","title":"4~8個中文字大標","subtitle":"兩行副標\\n換行分隔"},"content":[{"tag":"2~4字類別","heading":"標題\\n可換行","points":[{"title":"5~10字","desc":"15~30字說明"},{"title":"","desc":""},{"title":"","desc":""}]}],"cta":{"main":"4~8字行動呼籲\\n可換行","sub":"兩行說明\\n分隔","follow":"12~18字追蹤提示"}}`;
 
