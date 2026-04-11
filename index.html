@@ -920,43 +920,6 @@ document.getElementById('cfg-rev')?.addEventListener('input',function(){ documen
   updateSlideBadges();
 }
 
-/* ─── regenerate ─── */
-let regenCount = 0;
-
-async function reGen(){
-  if(!lastInput){stat('請先產生一次內容');return;}
-  regenCount++;
-  const btn=E('rgb');btn.disabled=true;
-  E('gb').disabled=true;
-  stat(`重新生成第 ${regenCount} 個版本…`);
-  desel();
-
-  // Append variation instruction to push different angle
-  const variations = [
-    '\n\n請用完全不同的切入角度、不同的標題和重點，重新規劃這個主題。',
-    '\n\n這次從「常見誤解」的角度切入，打破錯誤認知。',
-    '\n\n這次用「數字說話」，盡量加入具體數字、金額、比例。',
-    '\n\n這次從「新手常犯的錯」角度切入，列出會吃虧的決策。',
-    '\n\n這次語氣更直接犀利，用更強烈的對比和反問。',
-    '\n\n這次從「老手才知道」的內行視角切入，強調只有圈內人才懂的事。',
-  ];
-  const hint = variations[(regenCount - 1) % variations.length];
-  const modifiedInput = lastInput + hint;
-
-  try{
-    let text = await callAPI(modifiedInput, SYS, 2000);
-    let data = parseJSON(text);
-    if(!data){
-      text = await callAPI(modifiedInput, FSYS, 1500);
-      data = parseJSON(text);
-    }
-    if(!data){stat('⚠ 重新生成失敗，再試一次');return;}
-    render(data, lastAccount, globalTheme);
-    stat(`✓ 第 ${regenCount} 個版本 · 不滿意繼續按「↻ 換個版本」`);
-  }catch(e){stat('錯誤：'+e.message);}
-  finally{btn.disabled=false;E('gb').disabled=false;}
-}
-
 /* ─── generate ─── */
 function getCfg(){
   return {
