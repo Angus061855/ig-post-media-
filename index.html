@@ -396,25 +396,20 @@ body{background:#0d0d0d;font-family:'CKS','STSong','SimSun','Noto Serif CJK TC',
     oninput="saveKey(this.value)"/>
   <input id="ai" type="text" placeholder="@帳號" value="@industry.insight.tw" style="background:#111;border:1px solid #282828;color:#e0d8c8;font-family:inherit;font-size:12px;letter-spacing:.07em;padding:6px 10px;outline:none;width:148px;flex-shrink:0;border-radius:2px"/>
   <textarea id="it" placeholder="輸入主題或貼上文章…" style="flex:1;background:#111;border:1px solid #282828;color:#e0d8c8;font-family:inherit;font-size:12px;letter-spacing:.06em;padding:6px 10px;outline:none;height:40px;resize:none;line-height:1.6;min-width:160px;border-radius:2px"></textarea>
-  <div style="display:flex;align-items:center;gap:6px;flex-shrink:0">
-    <span style="font-size:10px;letter-spacing:.12em;color:rgba(200,175,120,.4)">模式</span>
-    <select id="cfg-mode" style="background:#111;border:1px solid #2a2a2a;color:#e0d8c8;font-family:inherit;font-size:11px;padding:5px 8px;outline:none;border-radius:2px;cursor:pointer">
-      <option value="safe">safe 保守</option>
-      <option value="balance" selected>balance 主力</option>
-      <option value="aggressive">aggressive 打臉</option>
-    </select>
+  <select id="cfg-mode" style="background:#111;border:1px solid #2a2a2a;color:#e0d8c8;font-family:inherit;font-size:11px;padding:5px 8px;outline:none;border-radius:2px;cursor:pointer;flex-shrink:0">
+    <option value="safe">safe 保守</option>
+    <option value="balance" selected>balance 主力</option>
+    <option value="aggressive">aggressive 打臉</option>
+  </select>
+  <div style="display:flex;align-items:center;gap:4px;flex-shrink:0">
+    <span style="font-size:10px;color:rgba(200,175,120,.4)">衝突</span>
+    <input type="range" id="cfg-int" min="0" max="1" step="0.1" value="0.7" style="width:60px;accent-color:var(--g);height:3px;cursor:pointer"/>
+    <span id="v-int" style="font-size:10px;color:rgba(200,175,120,.5);min-width:18px">0.7</span>
   </div>
-  <div style="display:flex;align-items:center;gap:5px;flex-shrink:0">
-    <span style="font-size:10px;letter-spacing:.1em;color:rgba(200,175,120,.4)">衝突</span>
-    <input type="range" id="cfg-intensity" min="0" max="1" step="0.1" value="0.7"
-      style="width:64px;accent-color:var(--g);height:3px;cursor:pointer"/>
-    <span id="v-intensity" style="font-size:10px;color:rgba(200,175,120,.5);min-width:20px">0.7</span>
-  </div>
-  <div style="display:flex;align-items:center;gap:5px;flex-shrink:0">
-    <span style="font-size:10px;letter-spacing:.1em;color:rgba(200,175,120,.4)">揭露</span>
-    <input type="range" id="cfg-reveal" min="0" max="1" step="0.1" value="0.5"
-      style="width:64px;accent-color:var(--g);height:3px;cursor:pointer"/>
-    <span id="v-reveal" style="font-size:10px;color:rgba(200,175,120,.5);min-width:20px">0.5</span>
+  <div style="display:flex;align-items:center;gap:4px;flex-shrink:0">
+    <span style="font-size:10px;color:rgba(200,175,120,.4)">揭露</span>
+    <input type="range" id="cfg-rev" min="0" max="1" step="0.1" value="0.5" style="width:60px;accent-color:var(--g);height:3px;cursor:pointer"/>
+    <span id="v-rev" style="font-size:10px;color:rgba(200,175,120,.5);min-width:18px">0.5</span>
   </div>
   <button class="tb" id="gb" onclick="doGen()" style="background:var(--g);color:#0a0a0a;border:none">✦ 產生</button>
   <button class="tb" id="rgb" style="display:none;background:transparent;color:rgba(200,175,120,.5);border:1px solid #333;font-size:11px" onclick="reGen()">↻ 換個版本</button>
@@ -544,12 +539,8 @@ function applyGlobalTheme(tid){
   globalTheme=tid;
   buildChips();
 loadKey();
-document.getElementById('cfg-intensity')?.addEventListener('input',function(){
-  document.getElementById('v-intensity').textContent=this.value;
-});
-document.getElementById('cfg-reveal')?.addEventListener('input',function(){
-  document.getElementById('v-reveal').textContent=this.value;
-});
+document.getElementById('cfg-int')?.addEventListener('input',function(){ document.getElementById('v-int').textContent=this.value; });
+document.getElementById('cfg-rev')?.addEventListener('input',function(){ document.getElementById('v-rev').textContent=this.value; });
   if(!currentData)return;
   desel();
   // Apply to all slides
@@ -924,12 +915,8 @@ function render(data,account,thm){
   E('tbar').style.display='block';
   buildChips();
 loadKey();
-document.getElementById('cfg-intensity')?.addEventListener('input',function(){
-  document.getElementById('v-intensity').textContent=this.value;
-});
-document.getElementById('cfg-reveal')?.addEventListener('input',function(){
-  document.getElementById('v-reveal').textContent=this.value;
-});
+document.getElementById('cfg-int')?.addEventListener('input',function(){ document.getElementById('v-int').textContent=this.value; });
+document.getElementById('cfg-rev')?.addEventListener('input',function(){ document.getElementById('v-rev').textContent=this.value; });
   updateSlideBadges();
 }
 
@@ -971,137 +958,129 @@ async function reGen(){
 }
 
 /* ─── generate ─── */
-const SYS = `你是一位專門做高轉換IG輪播的內容策略師，
-擅長把敏感或灰色產業主題，轉化為「可發佈、可擴散、可轉單」的內容。
-
-你的任務是根據輸入主題，生成7張IG輪播貼文（封面＋5頁內容＋總結＋CTA）。
-
-核心策略：
-- 表面在講觀念，實際在篩選受眾
-- 透過打臉與反轉，讓觀眾產生「我是不是搞錯了」
-- 不把話講完，刻意留下空間讓人私訊
-
-寫作風格要求：
-- 每一頁都要有「衝突感」或「反轉」
-- 至少2頁包含反問句
-- 至少2頁包含打臉句（直接否定常見認知）
-- 多用對比（例如：你以為 vs 其實）
-- 語氣像在講現實，不要像教學
-
-風控規則（非常重要）：
-- 禁止明確薪資數字（改為模糊描述）
-- 敏感產業詞需弱化（例如：用「工作類型」「環境」取代）
-- 禁止過度招募導向（避免「高薪」「快速賺錢」等字眼）
-- CTA需自然，引導諮詢而非強推
-
-內容張數規則：
-- content 數量固定3~4個（避免過長）
-- 每個 content 固定3個 points
-- 每一頁字數要短，適合滑動閱讀
-
-輸出純 JSON，直接從 { 開始，不加任何說明文字。
-
-格式：
-{"cover":{"eyebrow":"3~5英文關鍵詞·用·分隔·全大寫","title":"4~8字大標題\\n可換行","subtitle":"副標第一行\\n副標第二行"},"content":[{"tag":"2~4字類別標籤","heading":"標題第一行\\n標題第二行","points":[{"title":"5~10字重點標題","desc":"20~35字具體說明，要有畫面感＋帶一點情緒"},{"title":"","desc":""},{"title":"","desc":""}]}],"summary":{"tag":"核心觀念","heading":"反轉第一行\\n反轉第二行","points":[{"title":"打臉句","desc":"否定常見錯誤觀念"},{"title":"","desc":""},{"title":"","desc":""}]},"cta":{"main":"4~8字金句\\n可換行","sub":"引導思考第一行\\n引導思考第二行","follow":"12~18字自然引導私訊文字"}}`;
-
-const FSYS = `你是專業IG輪播文案策略師，只輸出JSON，從 { 開始，不輸出任何其他文字。
-
-重要規則：
-1. 不得寫成教科書或分析報告
-2. 每一頁都要讓人「想滑下一頁」
-3. 必須包含：
-   - 對比（你以為 vs 其實）
-   - 打臉（直接否定錯誤認知）
-   - 至少2個反問句
-4. 禁止出現：
-   - 明確金額
-   - 過度露骨產業描述
-   - 明顯招募語句
-
-語氣要求：
-- 像在講現實
-- 有壓迫感，但不說教
-- 讓人產生「我是不是搞錯了」
-
-CTA規則：
-- 不要直接賣
-- 用「你可能選錯了」「你該重新想」這種引導
-
-以下是格式範例（禁止照抄）：
-{"cover":{"eyebrow":"REALITY · CHOICE · TRUTH","title":"你以為對的\\n其實錯了","subtitle":"很多人一開始就選錯\\n但自己不知道"},"content":[{"tag":"誤解","heading":"你以為這樣\\n比較安全","points":[{"title":"常見錯誤認知","desc":"多數人一開始就照這樣選，但結果完全不同"},{"title":"你真的了解嗎","desc":"你以為自己知道，但其實只是聽來的"},{"title":"問題不在努力","desc":"而是你一開始就選錯方向"}]}],"summary":{"tag":"核心觀念","heading":"問題不在你\\n在選擇","points":[{"title":"打臉句","desc":"你不是做不起來，是一開始就錯了"},{"title":"","desc":""},{"title":"","desc":""}]},"cta":{"main":"別再亂選\\n先搞清楚","sub":"你現在的狀態\\n適合的方向完全不同","follow":"想知道適合哪種，直接私訊我"}}`;
-
-function saveKey(v){
-  if(v) localStorage.setItem('groq_key', v);
-}
-function loadKey(){
-  const k=localStorage.getItem('groq_key')||'';
-  if(k){ const inp=document.getElementById('groq-key'); if(inp) inp.value=k; }
-  return k;
-}
-
 function getCfg(){
   return {
-    mode: document.getElementById('cfg-mode')?.value || 'balance',
-    intensity: parseFloat(document.getElementById('cfg-intensity')?.value || 0.7),
-    revealLevel: parseFloat(document.getElementById('cfg-reveal')?.value || 0.5),
+    mode:        document.getElementById('cfg-mode')?.value || 'balance',
+    intensity:   parseFloat(document.getElementById('cfg-int')?.value  || 0.7),
+    revealLevel: parseFloat(document.getElementById('cfg-rev')?.value  || 0.5),
   };
 }
 
-async function callAPI(inp, sys, max){
-  const key = document.getElementById('groq-key')?.value.trim() || loadKey();
-  if(!key){
-    stat('⚠ 請先填入 Groq API Key');
-    throw new Error('No API key');
-  }
-  // If sys is passed externally (fallback), use it; otherwise build from config
-  const cfg = getCfg();
-  const prompt = sys ? sys : buildPrompt(inp, cfg);
-  const userMsg = sys ? '請為以下主題規劃版面：\n\n'+inp : inp;
+function buildPrompt(topic, cfg){
+  const modeDesc = {
+    safe:       '保守語氣，不直接提產業細節，偏觀念引導',
+    balance:    '模糊帶出差異，有打臉但不過激（主力版本）',
+    aggressive: '強打臉、強對比、強衝突，每頁讓人不舒服但停不下來',
+  }[cfg.mode] || '平衡版本';
 
-  const r=await fetch('https://api.groq.com/openai/v1/chat/completions',{
+  return `你是一個做了七年的夜總會經紀人，在寫自己的 IG 圖文。
+受眾：18-30 歲女生，對收入與工作選擇迷惘。
+
+【內容模式】${cfg.mode}：${modeDesc}
+【衝突強度】${cfg.intensity}（0=溫和，1=極度打臉直接）
+【揭露程度】${cfg.revealLevel}（0=完全不提產業，1=完整揭露行業真相）
+
+寫作規則：
+- 用講話的方式寫，不是寫文章
+- 禁止使用：深度、剖析、全方位、精準、洞察、賦能、破局
+- 每頁至少 2 個反問句，至少 2 個打臉句
+- 必須有「你以為 vs 其實」的對比
+- 口語化：可用「說真的」「老實說」「我做七年看過的」
+- 衝突強度越高 → 越直接打臉，對比越強
+- 揭露程度越高 → 描述越接近真實產業現場
+- 每頁都要讓人想滑下一頁
+- CTA 自然導向私訊，不要硬推銷
+
+主題：${topic}
+
+根據主題規劃 5-7 張圖文，content 長度看主題決定（3到5個）。
+輸出純 JSON，直接從 { 開始，不加任何說明：
+{"cover":{"eyebrow":"3~5英文關鍵詞·分隔全大寫","title":"4~8個中文字，有衝擊感","subtitle":"兩行\\n口語直接"},"content":[{"tag":"2~4字直白","heading":"4~8字\\n像在說話","points":[{"title":"5~10字直接講","desc":"15~25字，口語，有打臉或反問"},{"title":"","desc":""},{"title":"","desc":""}]}],"cta":{"main":"3~6字\\n口語行動","sub":"說清楚私訊得到什麼\\n不要曖昧","follow":"10~16字像跟朋友說話"}}`;
+}
+
+function buildFallbackPrompt(topic, cfg){
+  return `你是夜總會經紀人在寫 IG，只輸出JSON從{開始，語氣口語不要AI腔。
+模式：${cfg.mode}，衝突：${cfg.intensity}，揭露：${cfg.revealLevel}，主題：${topic}
+{"cover":{"eyebrow":"INCOME · REALITY · INSIDER","title":"主題大標","subtitle":"口語直接\\n點出現實"},"content":[{"tag":"真相","heading":"你以為\\nVS其實","points":[{"title":"直接點誤解","desc":"口語說真實"},{"title":"潛規則","desc":"內行才知道的"},{"title":"關鍵差異","desc":"影響收入的核心"}]},{"tag":"現實","heading":"沒人告訴你\\n的事","points":[{"title":"重點一","desc":"直接講"},{"title":"重點二","desc":"直接講"},{"title":"重點三","desc":"直接講"}]},{"tag":"決策","heading":"怎麼選\\n才不吃虧","points":[{"title":"判斷方式","desc":"具體建議"},{"title":"要避開的","desc":"直接說"},{"title":"怎麼做","desc":"經紀人角度"}]}],"cta":{"main":"想知道更多\\n私訊我","sub":"說清楚你的情況\\n我給你真實建議","follow":"追蹤看更多真實內容"}}`;
+}
+
+async function callAPI(inp, overrideSys, max){
+  const key = document.getElementById('groq-key')?.value.trim() || loadKey();
+  if(!key){ stat('⚠ 請先填入 Groq API Key'); throw new Error('No API key'); }
+  const cfg = getCfg();
+  const sys = overrideSys || buildPrompt(inp, cfg);
+  const r = await fetch('https://api.groq.com/openai/v1/chat/completions',{
     method:'POST',
     headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
-    body:JSON.stringify({
-      model:'llama-3.3-70b-versatile',
-      max_tokens:max||2000,
+    body: JSON.stringify({
+      model: 'llama-3.3-70b-versatile',
+      max_tokens: max||2000,
       messages:[
-        {role:'system', content: prompt},
-        {role:'user', content: userMsg}
+        {role:'system', content: sys},
+        {role:'user',   content: inp}
       ]
     })
   });
-  const j=await r.json();
+  const j = await r.json();
   if(j.error) throw new Error(j.error.message||'Groq error');
-  return j.choices?.[0]?.message?.content||'';
-}
-
-function parseJSON(text){
-  const s=text.indexOf('{'),e2=text.lastIndexOf('}');
-  if(s===-1||e2===-1)return null;
-  try{return JSON.parse(text.slice(s,e2+1))}catch(e){return null}
+  return j.choices?.[0]?.message?.content || '';
 }
 
 async function doGen(){
-  const inp=E('it').value.trim();
-  const account=E('ai').value.trim()||'@your.account';
-  if(!inp){stat('請輸入主題或文章');return}
-  lastInput=inp;lastAccount=account;
-  E('gb').disabled=true;stat('AI 規劃中…');desel();
+  const inp     = E('it').value.trim();
+  const account = E('ai').value.trim() || '@your.account';
+  if(!inp){ stat('請輸入主題或文章'); return; }
+  lastInput=inp; lastAccount=account;
+  E('gb').disabled=true; stat('AI 規劃中…'); desel();
+  await runGen(inp, account);
+}
+
+async function runGen(inp, account){
   try{
-    const cfg=getCfg();
-    let text=await callAPI(inp, null, 2000);
-    let data=parseJSON(text);
+    const cfg = getCfg();
+    let text = await callAPI(inp, null, 2000);
+    let data = parseJSON(text);
     if(!data){
       stat('備用方案中…');
-      const fbPrompt=buildFallbackPrompt(inp,cfg);
-      text=await callAPI(inp, fbPrompt, 1500);
-      data=parseJSON(text);
+      text = await callAPI(inp, buildFallbackPrompt(inp, cfg), 1500);
+      data = parseJSON(text);
     }
-    if(!data){stat('⚠ 生成失敗，請換個說法');return;}
-    render(data,account,globalTheme);
+    if(!data){ stat('⚠ 生成失敗，請換個說法'); return; }
+    render(data, account, globalTheme);
     stat('✓ 完成 · 點選元素編輯 · 上方切換整體風格 · 每張右上可單獨換');
-  }catch(e){stat('錯誤：'+e.message);console.error(e)}
-  finally{E('gb').disabled=false}
+  }catch(e){ stat('錯誤：'+e.message); console.error(e); }
+  finally{ E('gb').disabled=false; }
+}
+
+/* ─── regenerate ─── */
+let regenCount=0;
+async function reGen(){
+  if(!lastInput){ stat('請先產生一次內容'); return; }
+  regenCount++;
+  const btn=E('rgb'); btn.disabled=true; E('gb').disabled=true;
+  stat(`重新生成第 ${regenCount} 個版本…`); desel();
+  const variations=[
+    '\n\n請用完全不同的切入角度、不同標題重新規劃。',
+    '\n\n這次從「常見誤解」的角度切入，打破錯誤認知。',
+    '\n\n這次用具體數字說話，盡量加金額、比例、時間。',
+    '\n\n這次從「新手常犯的錯」切入，列出會吃虧的決策。',
+    '\n\n這次語氣更犀利，用更強烈的對比和反問。',
+    '\n\n這次從「老手才知道」的內行視角，強調圈內人才懂的事。',
+  ];
+  const hint = variations[(regenCount-1) % variations.length];
+  try{
+    const cfg = getCfg();
+    let text = await callAPI(lastInput+hint, null, 2000);
+    let data = parseJSON(text);
+    if(!data){
+      text = await callAPI(lastInput+hint, buildFallbackPrompt(lastInput, cfg), 1500);
+      data = parseJSON(text);
+    }
+    if(!data){ stat('⚠ 重新生成失敗，再試一次'); return; }
+    render(data, lastAccount, globalTheme);
+    stat(`✓ 第 ${regenCount} 個版本 · 不滿意繼續按「↻ 換個版本」`);
+  }catch(e){ stat('錯誤：'+e.message); }
+  finally{ btn.disabled=false; E('gb').disabled=false; }
 }
 
 /* ─── download ─── */
@@ -1333,12 +1312,8 @@ function initDefault(){
 /* ─── init ─── */
 buildChips();
 loadKey();
-document.getElementById('cfg-intensity')?.addEventListener('input',function(){
-  document.getElementById('v-intensity').textContent=this.value;
-});
-document.getElementById('cfg-reveal')?.addEventListener('input',function(){
-  document.getElementById('v-reveal').textContent=this.value;
-});
+document.getElementById('cfg-int')?.addEventListener('input',function(){ document.getElementById('v-int').textContent=this.value; });
+document.getElementById('cfg-rev')?.addEventListener('input',function(){ document.getElementById('v-rev').textContent=this.value; });
 </script>
 </body>
 </html>
