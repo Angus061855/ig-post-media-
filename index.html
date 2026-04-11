@@ -13,15 +13,14 @@
 :root{--g:rgba(200,175,120,1);--gd:rgba(200,175,120,.6);--gf:rgba(200,175,120,.18);--cr:#f0ece4}
 body{background:#0d0d0d;font-family:'CKS','STSong','SimSun','Noto Serif CJK TC','Source Han Serif TC',serif,'STSong','SimSun','Noto Serif CJK TC','Source Han Serif TC',serif;display:flex;flex-direction:column;align-items:center;padding:28px 20px 120px;min-height:100vh}
 
-  /* 字體放大覆蓋 */
-.t1 .tt,.t2 .tt,.t3 .tt,.t4 .tt,.t5 .tt,.t6 .tt,.t7 .tt,.t8 .tt{font-size:116px!important}
-.t1 .hd,.t2 .hd,.t3 .hd,.t4 .hd,.t5 .hd,.t6 .hd,.t7 .hd,.t8 .hd{font-size:72px!important}
-.t1 .ph2,.t2 .ph2,.t3 .ph2,.t4 .ph2,.t5 .ph2,.t6 .ph2,.t7 .ph2,.t8 .ph2{font-size:32px!important}
-.t1 .pd,.t2 .pd,.t3 .pd,.t4 .pd,.t5 .pd,.t6 .pd,.t7 .pd,.t8 .pd{font-size:20px!important}
-.t1 .sb,.t2 .sb,.t3 .sb,.t4 .sb,.t5 .sb,.t6 .sb,.t7 .sb,.t8 .sb{font-size:30px!important}
-.t1 .cm,.t2 .cm,.t3 .cm,.t4 .cm,.t5 .cm,.t6 .cm,.t7 .cm,.t8 .cm{font-size:78px!important}
-.t1 .cs,.t2 .cs,.t3 .cs,.t4 .cs,.t5 .cs,.t6 .cs,.t7 .cs,.t8 .cs{font-size:27px!important}
-.t1 .ey,.t2 .ey,.t3 .ey,.t4 .ey,.t5 .ey,.t6 .ey,.t7 .ey,.t8 .ey{font-size:16px!important}
+/* 字體再放大 */
+.t1 .tt,.t2 .tt,.t3 .tt,.t4 .tt,.t5 .tt,.t6 .tt,.t7 .tt,.t8 .tt{font-size:130px!important;line-height:1.0!important}
+.t1 .hd,.t2 .hd,.t3 .hd,.t4 .hd,.t5 .hd,.t6 .hd,.t7 .hd,.t8 .hd{font-size:80px!important}
+.t1 .ph2,.t2 .ph2,.t3 .ph2,.t4 .ph2,.t5 .ph2,.t6 .ph2,.t7 .ph2,.t8 .ph2{font-size:36px!important}
+.t1 .pd,.t2 .pd,.t3 .pd,.t4 .pd,.t5 .pd,.t6 .pd,.t7 .pd,.t8 .pd{font-size:22px!important}
+.t1 .sb,.t2 .sb,.t3 .sb,.t4 .sb,.t5 .sb,.t6 .sb,.t7 .sb,.t8 .sb{font-size:32px!important}
+.t1 .cm,.t2 .cm,.t3 .cm,.t4 .cm,.t5 .cm,.t6 .cm,.t7 .cm,.t8 .cm{font-size:84px!important}
+.t1 .cs,.t2 .cs,.t3 .cs,.t4 .cs,.t5 .cs,.t6 .cs,.t7 .cs,.t8 .cs{font-size:30px!important}
 
 /* ── topbar ── */
 #topbar{width:100%;max-width:1220px;display:flex;align-items:center;gap:8px;background:#181818;border:1px solid #252525;padding:11px 16px;margin-bottom:22px;flex-wrap:wrap;border-radius:3px}
@@ -803,48 +802,17 @@ function mkControls(slideId){
 
 /* ─── HTML builders ─── */
 function bgD(thm){
-  const opq=thm==='t8'?'.85':'.5';
+  const opq=thm==='t8'?'.9':'.85';
   return`<div class="bg-el deco" style="background-image:${BGU};opacity:${opq}"></div>`;
 }
 function ovD(thm){
   if(thm==='t8')return`<div class="ov-el" style="position:absolute;inset:0;pointer-events:none;opacity:0"></div>`;
-  return`<div class="ov-el" style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(160deg,rgba(0,0,0,.88) 0%,rgba(14,10,6,.7) 50%,rgba(0,0,0,.93) 100%);opacity:1"></div>`;
+  return`<div class="ov-el" style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(160deg,rgba(0,0,0,.55) 0%,rgba(14,10,6,.4) 50%,rgba(0,0,0,.65) 100%);opacity:1"></div>`;
 }
 
 // deco extras per theme
 function tDeco(thm,type){
-  // type: cover | content | cta
-  if(thm==='t1'){
-    if(type==='cover')return`<div class="corner tl deco"></div><div class="corner tr deco"></div><div class="corner bl deco"></div><div class="corner br deco"></div><div class="hl deco" style="top:130px"></div><div class="hl deco" style="bottom:130px"></div>`;
-    if(type==='content')return`<div class="corner tl deco"></div><div class="corner tr deco"></div><div class="corner bl deco"></div><div class="corner br deco"></div><div class="vl deco"></div>`;
-    if(type==='cta')return`<div class="corner tl deco"></div><div class="corner tr deco"></div><div class="corner bl deco"></div><div class="corner br deco"></div><div class="hl deco" style="top:130px"></div><div class="hl deco" style="bottom:130px"></div>`;
-  }
-  if(thm==='t2'){
-    return`<div class="corner tl deco"></div><div class="corner tr deco"></div><div class="corner bl deco"></div><div class="corner br deco"></div>`;
-  }
-  if(thm==='t3'){
-    return`<div class="sb2 deco"></div>`+(type==='cover'?`<div class="hl deco" style="top:60px"></div>`:'');
-  }
-  if(thm==='t4'){
-    if(type==='cover')return`<div class="corner tl deco"></div><div class="corner tr deco"></div><div class="corner bl deco"></div><div class="corner br deco"></div><div class="hl deco" style="top:76px"></div><div class="hl deco" style="bottom:76px"></div>`;
-    if(type==='cta')return`<div class="corner tl deco"></div><div class="corner tr deco"></div><div class="corner bl deco"></div><div class="corner br deco"></div>`;
-    return`<div class="corner tl deco"></div><div class="corner tr deco"></div><div class="corner bl deco"></div><div class="corner br deco"></div>`;
-  }
-  if(thm==='t5'){
-    return`<div class="vl deco"></div>`;
-  }
-  if(thm==='t6'){
-    return`<div class="rl deco"></div>`+(type!=='content'?`<div class="hl deco" style="top:110px"></div><div class="hl deco" style="bottom:110px"></div>`:'');
-  }
-  if(thm==='t7'){
-    if(type==='content')return`<div class="corner tl deco"></div><div class="corner tr deco"></div><div class="corner bl deco"></div><div class="corner br deco"></div><div class="vl deco"></div>`;
-    return`<div class="corner tl deco"></div><div class="corner tr deco"></div><div class="corner bl deco"></div><div class="corner br deco"></div><div class="hl deco" style="top:110px"></div><div class="hl deco" style="bottom:110px"></div>`;
-  }
-  if(thm==='t8'){
-    if(type==='content')return`<div class="corner tl deco"></div><div class="corner tr deco"></div><div class="corner bl deco"></div><div class="corner br deco"></div><div class="vl deco"></div>`;
-    return`<div class="corner tl deco"></div><div class="corner tr deco"></div><div class="corner bl deco"></div><div class="corner br deco"></div>`;
-  }
-  return'';
+  return ''; // 預設不顯示任何裝飾元素
 }
 
 function acctExtra(thm,account){
@@ -1168,21 +1136,10 @@ const DEFAULT_CONTENT={
   cta:{cm:'行動呼籲',cs:'說清楚私訊能得到什麼\n不要模糊',cf:'追蹤帳號獲取更多',ca:'@your.account'},
 };
 
-function bgD2(thm){return`<div class="bg-el deco" style="background-image:${BGU};opacity:${thm==='t8'?'.85':'.5'}"></div>`}
-function ovD2(thm){return`<div class="ov-el" style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(160deg,rgba(0,0,0,.88) 0%,rgba(14,10,6,.7) 50%,rgba(0,0,0,.93) 100%);opacity:${thm==='t8'?'0':'1'}"></div>`}
+function bgD2(thm){return`<div class="bg-el deco" style="background-image:${BGU};opacity:${thm==='t8'?'.9':'.85'}"></div>`}
 
 function tDeco2(thm,type){
-  const C=`<div class="corner tl deco"></div><div class="corner tr deco"></div><div class="corner bl deco"></div><div class="corner br deco"></div>`;
-  const HL=`<div class="hl deco" style="top:130px"></div><div class="hl deco" style="bottom:130px"></div>`;
-  if(thm==='t1')return type==='content'?C+`<div class="vl deco"></div>`:C+HL;
-  if(thm==='t2')return C;
-  if(thm==='t3')return`<div class="sb2 deco"></div>`+(type==='cover'?`<div class="hl deco" style="top:60px"></div>`:'');
-  if(thm==='t4')return type==='cover'?C+`<div class="hl deco" style="top:76px"></div><div class="hl deco" style="bottom:76px"></div>`:C;
-  if(thm==='t5')return`<div class="vl deco"></div>`;
-  if(thm==='t6')return`<div class="rl deco"></div>`+(type!=='content'?`<div class="hl deco" style="top:110px"></div><div class="hl deco" style="bottom:110px"></div>`:'');
-  if(thm==='t7')return type==='content'?C+`<div class="vl deco"></div>`:C+HL;
-  if(thm==='t8')return type==='content'?C+`<div class="vl deco"></div>`:C;
-  return'';
+  return ''; // 預設不顯示任何裝飾元素
 }
 
 function coverHTML2(thm,d){
