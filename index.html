@@ -350,6 +350,17 @@ body{background:#0d0d0d;font-family:'CKS','STSong','SimSun','Noto Serif CJK TC',
 /* paper needs light bg for ov */
 .t8 .ov-el{background:rgba(245,242,236,.0)!important;opacity:1!important}
 
+/* ── slide overlay labels ── */
+.slide-hashtag{
+  position:absolute;top:44px;left:52px;
+  font-family:'CKS','STSong',serif;font-size:18px;letter-spacing:.18em;
+  color:rgba(200,175,120,.75);z-index:10;pointer-events:none;
+}
+.slide-watermark{
+  position:absolute;bottom:32px;left:50%;transform:translateX(-50%);
+  font-family:'CKS','STSong',serif;font-size:17px;letter-spacing:.22em;
+  color:rgba(200,175,120,.5);z-index:10;pointer-events:none;white-space:nowrap;
+}
 /* ── manual slide controls ── */
 .slide-outer{display:flex;flex-direction:column;align-items:flex-start;gap:0}
 .slide-bar{display:flex;align-items:center;gap:5px;padding:5px 0;width:1080px;flex-wrap:wrap}
@@ -797,50 +808,17 @@ function ovD(thm){
 }
 
 // deco extras per theme
-function tDeco(thm,type){
-  // type: cover | content | cta
-  if(thm==='t1'){
-    if(type==='cover')return`<div class="corner tl deco"></div><div class="corner tr deco"></div><div class="corner bl deco"></div><div class="corner br deco"></div><div class="hl deco" style="top:130px"></div><div class="hl deco" style="bottom:130px"></div>`;
-    if(type==='content')return`<div class="corner tl deco"></div><div class="corner tr deco"></div><div class="corner bl deco"></div><div class="corner br deco"></div><div class="vl deco"></div>`;
-    if(type==='cta')return`<div class="corner tl deco"></div><div class="corner tr deco"></div><div class="corner bl deco"></div><div class="corner br deco"></div><div class="hl deco" style="top:130px"></div><div class="hl deco" style="bottom:130px"></div>`;
-  }
-  if(thm==='t2'){
-    return`<div class="corner tl deco"></div><div class="corner tr deco"></div><div class="corner bl deco"></div><div class="corner br deco"></div>`;
-  }
-  if(thm==='t3'){
-    return`<div class="sb2 deco"></div>`+(type==='cover'?`<div class="hl deco" style="top:60px"></div>`:'');
-  }
-  if(thm==='t4'){
-    if(type==='cover')return`<div class="corner tl deco"></div><div class="corner tr deco"></div><div class="corner bl deco"></div><div class="corner br deco"></div><div class="hl deco" style="top:76px"></div><div class="hl deco" style="bottom:76px"></div>`;
-    if(type==='cta')return`<div class="corner tl deco"></div><div class="corner tr deco"></div><div class="corner bl deco"></div><div class="corner br deco"></div>`;
-    return`<div class="corner tl deco"></div><div class="corner tr deco"></div><div class="corner bl deco"></div><div class="corner br deco"></div>`;
-  }
-  if(thm==='t5'){
-    return`<div class="vl deco"></div>`;
-  }
-  if(thm==='t6'){
-    return`<div class="rl deco"></div>`+(type!=='content'?`<div class="hl deco" style="top:110px"></div><div class="hl deco" style="bottom:110px"></div>`:'');
-  }
-  if(thm==='t7'){
-    if(type==='content')return`<div class="corner tl deco"></div><div class="corner tr deco"></div><div class="corner bl deco"></div><div class="corner br deco"></div><div class="vl deco"></div>`;
-    return`<div class="corner tl deco"></div><div class="corner tr deco"></div><div class="corner bl deco"></div><div class="corner br deco"></div><div class="hl deco" style="top:110px"></div><div class="hl deco" style="bottom:110px"></div>`;
-  }
-  if(thm==='t8'){
-    if(type==='content')return`<div class="corner tl deco"></div><div class="corner tr deco"></div><div class="corner bl deco"></div><div class="corner br deco"></div><div class="vl deco"></div>`;
-    return`<div class="corner tl deco"></div><div class="corner tr deco"></div><div class="corner bl deco"></div><div class="corner br deco"></div>`;
-  }
-  return'';
-}
-
-function acctExtra(thm,account){
-  return thm==='t3'?`<div class="ac2 ed">${account}</div>`:'';
-}
+function tDeco(thm,type){ return ''; }
+function acctExtra(thm,account){ return ''; }
 
 function mkSlide(id,thm,innerHtml){
   const s=document.createElement('div');s.className='slide';s.id=id;
   s.appendChild(mkControls(id));
   const si=document.createElement('div');si.className=`si ${thm}`;
-  si.innerHTML=innerHtml;s.appendChild(si);att(s);
+  // inject hashtag top-left and watermark bottom-center
+  const tag='<div class="slide-hashtag">#AS娛樂經紀 大頭</div>';
+  const wm='<div class="slide-watermark">'+( document.getElementById('ai')?.value.trim()||'@angus061855' )+'</div>';
+  si.innerHTML=tag+innerHtml+wm;s.appendChild(si);att(s);
   slideThemes[id]=thm;
   return s;
 }
@@ -944,7 +922,9 @@ async function reGen(){
       data = parseJSON(text);
     }
     if(!data){stat('⚠ 重新生成失敗，再試一次');return;}
-    render(data, lastAccount, globalTheme);
+    const themes2=THEMES.map(t=>t.id);
+    const randTheme2=themes2[Math.floor(Math.random()*themes2.length)];
+    render(data, lastAccount, randTheme2);
     stat(`✓ 第 ${regenCount} 個版本 · 不滿意繼續按「↻ 換個版本」`);
   }catch(e){stat('錯誤：'+e.message);}
   finally{btn.disabled=false;E('gb').disabled=false;}
@@ -958,7 +938,7 @@ function buildPrompt(topic,cfg){
   return '你是一位專門做高轉換IG輪播的內容策略師。\n'
     +'你的任務是根據輸入主題，生成一組IG輪播貼文，結構如下：\n'
     +'- 封面（cover）：大問句或數字衝擊 + 痛點，讓人想滑下去\n'
-    +'- 故事頁（story）：「我曾經...後來才發現...」建立信任感，要有具體反轉\n'
+    +'- 故事頁（story）：「我做了七年經紀，見過太多...」用內行人視角說業界亂象，建立信任感\n'
     +'- 內容頁（content）：3~4頁，每頁一個核心觀念，tag用「觀念①②③④」編號\n'
     +'- 總結頁（summary）：把所有重點列成清單，heading用問句（你有幾個？）\n'
     +'- CTA頁：自然引導私訊，不強推\n'
@@ -979,7 +959,10 @@ function buildPrompt(topic,cfg){
     +'- 禁止明確薪資數字（改為模糊描述）\n'
     +'- 敏感產業詞需弱化（用「工作類型」「環境」取代）\n'
     +'- 禁止過度招募導向，CTA要自然\n'
-    +'帳號定位：幫助 18-30 歲女生不被黑心經紀人騙，想賺錢可以找誠實的經紀人。\n'
+    +'你的角色：你是一個做了七年的娛樂經紀人（男性），你的帳號是要找 18-30 歲有意願賺錢的女生。\n'
+    +'你的策略：透過踢爆業界黑心經紀人的手法，讓她們知道市場亂象，自然找到你。\n'
+    +'語氣：是一個內行人說「我見過太多這種事」的口吻，不是受害者的口吻。\n'
+    +'絕對不要用「我曾經找錯經紀人」這種角度，你是經紀人不是求職者。\n'
     +'主題：'+topic+'\n'
     +'輸出純 JSON，直接從 { 開始，不加任何說明。格式：\n'
     +'{"cover":{"eyebrow":"3~5英文關鍵詞·分隔·全大寫","title":"大問句或數字衝擊\\n可換行","subtitle":"痛點描述\\n讓人有共鳴"},'
@@ -1057,7 +1040,9 @@ async function doGen(){
       data=parseJSON(text);
     }
     if(!data){stat('⚠ 生成失敗，請換個說法');return;}
-    render(data,account,globalTheme);
+    const themes=THEMES.map(t=>t.id);
+    const randTheme=themes[Math.floor(Math.random()*themes.length)];
+    render(data,account,randTheme);
     stat('✓ 完成 · 點選元素編輯 · 上方切換整體風格 · 每張右上可單獨換');
   }catch(e){stat('錯誤：'+e.message);console.error(e)}
   finally{E('gb').disabled=false}
