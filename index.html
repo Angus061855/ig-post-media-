@@ -1418,18 +1418,23 @@ window._layoutVariant=0;
 
 // ── back.png: 嘗試載入，成功後套用到所有 bg-el ──
 (function loadBackPng(){
-  // Try relative path first (same-origin / GitHub Pages)
-  const testImg=new Image();
-  testImg.onload=function(){
-    BGU='url("back.png?v='+Date.now()+'")';
+  const img=new Image();
+  img.crossOrigin='anonymous';
+  img.onload=function(){
+    try{
+      const c=document.createElement('canvas');
+      c.width=img.naturalWidth;c.height=img.naturalHeight;
+      c.getContext('2d').drawImage(img,0,0);
+      BGU='url("'+c.toDataURL()+'")';
+    }catch(e){
+      BGU='url("back.png")';
+    }
     document.querySelectorAll('.bg-el').forEach(b=>b.style.backgroundImage=BGU);
   };
-  testImg.onerror=function(){
-    // 如果 back.png 讀不到，保持預設深色背景
-    BGU='url("data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=")';
+  img.onerror=function(){
     stat('⚠ 找不到 back.png，請用「⊕ 換背景」上傳圖片');
   };
-  testImg.src='back.png?v='+Date.now();
+  img.src='back.png?v='+Date.now();
 })();
 </script>
 </body>
