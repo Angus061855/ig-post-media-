@@ -968,6 +968,10 @@ function buildPrompt(topic,cfg){
     +'- 多用對比（你以為 vs 其實）\n'
     +'- 至少2頁有反問句，至少2頁有打臉句（直接否定常見認知）\n'
     +'- 標題要短，適合滑動閱讀\n'
+    +'- cover的title每行嚴格限制最多6個中文字，超過用\\n換行，換行點必須在語意完整處\n'
+    +'- content/story/summary的heading每行最多7個中文字，超過用\\n換行\n'
+    +'- 禁止在詞語中間斷行（例如「經紀」「清楚」「信任」不可拆開）\n'
+    +'- 每個point的title最多8個字，desc最多30個字\n'
     +'風控規則：\n'
     +'- 禁止明確薪資數字（改為模糊描述）\n'
     +'- 敏感產業詞需弱化（用「工作類型」「環境」取代）\n'
@@ -1042,7 +1046,7 @@ async function doGen(){
   E('gb').disabled=true;stat('AI 規劃中…');desel();
   try{
     const cfg=getCfg();
-    let text=await callAPI(inp,null,2000);
+    let text=await callAPI(inp,null,3000);
     let data=parseJSON(text);
     if(!data){
       stat('備用方案中…');
