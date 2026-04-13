@@ -13,7 +13,7 @@ body{background:#0d0d0d;font-family:'CKS','STSong','SimSun','Noto Serif CJK TC',
 /* ── topbar ── */
 #topbar{width:100%;max-width:1220px;display:flex;align-items:center;gap:8px;background:#181818;border:1px solid #252525;padding:11px 16px;margin-bottom:22px;flex-wrap:wrap;border-radius:3px}
 #topbar h1{font-size:15px;letter-spacing:.22em;color:var(--g);white-space:nowrap}
-#ai{background:#111;border:1px solid #282828;color:#e0d8c8;font-family:'CKS','STSong','SimSun','Noto Serif CJK TC',serif;font-size:12px;letter-spacing:.07em;padding:6px 10px;outline:none;width:148px;flex-shrink:0;border-radius:2px}
+#ai{background:#111;border:1px solid #282828;color:#e0d8c8;font-family:'CKS','STSong','SimSun@industry.insight.tw@industry.insight.tw','Noto Serif CJK TC',serif;font-size:12px;letter-spacing:.07em;padding:6px 10px;outline:none;width:148px;flex-shrink:0;border-radius:2px}
 #ai:focus,#it:focus{border-color:var(--gd)}
 #it{flex:1;background:#111;border:1px solid #282828;color:#e0d8c8;font-family:'CKS','STSong','SimSun','Noto Serif CJK TC',serif;font-size:12px;letter-spacing:.06em;padding:6px 10px;outline:none;height:40px;resize:none;line-height:1.6;min-width:160px;border-radius:2px}
 #ai::placeholder,#it::placeholder{color:rgba(200,175,120,.18)}
@@ -439,7 +439,7 @@ body{background:#0d0d0d;font-family:'CKS','STSong','SimSun','Noto Serif CJK TC',
     style="background:#111;border:1px solid #2e2e2e;color:#e0d8c8;font-family:inherit;font-size:11px;
     letter-spacing:.05em;padding:6px 10px;outline:none;width:220px;flex-shrink:0;border-radius:2px"
     oninput="saveKey(this.value)"/>
-  <input id="ai" type="text" placeholder="@帳號" value="@industry.insight.tw" style="background:#111;border:1px solid #282828;color:#e0d8c8;font-family:inherit;font-size:12px;letter-spacing:.07em;padding:6px 10px;outline:none;width:148px;flex-shrink:0;border-radius:2px"/>
+  <input id="ai" type="text" placeholder="@帳號" value="@angus061855" style="background:#111;border:1px solid #282828;color:#e0d8c8;font-family:inherit;font-size:12px;letter-spacing:.07em;padding:6px 10px;outline:none;width:148px;flex-shrink:0;border-radius:2px"/>
   <textarea id="it" placeholder="輸入主題或貼上文章…" style="flex:1;background:#111;border:1px solid #282828;color:#e0d8c8;font-family:inherit;font-size:12px;letter-spacing:.06em;padding:6px 10px;outline:none;height:40px;resize:none;line-height:1.6;min-width:160px;border-radius:2px"></textarea>
   <button class="tb" id="gb" onclick="doGen()" style="background:var(--g);color:#0a0a0a;border:none">✦ 產生</button>
   <button class="tb" id="rgb" style="display:none;background:transparent;color:rgba(200,175,120,.5);border:1px solid #333;font-size:11px" onclick="reGen()">↻ 換個版本</button>
