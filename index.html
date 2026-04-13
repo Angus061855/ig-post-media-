@@ -735,20 +735,38 @@ function bCover(d,account,thm){
 
 function bContent(d,idx,total,thm){
   const num=String(idx+1).padStart(2,'0')+' / '+String(total).padStart(2,'0');
-  const pts=(d.points||[]).map((p,i)=>`
-    <li class="pi">
-      <span class="pn deco">0${i+1}</span>
-      <div><div class="ph2 ed">${p.title||''}</div><div class="pd ed">${p.desc||''}</div></div>
-    </li>`).join('');
-  return mkSlide(`slide-${idx+2}`,thm,`${bgD(thm)}${ovD(thm)}
-    <div class="nw">
+  const hasBadGood=d.bad||d.good;
+
+  let inner='';
+  if(hasBadGood){
+    inner=`
+      <div class="nm deco">${num}</div>
+      <div class="tg ed">${d.tag||''}</div>
+      <div class="hd ed">${(d.heading||'').replace(/\n/g,'<br>')}</div>
+      <div class="dv deco"></div>
+      <div class="pd ed" style="color:rgba(255,100,100,.75);line-height:1.8;margin-bottom:18px">${(d.bad||'').replace(/\n/g,'<br>')}</div>
+      <div class="pd ed" style="color:rgba(120,200,120,.85);line-height:1.8;margin-bottom:32px">${(d.good||'').replace(/\n/g,'<br>')}</div>
+      <div class="ph2 ed" style="font-size:28px;color:rgba(200,175,120,.9);letter-spacing:.12em;line-height:1.6">${d.quote||''}</div>
+    `;
+  }else{
+    const pts=(d.points||[]).map((p,i)=>`
+      <li class="pi">
+        <span class="pn deco">0${i+1}</span>
+        <div><div class="ph2 ed">${p.title||''}</div><div class="pd ed">${p.desc||''}</div></div>
+      </li>`).join('');
+    inner=`
       <div class="nm deco">${num}</div>
       <div class="tg ed">${d.tag||''}</div>
       <div class="hd ed">${(d.heading||'').replace(/\n/g,'<br>')}</div>
       <div class="dv deco"></div>
       <ul class="pl">${pts}</ul>
-    </div>`);
+    `;
+  }
+
+  return mkSlide(`slide-${idx+2}`,thm,`${bgD(thm)}${ovD(thm)}
+    <div class="nw">${inner}</div>`);
 }
+
 
 function bCta(d,account,idx,thm){
   return mkSlide(`slide-${idx+2}`,thm,`${bgD(thm)}${ovD(thm)}
@@ -807,6 +825,7 @@ function buildPrompt(topic){
     +'3. 每行至少5個字，不可出現單字孤行\n'
     +'4. 正確："你以為你了解\\n這個行業"；錯誤："你以為你了\\n解這個行業"\n'
     +'5. 寧可整句不換行，也不要把一個詞拆開\n\n'
+    +'eyebrow 必須是中文，用·分隔，禁止英文。\n'
     +'你是專業 IG 輪播文案策略師，只輸出 JSON，從 { 開始，不輸出任何其他文字。\n'
     +'你現在服務的帳號人設是：八大行業／酒店經紀人／敢講真話／誠實揭密／什麼都敢說，但不是低俗聳動，而是像真正看過這行的人在拆真相。\n'
     +'文案核心風格：真實、直接、敢揭露、帶點狠勁、有內幕感、有反差感，讓人一看就覺得這是圈內人才會講的。\n'
@@ -854,8 +873,8 @@ function buildPrompt(topic){
     +'6. 新人最容易栽在＿＿\n\n'
     +'主題：'+topic+'\n\n'
     +'輸出格式：\n'
-    +'{"cover":{"eyebrow":"3~5個英文關鍵詞，用·分隔，全大寫","title":"封面主標，嚴格限制 8~14 字內，不可超過 14 字，不可寫成完整長句，要像短標題，例如：經紀最黑的事、別再信酒店畫餅、八大新人最慘的坑","subtitle":"副標第一行\\n副標第二行，要有懸念或反差，每行 8~14 字內"},'
-    +'"content":[{"tag":"2~4字類別標籤","heading":"標題第一行\\n標題第二行，要像一刀切進真相","points":[{"title":"5~10字重點標題","desc":"20~35字具體說明，要有畫面感、情緒、人性或現實感"},{"title":"","desc":""},{"title":"","desc":""}]}],'
+    +'{"cover":{"eyebrow":"3~5個中文關鍵詞，用·分隔，例如：揭密·真相·行業規則","title":"封面主標，嚴格限制 8~14 字內，不可超過 14 字，不可寫成完整長句，要像短標題，例如：經紀最黑的事、別再信酒店畫餅、八大新人最慘的坑","subtitle":"副標第一行\\n副標第二行，要有懸念或反差，每行 8~14 字內"},'
+    +'"content":[{"tag":"特質①","heading":"大標題（4~8字）","bad":"✗ 錯誤示範\\n「具體錯誤例子，15字內」","good":"✓ 正確做法\\n「具體正確例子，15字內」","quote":"一句金句，像截圖收藏那種"}],'
     +'"summary":{"tag":"核心觀念","heading":"反轉第一行\\n反轉第二行","points":[{"title":"打臉句","desc":"否定常見錯誤觀念，講出真正的現實"},{"title":"","desc":""},{"title":"","desc":""}]},'
     +'"cta":{"main":"4~8字金句\\n可換行","sub":"引導思考第一行\\n引導思考第二行","follow":"12~18字自然引導留言或私訊文字"}}';
 }
