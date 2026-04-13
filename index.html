@@ -930,11 +930,12 @@ async function reGen(){
   const hint = variations[(regenCount - 1) % variations.length];
   const modifiedInput = lastInput + hint;
 
+  const cfg = getCfg();
   try{
-    let text = await callAPI(modifiedInput, SYS, 2000);
+    let text = await callAPI(modifiedInput, null, 2000);
     let data = parseJSON(text);
     if(!data){
-      text = await callAPI(modifiedInput, FSYS, 1500);
+      text = await callAPI(modifiedInput, buildFallbackPrompt(lastInput, cfg), 1500);
       data = parseJSON(text);
     }
     if(!data){stat('⚠ 重新生成失敗，再試一次');return;}
@@ -961,9 +962,7 @@ function buildPrompt(topic,cfg){
     +'- 每頁都要有衝突感或反轉，讓人想滑下一頁\n'
     +'- 多用對比（你以為 vs 其實）\n'
     +'- 至少2頁有反問句，至少2頁有打臉句（直接否定常見認知）\n'
-    +'- 標題每行最多8個中文字，title欄位不超過8字，超過就拆成兩個point
-    +'- cover的title每行最多6個中文字，用\\n換行，確保斷句在語意完整處
-    
+    +'- 標題要短，適合滑動閱讀\n'
     +'風控規則：\n'
     +'- 禁止明確薪資數字（改為模糊描述）\n'
     +'- 敏感產業詞需弱化（用「工作類型」「環境」取代）\n'
