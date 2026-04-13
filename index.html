@@ -530,7 +530,20 @@ const THEMES=[
 ];
 
 let SEL=null,SMODE='txt',savedSel=null;
-let BGU='url("back.png")';c.innerHTML='';
+let BGU='url("back.png")';
+let lastInput='',lastAccount='';
+let currentData=null;
+let globalTheme='t1';
+let slideThemes={};
+
+const E=id=>document.getElementById(id);
+const SS=(id,v)=>E(id).textContent=v;
+const SG=(id,v)=>{E(id).value=v};
+const stat=m=>E('st').textContent=m;
+
+/* ─── init theme chips ─── */
+function buildChips(){
+  const c=E('chips');c.innerHTML='';
   THEMES.forEach(t=>{
     const chip=document.createElement('div');
     chip.className='chip'+(t.id===globalTheme?' on':'');
