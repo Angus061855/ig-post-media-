@@ -371,6 +371,12 @@ body{background:#0d0d0d;font-family:'Noto Serif TC','CKS','STSong',serif;display
   font-family:'Noto Serif TC','CKS','STSong',serif;font-size:16px;letter-spacing:.28em;
   color:rgba(200,175,120,.35);z-index:10;pointer-events:none;white-space:nowrap;
 }
+.slide-footer{
+  position:absolute;bottom:28px;right:52px;
+  font-family:'Noto Serif TC','CKS','STSong',serif;
+  font-size:22px;letter-spacing:.2em;font-weight:700;
+  color:rgba(200,175,120,.38);z-index:10;pointer-events:none;white-space:nowrap;
+}
 
 /* ── layout picker ── */
 #lv-bar{width:100%;max-width:1220px;display:none;align-items:center;gap:6px;margin-bottom:12px;flex-wrap:wrap}
@@ -435,8 +441,20 @@ body{background:#0d0d0d;font-family:'Noto Serif TC','CKS','STSong',serif;display
 .lv6 .pl{gap:28px}
 .lv6 .cw{justify-content:flex-end;padding-bottom:140px;padding-left:100px;padding-right:100px}
 
-/* ── lv7 (idx=6): 左對齊·大數字浮水印背景 ── */
-.lv7 .nw::before{content:attr(data-idx);position:absolute;font-size:520px;font-weight:900;color:rgba(200,175,120,.04);right:-60px;bottom:-120px;line-height:1;pointer-events:none}
+/* ── 全版型：大數字頁碼浮水印（所有版本都有）── */
+.t1 .nw::before{
+  content:attr(data-idx);
+  position:absolute;
+  font-size:480px;font-weight:900;
+  color:rgba(200,175,120,.06);
+  right:-40px;bottom:-100px;
+  line-height:1;pointer-events:none;
+  font-family:'Noto Serif TC','CKS','STSong',serif;
+  letter-spacing:-.02em;
+}
+
+/* ── lv7 (idx=6): 左對齊·大數字更明顯 ── */
+.lv7 .nw::before{font-size:560px;color:rgba(200,175,120,.08);right:-60px;bottom:-130px}
 .lv7 .nw{padding:100px 100px 100px 120px;justify-content:center}
 .lv7 .hd{font-size:60px!important;margin-bottom:44px}
 .lv7 .pn{font-size:38px!important;color:rgba(200,175,120,.85)!important;font-weight:900}
@@ -883,7 +901,7 @@ function ovD(thm){
 function tDeco(thm,type){ return ''; }
 function acctExtra(thm,account){ return ''; }
 
-function mkSlide(id,thm,innerHtml){
+function mkSlide(id,thm,innerHtml,pgLabel){
   const s=document.createElement('div');s.className='slide';s.id=id;
   s.appendChild(mkControls(id));
   const variants=['lv1','lv2','lv3','lv4','lv5','lv6','lv7','lv8'];
@@ -892,12 +910,13 @@ function mkSlide(id,thm,innerHtml){
   const tag='<div class="slide-hashtag">#AS娛樂經紀 大頭</div>';
   const logo='<img class="slide-logo" src="logo.png" alt="logo" onerror="this.style.display=\'none\'">';
   const wm='<div class="slide-watermark">'+( document.getElementById('ai')?.value.trim()||'@angus061855' )+'</div>';
-  si.innerHTML=logo+tag+innerHtml+wm;s.appendChild(si);att(s);
+  const footer=pgLabel?`<div class="slide-footer">${pgLabel}</div>`:'';
+  si.innerHTML=logo+tag+innerHtml+wm+footer;s.appendChild(si);att(s);
   slideThemes[id]=thm;
   return s;
 }
 
-function bCover(d,account,thm){
+function bCover(d,account,thm,pgLabel){
   const ch=[...(d.title||'')];const mid=Math.ceil(ch.length/2);
   return mkSlide('slide-1',thm,`${bgD(thm)}${ovD(thm)}${tDeco(thm,'cover')}${acctExtra(thm,account)}
     <div class="cw">
@@ -912,26 +931,28 @@ function bCover(d,account,thm){
       <div class="sp2 deco"></div>
       <div class="sb ed" style="font-size:30px;letter-spacing:.18em;line-height:1.85;margin-bottom:40px;color:rgba(210,205,195,.9)">${(d.subtitle||'').replace(/\n/g,'<br>')}</div>
       <div class="ac2 ed">${account}</div>
-    </div>`);
+    </div>`,pgLabel);
 }
-function bContent(d,idx,total,thm){
+function bContent(d,idx,total,thm,pgLabel){
   const num=String(idx+1).padStart(2,'0')+' / '+String(total).padStart(2,'0');
+  // data-idx 用頁碼數字（從 pgLabel 取，例如 "03 / 07" → "3"）
+  const pgNum=pgLabel?parseInt(pgLabel.split('/')[0])||idx+1:idx+1;
   const pts=(d.points||[]).map((p,i)=>`
     <li class="pi">
       <span class="pn deco">0${i+1}</span>
       <div><div class="ph2 ed">${p.title||''}</div><div class="pd ed">${p.desc||''}</div></div>
     </li>`).join('');
   return mkSlide(`slide-${idx+2}`,thm,`${bgD(thm)}${ovD(thm)}${tDeco(thm,'content')}
-    <div class="nw" data-idx="${idx+1}">
+    <div class="nw" data-idx="${pgNum}">
       <div class="nm deco">${num}</div>
       <div class="tg ed">${d.tag||''}</div>
       <div class="hd ed">${(d.heading||'').replace(/\n/g,'<br>')}</div>
       <div class="dv deco"></div>
       <ul class="pl">${pts}</ul>
-    </div>`);
+    </div>`,pgLabel);
 }
 
-function bCta(d,account,idx,thm){
+function bCta(d,account,idx,thm,pgLabel){
   return mkSlide(`slide-${idx+2}`,thm,`${bgD(thm)}${ovD(thm)}${tDeco(thm,'cta')}
     <div class="ctw">
       <div class="cd deco">◆ ◆ ◆</div>
@@ -940,7 +961,7 @@ function bCta(d,account,idx,thm){
       <div class="cv deco"></div>
       <div class="cb deco"><div class="cf ed">${d.follow||''}</div></div>
       <div class="ca ed">${account}</div>
-    </div>`);
+    </div>`,pgLabel);
 }
 
 function render(data,account,thm){
@@ -951,14 +972,15 @@ function render(data,account,thm){
   const hasStory=!!(data.story&&data.story.heading);
   const hasSummary=!!(data.summary&&data.summary.heading);
   const totalContent=(hasStory?1:0)+cnt.length+(hasSummary?1:0);
-  let slideIdx=0;
-  wrap.appendChild(bCover(data.cover,account,thm));
-  if(hasStory) wrap.appendChild(bContent(data.story,slideIdx++,totalContent,thm));
-  cnt.forEach((c)=>wrap.appendChild(bContent(c,slideIdx++,totalContent,thm)));
-  if(hasSummary) wrap.appendChild(bContent(data.summary,slideIdx++,totalContent,thm));
-  wrap.appendChild(bCta(data.cta,account,totalContent,thm));
+  const totalSlides=1+totalContent+1;
+  const pg=n=>String(n).padStart(2,'0')+' / '+String(totalSlides).padStart(2,'0');
+  let pgIdx=1; let slideIdx=0;
+  wrap.appendChild(bCover(data.cover,account,thm,pg(pgIdx++)));
+  if(hasStory) wrap.appendChild(bContent(data.story,slideIdx++,totalContent,thm,pg(pgIdx++)));
+  cnt.forEach((c)=>wrap.appendChild(bContent(c,slideIdx++,totalContent,thm,pg(pgIdx++))));
+  if(hasSummary) wrap.appendChild(bContent(data.summary,slideIdx++,totalContent,thm,pg(pgIdx++)));
+  wrap.appendChild(bCta(data.cta,account,totalContent,thm,pg(pgIdx++)));
   E('db').style.display='block';E('rgb').style.display='block';
-  // Show layout picker
   const lvbar=E('lv-bar');if(lvbar)lvbar.style.display='flex';
   updateLvButtons();
   updateSlideBadges();
