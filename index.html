@@ -733,18 +733,26 @@ function bCta(d,account,idx,thm){
 }
 
 /* ✅ 修正：fixLineBreaks 防止詞語中間換行 */
-function fixLineBreaks(data){
-  function fix(str){
-    if(typeof str!=='string')return str;
-    return str.replace(/([^\s，。！？、：；\n])\n([^\s，。！？、：；])/g,'$1$2');
-  }
-  function walk(obj){
-    if(!obj)return obj;
-    if(typeof obj==='string')return fix(obj);
-    if(Array.isArray(obj))return obj.map(walk);
-    const r={};for(const k in obj)r[k]=walk(obj[k]);return r;
-  }
-  return walk(data);
+function render(data,account,thm){
+  currentData=data;
+  const wrap=E('wrap');
+  wrap.innerHTML='';
+  slideThemes={};
+
+  const cnt=data.content||[];
+  const hasSummary=!!(data.summary&&data.summary.heading);
+
+  wrap.appendChild(bCover(data.cover,account,thm));
+  cnt.forEach((c,i)=>wrap.appendChild(bContent(c,i,cnt.length,thm)));
+  if(hasSummary)wrap.appendChild(bContent(data.summary,cnt.length,cnt.length+1,thm));
+  wrap.appendChild(bCta(data.cta,account,hasSummary?cnt.length+1:cnt.length,thm));
+
+  E('db').style.display='block';
+  E('rgb').style.display='block';
+  E('tbar').style.display='block';
+
+  buildChips();
+  updateSlideBadges();
 }
 
 function render(data,account,thm){
@@ -764,41 +772,71 @@ function render(data,account,thm){
 
 /* ─── API ─── */
 /* ✅ 修正：只保留一個 buildPrompt，移除重複定義 */
-function buildPrompt(topic,cfg){
-  const modeHints={
-    safe:'語氣溫和，用觀念引導，不要太直接',
-    balance:'有衝突感，打臉但不過激，保持可發佈',
-    aggressive:'非常直接，大量打臉，語氣犀利，讓人不舒服但停不下來'
-  };
-  const hint=modeHints[cfg.mode]||modeHints.balance;
+function buildPrompt(topic){
   return '【強制換行規則】\n'
     +'1. \\n 只能出現在標點符號後，或完整語意結束後\n'
     +'2. 禁止在詞語中間、動詞賓語之間換行\n'
     +'3. 每行至少5個字，不可出現單字孤行\n'
-    +'4. 正確："你以為你了解\\n這個行業"　錯誤："你以為你了\\n解這個行業"\n\n'
-    +'你是專業IG輪播文案策略師，只輸出JSON，從 { 開始，不輸出任何其他文字。\n'
-    +'語氣要求：'+hint+'\n'
-    +'衝突強度：'+cfg.intensity+'（0保守～1最強）\n'
-    +'揭露程度：'+cfg.revealLevel+'（0模糊～1直接）\n'
-    +'規則：\n'
-    +'1. 每頁都要有衝突感或反轉\n'
-    +'2. 至少2頁含反問句\n'
-    +'3. 至少2頁含打臉句（直接否定常見認知）\n'
-    +'4. 多用對比（你以為 vs 其實）\n'
-    +'5. 禁止明確金額、過度露骨描述\n'
-    +'6. content 固定4~5個，每個固定3個 points\n'
-    +'7. 每頁字數要短，適合滑動閱讀\n'
-    +'8. heading 每行控制在 7~9 字，只在完整詞組結束後換行\n'
-    +'9. 動補結構不可拆開：錯誤"會喝\\n到爛醉"，正確"喝到爛醉\\n的真相"\n'
-    +'10. 寧可整句不換行，也不要在詞語中間換行\n'
-    
-    +'主題：'+topic+'\n'
+    +'4. 正確："你以為你了解\\n這個行業"；錯誤："你以為你了\\n解這個行業"\n'
+    +'5. 寧可整句不換行，也不要把一個詞拆開\n\n'
+
+    +'你是專業 IG 輪播文案策略師，只輸出 JSON，從 { 開始，不輸出任何其他文字。\n'
+    +'你現在服務的帳號人設是：八大行業／酒店經紀人／敢講真話／誠實揭密／什麼都敢說，但不是低俗聳動，而是像真正看過這行的人在拆真相。\n'
+    +'文案核心風格：真實、直接、敢揭露、帶點狠勁、有內幕感、有反差感，讓人一看就覺得這是圈內人才會講的。\n'
+    +'語氣固定為：直接、犀利、真實、有情緒張力，但不要違規、不要低俗、不要露骨。\n\n'
+
+    +'【內容目標】\n'
+    +'1. 讓觀眾想一直滑下去\n'
+    +'2. 讓觀眾覺得你講的是實話，不是套話\n'
+    +'3. 讓觀眾感受到行業反差、真相、規則、人性\n'
+    +'4. 讓觀眾覺得你不是在說教，而是在揭密\n'
+    +'5. 要有「這個我沒聽過」的感覺\n\n'
+
+    +'【文案規則】\n'
+    +'1. 開場一定要強，像揭開真相，不要平鋪直敘\n'
+    +'2. 每頁都要有衝突感、反差感或反轉\n'
+    +'3. 至少2頁有反問句\n'
+    +'4. 至少2頁有打臉句，直接否定常見誤解\n'
+    +'5. 多用對比，例如：你以為 vs 其實，不是A，而是B，表面上 vs 真正的情況\n'
+    +'6. 可以寫八大、酒店、陪酒、經紀、生存規則、人性觀察、客人心理、小姐處境、行業現實，但不要過度露骨，不要違規\n'
+    +'7. 禁止空泛雞湯，禁止太像心靈成長文\n'
+    +'8. 每頁字數要短，能讓人3秒抓到重點\n'
+    +'9. heading 每行控制在 6~9 字，只在完整詞組後換行\n'
+    +'10. desc 要具體，要有畫面感，要像真的見過這種場景\n'
+    +'11. 內容要偏「真相揭秘」「行業誤解」「新人會踩的坑」「外人不知道的規則」「最現實的人性」\n'
+    +'12. 可以狠，但不要只是罵，要有觀點\n'
+    +'13. 禁止明確金額、禁止鼓吹違法、禁止露骨性描寫\n'
+    +'14. 每一頁盡量避免抽象說教，要像在講一個這行真的會發生的場景\n'
+    +'15. 多寫人性反應，例如：嘴上說沒事、其實心裡很慌；表面在笑，回家一句話都不想講\n'
+    +'16. 優先產生讓人想留言「真的」「太真實了」「這就是內行」的句子\n'
+    +'17. 句子要像能被截圖收藏，而不是只是看過就滑走\n\n'
+
+    +'【觀眾最愛看的角度】\n'
+    +'優先使用以下切入角度：\n'
+    +'A. 你以為的八大，和真正的八大完全不同\n'
+    +'B. 外行最常誤會的事\n'
+    +'C. 新人最容易踩的坑\n'
+    +'D. 這行最現實但沒人明講的規則\n'
+    +'E. 讓人最意外的人性真相\n'
+    +'F. 表面風光，背後代價\n\n'
+
+    +'【句型偏好】\n'
+    +'1. 你以為＿＿，其實＿＿\n'
+    +'2. 真正可怕的不是＿＿，是＿＿\n'
+    +'3. 很多人以為＿＿，但內行都知道＿＿\n'
+    +'4. 表面上＿＿，實際上＿＿\n'
+    +'5. 外面都在講＿＿，但真正的重點是＿＿\n'
+    +'6. 新人最容易栽在＿＿\n\n'
+
+    +'主題：'+topic+'\n\n'
+
     +'輸出格式：\n'
-    +'{"cover":{"eyebrow":"3~5英文關鍵詞·用·分隔·全大寫","title":"4~8字大標題","subtitle":"副標第一行\\n副標第二行"},'
-    +'"content":[{"tag":"2~4字類別標籤","heading":"標題第一行\\n標題第二行","points":[{"title":"5~10字重點標題","desc":"20~35字具體說明，要有畫面感＋帶情緒"},{"title":"","desc":""},{"title":"","desc":""}]}],'
-    +'"summary":{"tag":"核心觀念","heading":"反轉第一行\\n反轉第二行","points":[{"title":"打臉句","desc":"否定常見錯誤觀念"},{"title":"","desc":""},{"title":"","desc":""}]},'
-    +'"cta":{"main":"4~8字金句\\n可換行","sub":"引導思考第一行\\n引導思考第二行","follow":"12~18字自然引導私訊文字"}}';
+    +'{"cover":{"eyebrow":"3~5個英文關鍵詞，用·分隔，全大寫","title":"4~8字大標題，要有爆點","subtitle":"副標第一行\\n副標第二行，要有懸念或反差"},'
+    +'"content":[{"tag":"2~4字類別標籤","heading":"標題第一行\\n標題第二行，要像一刀切進真相","points":[{"title":"5~10字重點標題","desc":"20~35字具體說明，要有畫面感、情緒、人性或現實感"},{"title":"","desc":""},{"title":"","desc":""}]}],'
+    +'"summary":{"tag":"核心觀念","heading":"反轉第一行\\n反轉第二行","points":[{"title":"打臉句","desc":"否定常見錯誤觀念，講出真正的現實"},{"title":"","desc":""},{"title":"","desc":""}]},'
+    +'"cta":{"main":"4~8字金句\\n可換行","sub":"引導思考第一行\\n引導思考第二行","follow":"12~18字自然引導留言或私訊文字"}}';
 }
+
 
 const FSYS='你是版面填充機器，只輸出JSON，從{開始，不輸出任何其他文字。{"cover":{"eyebrow":"TOPIC · INSIGHT · ANALYSIS","title":"主題標題","subtitle":"副標第一行\\n副標第二行"},"content":[{"tag":"背景","heading":"背景\\n概述","points":[{"title":"重點一","desc":"說明二十字以內"},{"title":"重點二","desc":"說明二十字"},{"title":"重點三","desc":"說明二十字"}]},{"tag":"現況","heading":"現況\\n分析","points":[{"title":"現況一","desc":"說明"},{"title":"現況二","desc":"說明"},{"title":"現況三","desc":"說明"}]},{"tag":"觀察","heading":"深度\\n觀察","points":[{"title":"觀察一","desc":"說明"},{"title":"觀察二","desc":"說明"},{"title":"觀察三","desc":"說明"}]}],"summary":{"tag":"核心觀念","heading":"問題不在你\\n在選擇","points":[{"title":"打臉句","desc":"你不是做不起來，是一開始就錯了"},{"title":"重點二","desc":"說明"},{"title":"重點三","desc":"說明"}]},"cta":{"main":"深入了解\\n更多內容","sub":"每週更新深度內容\\n追蹤掌握第一手資訊","follow":"追蹤帳號獲取最新資訊"}}';
 
@@ -852,8 +890,7 @@ async function doGen(){
   lastInput=inp;lastAccount=account;
   E('gb').disabled=true;stat('AI 規劃中…');desel();
   try{
-    const cfg=getCfg();
-    let text=await callAPI(inp,buildPrompt(inp,cfg),2000);
+    let text=await callAPI(inp,buildPrompt(inp),2000);
     let data=parseJSON(text);
     if(!data){
       stat('備用方案中…');
@@ -863,8 +900,12 @@ async function doGen(){
     if(!data){stat('⚠ 生成失敗，請換個說法');return;}
     render(fixLineBreaks(data),account,globalTheme);
     stat('✓ 完成 · 點選元素編輯 · 上方切換整體風格 · 每張右上可單獨換');
-  }catch(e){stat('錯誤：'+e.message);console.error(e)}
-  finally{E('gb').disabled=false}
+  }catch(e){
+    stat('錯誤：'+e.message);
+    console.error(e);
+  }finally{
+    E('gb').disabled=false;
+  }
 }
 
 /* ✅ 修正：reGen 也使用 buildPrompt，備用改用 FSYS */
@@ -872,31 +913,43 @@ let regenCount=0;
 async function reGen(){
   if(!lastInput){stat('請先產生一次內容');return;}
   regenCount++;
-  const btn=E('rgb');btn.disabled=true;E('gb').disabled=true;
-  stat(`重新生成第 ${regenCount} 個版本…`);desel();
+  const btn=E('rgb');
+  btn.disabled=true;
+  E('gb').disabled=true;
+  stat(`重新生成第 ${regenCount} 個版本…`);
+  desel();
+
   const variations=[
     '\n\n請用完全不同的切入角度、不同的標題和重點，重新規劃這個主題。',
     '\n\n這次從「常見誤解」的角度切入，打破錯誤認知。',
-    '\n\n這次用「數字說話」，盡量加入具體數字、金額、比例。',
-    '\n\n這次從「新手常犯的錯」角度切入，列出會吃虧的決策。',
+    '\n\n這次從「新人最容易踩的坑」角度切入，列出最容易吃虧的地方。',
     '\n\n這次語氣更直接犀利，用更強烈的對比和反問。',
     '\n\n這次從「老手才知道」的內行視角切入，強調只有圈內人才懂的事。',
+    '\n\n這次從「表面風光，背後代價」的角度切入，強化反差感。'
   ];
+
   const hint=variations[(regenCount-1)%variations.length];
   const modifiedInput=lastInput+hint;
+
   try{
-    const cfg=getCfg();
-    let text=await callAPI(modifiedInput,buildPrompt(modifiedInput,cfg),2000);
+    let text=await callAPI(modifiedInput,buildPrompt(modifiedInput),2000);
     let data=parseJSON(text);
     if(!data){
       text=await callAPI(modifiedInput,FSYS,1500);
       data=parseJSON(text);
     }
-    if(!data){stat('⚠ 重新生成失敗，再試一次');return;}
+    if(!data){
+      stat('⚠ 重新生成失敗，再試一次');
+      return;
+    }
     render(fixLineBreaks(data),lastAccount,globalTheme);
     stat(`✓ 第 ${regenCount} 個版本 · 不滿意繼續按「↻ 換個版本」`);
-  }catch(e){stat('錯誤：'+e.message);}
-  finally{btn.disabled=false;E('gb').disabled=false;}
+  }catch(e){
+    stat('錯誤：'+e.message);
+  }finally{
+    btn.disabled=false;
+    E('gb').disabled=false;
+  }
 }
 
 /* ─── download ─── */
