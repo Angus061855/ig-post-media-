@@ -937,10 +937,10 @@ async function reGen(){
 
   const cfg = getCfg();
   try{
-    let text = await callAPI(modifiedInput, null, 2000);
+    let text = await callAPI(modifiedInput, null, 4000);
     let data = parseJSON(text);
     if(!data){
-      text = await callAPI(modifiedInput, buildFallbackPrompt(lastInput, cfg), 1500);
+      text = await callAPI(modifiedInput, buildFallbackPrompt(lastInput, cfg), 3000);
       data = parseJSON(text);
     }
     if(!data){stat('⚠ 重新生成失敗，再試一次');return;}
@@ -1046,11 +1046,11 @@ async function doGen(){
   E('gb').disabled=true;stat('AI 規劃中…');desel();
   try{
     const cfg=getCfg();
-    let text=await callAPI(inp,null,3000);
+    let text=await callAPI(inp,null,4000);
     let data=parseJSON(text);
     if(!data){
       stat('備用方案中…');
-      text=await callAPI(inp,buildFallbackPrompt(inp,cfg),1500);
+      text=await callAPI(inp,buildFallbackPrompt(inp,cfg),3000);
       data=parseJSON(text);
     }
     if(!data){stat('⚠ 生成失敗，請換個說法');return;}
