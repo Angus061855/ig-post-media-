@@ -355,10 +355,10 @@ body{background:#0d0d0d;font-family:'Noto Serif TC','CKS','STSong',serif;display
 
 /* ── slide overlay labels ── */
 .slide-logo{
-  position:absolute;top:36px;right:44px;
-  width:60px;height:60px;
+  position:absolute;top:32px;right:40px;
+  width:80px;height:80px;
   object-fit:contain;z-index:10;pointer-events:none;
-  opacity:.9;
+  opacity:.92;
 }
 /* ── slide overlay labels ── */
 .slide-hashtag{
@@ -367,91 +367,90 @@ body{background:#0d0d0d;font-family:'Noto Serif TC','CKS','STSong',serif;display
   color:rgba(200,175,120,.75);z-index:10;pointer-events:none;
 }
 .slide-watermark{
-  position:absolute;bottom:32px;left:50%;transform:translateX(-50%);
-  font-family:'Noto Serif TC','CKS','STSong',serif;font-size:28px;letter-spacing:.22em;
-  color:rgba(200,175,120,.5);z-index:10;pointer-events:none;white-space:nowrap;
+  position:absolute;bottom:28px;left:50%;transform:translateX(-50%);
+  font-family:'Noto Serif TC','CKS','STSong',serif;font-size:16px;letter-spacing:.28em;
+  color:rgba(200,175,120,.35);z-index:10;pointer-events:none;white-space:nowrap;
 }
 
-/* ══ Layout Variants — 8 種完全不同排版 ══ */
+/* ── layout picker ── */
+#lv-bar{width:100%;max-width:1220px;display:none;align-items:center;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+#lv-bar .lv-lbl{font-size:10px;letter-spacing:.2em;color:rgba(200,175,120,.35);white-space:nowrap}
+.lv-btn{background:#1a1a1a;border:1px solid #2a2a2a;color:rgba(200,175,120,.4);font-family:inherit;font-size:10px;letter-spacing:.1em;padding:5px 10px;cursor:pointer;border-radius:2px;transition:all .15s;white-space:nowrap}
+.lv-btn:hover{border-color:var(--gd);color:var(--g)}
+.lv-btn.on{border-color:var(--g);color:var(--g);background:#222}
 
-/* ── lv1: 預設左對齊，標準帝王 ── */
-/* no override needed */
+/* ══ Layout Variants — 8 種排版 ══ */
 
-/* ── lv2: 置中 · 對稱感強 ── */
-.lv2 .cw{align-items:center;text-align:center;padding:120px 80px}
-.lv2 .tt,.lv2 .sb,.lv2 .ey,.lv2 .ac2{text-align:center}
+/* ── lv1 (idx=0): 左對齊·內容置中偏上 ── */
+.lv1 .nw{justify-content:center;padding:100px 100px 100px 120px}
+.lv1 .cw{justify-content:center;padding:100px 100px}
+
+/* ── lv2 (idx=1): 置中·所有元素居中 ── */
+.lv2 .cw{align-items:center;text-align:center;padding:110px 90px}
+.lv2 .tt,.lv2 .sb,.lv2 .ey,.lv2 .ac2,.lv2 .bio{text-align:center}
 .lv2 .sp2{margin:24px auto}
-.lv2 .bio{text-align:center}
-/* content置中：數字在上、標題居中 */
-.lv2 .nw{align-items:center;text-align:center;padding:100px 80px}
-.lv2 .hd,.lv2 .tg{text-align:center}
+.lv2 .nw{align-items:center;text-align:center;padding:100px 90px}
+.lv2 .hd,.lv2 .tg,.lv2 .nm{text-align:center}
 .lv2 .dv{margin:0 auto 44px}
 .lv2 .pl{align-items:center}
 .lv2 .pi{flex-direction:column;align-items:center;text-align:center;gap:10px}
 .lv2 .pn{width:auto;text-align:center}
 .lv2 .ph2,.lv2 .pd{text-align:center}
 
-/* ── lv3: 右對齊 · 反向張力 ── */
-.lv3 .cw{align-items:flex-end;text-align:right;padding:110px 90px 110px 120px}
-.lv3 .tt,.lv3 .sb,.lv3 .ey,.lv3 .ac2,.lv3 .bio{text-align:right}
-.lv3 .sp2{margin-right:0;margin-left:auto}
-.lv3 .nw{align-items:flex-end;text-align:right;padding:110px 90px 110px 130px}
-.lv3 .hd,.lv3 .tg{text-align:right}
-.lv3 .dv{margin-left:auto}
-.lv3 .pi{flex-direction:row-reverse;gap:44px}
-.lv3 .pn{width:44px;text-align:right}
-.lv3 .ph2,.lv3 .pd{text-align:right}
+/* ── lv3 (idx=2): 左對齊·標題在上·內容靠頂 ── */
+.lv3 .cw{justify-content:flex-start;padding-top:160px;padding-left:100px;padding-right:100px}
+.lv3 .bio{margin-bottom:18px}
+.lv3 .nw{justify-content:flex-start;padding-top:140px;padding-left:120px;padding-right:100px}
+.lv3 .hd{font-size:64px!important;margin-bottom:52px}
+.lv3 .dv{display:none}
+.lv3 .nm{margin-bottom:28px}
 
-/* ── lv4: 標題置頂 · 留白底部 · 呼吸感 ── */
-.lv4 .cw{justify-content:flex-start;padding-top:200px;padding-bottom:80px}
-.lv4 .bio{margin-bottom:20px}
-.lv4 .nw{justify-content:flex-start;padding-top:180px}
-.lv4 .hd{font-size:68px!important;line-height:1.12;margin-bottom:60px}
-.lv4 .pl{gap:32px}
+/* ── lv4 (idx=3): 左對齊·卡片式points ── */
+.lv4 .nw{padding:80px 70px 80px 90px}
+.lv4 .hd{font-size:52px!important;margin-bottom:36px}
 .lv4 .dv{display:none}
+.lv4 .pl{gap:0}
+.lv4 .pi{padding:22px 26px;margin-bottom:14px;background:rgba(200,175,120,.05);border-left:3px solid rgba(200,175,120,.5);border-radius:0 4px 4px 0;gap:28px;align-items:flex-start}
+.lv4 .pn{font-size:26px!important;color:var(--g)!important;width:32px;text-align:left}
+.lv4 .ph2{font-size:34px!important;line-height:1.3}
+.lv4 .pd{font-size:24px!important;margin-top:4px}
 
-/* ── lv5: 大數字背景浮水印 · 強調感 ── */
-.lv5 .cw::before{content:'AS';position:absolute;font-size:420px;font-weight:900;color:rgba(200,175,120,.03);right:-30px;bottom:-80px;line-height:1;pointer-events:none;letter-spacing:0}
-.lv5 .nw::before{content:attr(data-idx);position:absolute;font-size:500px;font-weight:900;color:rgba(200,175,120,.04);right:-40px;bottom:-100px;line-height:1;pointer-events:none}
-.lv5 .hd{font-size:62px!important}
-.lv5 .pn{font-size:40px!important;color:rgba(200,175,120,.9)!important;font-weight:900}
+/* ── lv5 (idx=4): 置中·大標題·超衝擊 ── */
+.lv5 .nw{align-items:center;text-align:center;padding:80px 80px;justify-content:center}
+.lv5 .hd{font-size:72px!important;line-height:1.1;text-align:center;margin-bottom:52px}
+.lv5 .tg{text-align:center}
+.lv5 .nm{text-align:center}
+.lv5 .dv{margin:0 auto 44px}
+.lv5 .pl{align-items:center}
+.lv5 .pi{flex-direction:column;align-items:center;text-align:center;gap:8px;max-width:800px}
+.lv5 .pn{width:auto;text-align:center;font-size:30px!important;color:var(--g)!important}
+.lv5 .ph2,.lv5 .pd{text-align:center}
 
-/* ── lv6: 卡片式 · 每個point獨立區塊感 ── */
-.lv6 .nw{padding:90px 80px 90px 100px}
-.lv6 .hd{font-size:52px!important;margin-bottom:40px}
+/* ── lv6 (idx=5): 左對齊·內容靠底 ── */
+.lv6 .nw{justify-content:flex-end;padding-bottom:110px;padding-left:120px;padding-right:100px;padding-top:80px}
+.lv6 .nm{position:absolute;top:100px;left:120px;margin-bottom:0}
+.lv6 .tg{position:absolute;top:155px;left:120px;margin-bottom:0}
+.lv6 .hd{font-size:60px!important;margin-bottom:40px;border-top:2px solid rgba(200,175,120,.2);padding-top:32px}
 .lv6 .dv{display:none}
-.lv6 .pl{gap:0px}
-.lv6 .pi{
-  padding:24px 28px;margin-bottom:16px;
-  background:rgba(200,175,120,.05);
-  border-left:3px solid rgba(200,175,120,.45);
-  border-radius:0 4px 4px 0;
-  gap:28px;align-items:center
-}
-.lv6 .pn{font-size:28px!important;color:var(--g)!important;width:36px;text-align:left}
-.lv6 .ph2{font-size:34px!important;line-height:1.3}
-.lv6 .pd{font-size:24px!important;margin-top:4px;color:rgba(210,205,195,.75)}
+.lv6 .pl{gap:28px}
+.lv6 .cw{justify-content:flex-end;padding-bottom:140px;padding-left:100px;padding-right:100px}
 
-/* ── lv7: 超大標題 · 少字衝擊 ── */
-.lv7 .nw{padding:80px 80px 80px 110px;justify-content:flex-start;padding-top:160px}
-.lv7 .nm{margin-bottom:28px}
-.lv7 .tg{margin-bottom:20px}
-.lv7 .hd{font-size:80px!important;line-height:1.08;letter-spacing:.1em;margin-bottom:50px}
-.lv7 .dv{width:100px;height:3px;background:linear-gradient(90deg,var(--g),transparent);margin-bottom:40px}
-.lv7 .pl{gap:24px}
-.lv7 .ph2{font-size:34px!important}
-.lv7 .pd{font-size:24px!important}
+/* ── lv7 (idx=6): 左對齊·大數字浮水印背景 ── */
+.lv7 .nw::before{content:attr(data-idx);position:absolute;font-size:520px;font-weight:900;color:rgba(200,175,120,.04);right:-60px;bottom:-120px;line-height:1;pointer-events:none}
+.lv7 .nw{padding:100px 100px 100px 120px;justify-content:center}
+.lv7 .hd{font-size:60px!important;margin-bottom:44px}
+.lv7 .pn{font-size:38px!important;color:rgba(200,175,120,.85)!important;font-weight:900}
 
-/* ── lv8: 底部對齊 · 戲劇性空間 ── */
-.lv8 .nw{justify-content:flex-end;padding-bottom:130px;padding-top:80px}
-.lv8 .nm{position:absolute;top:110px;left:136px;margin-bottom:0}
-.lv8 .tg{position:absolute;top:165px;left:136px;margin-bottom:0}
-.lv8 .hd{font-size:64px!important;margin-bottom:44px;border-top:2px solid rgba(200,175,120,.25);padding-top:36px}
-.lv8 .dv{display:none}
-.lv8 .pl{gap:28px}
-.lv8 .pi{background:rgba(0,0,0,.3);padding:20px 24px;border-radius:2px}
-.lv8 .ph2{font-size:32px!important}
-.lv8 .pd{font-size:22px!important}
+/* ── lv8 (idx=7): 置中·標題特大·底留白 ── */
+.lv8 .nw{align-items:center;text-align:center;justify-content:flex-start;padding:160px 80px 80px}
+.lv8 .nm{text-align:center;margin-bottom:20px}
+.lv8 .tg{text-align:center;margin-bottom:24px}
+.lv8 .hd{font-size:76px!important;line-height:1.12;text-align:center;margin-bottom:56px;letter-spacing:.1em}
+.lv8 .dv{margin:0 auto 48px;width:120px;height:3px;background:linear-gradient(90deg,transparent,var(--g),transparent)}
+.lv8 .pl{align-items:center;gap:32px}
+.lv8 .pi{flex-direction:column;align-items:center;text-align:center;gap:8px;max-width:820px}
+.lv8 .pn{width:auto;text-align:center}
+.lv8 .ph2,.lv8 .pd{text-align:center}
 
 /* ── manual slide controls ── */
 .slide-outer{display:flex;flex-direction:column;align-items:flex-start;gap:0}
@@ -517,7 +516,19 @@ body{background:#0d0d0d;font-family:'Noto Serif TC','CKS','STSong',serif;display
   <button class="tb" id="bb" onclick="document.getElementById('bgf').click()" style="background:transparent;color:rgba(200,175,120,.4);border:1px solid #2a2a2a;font-size:11px">⊕ 換背景</button>
   <input type="file" id="bgf" accept="image/*" onchange="uploadBg(event)" style="display:none"/>
   <button class="tb" id="db" onclick="dlAll()" style="display:none;background:var(--g);color:#0a0a0a;border:none">↓ 下載全部 (ZIP)</button>
-  
+</div>
+
+<!-- Layout variant picker -->
+<div id="lv-bar">
+  <span class="lv-lbl">排版：</span>
+  <button class="lv-btn on" data-lv="0" onclick="setLayoutVariant(0)">① 標準左</button>
+  <button class="lv-btn" data-lv="1" onclick="setLayoutVariant(1)">② 置中</button>
+  <button class="lv-btn" data-lv="2" onclick="setLayoutVariant(2)">③ 標題置頂</button>
+  <button class="lv-btn" data-lv="3" onclick="setLayoutVariant(3)">④ 卡片式</button>
+  <button class="lv-btn" data-lv="4" onclick="setLayoutVariant(4)">⑤ 超大標</button>
+  <button class="lv-btn" data-lv="5" onclick="setLayoutVariant(5)">⑥ 底部對齊</button>
+  <button class="lv-btn" data-lv="6" onclick="setLayoutVariant(6)">⑦ 浮水印</button>
+  <button class="lv-btn" data-lv="7" onclick="setLayoutVariant(7)">⑧ 隨機</button>
 </div>
 <div id="tbar" style="display:none">
   <span class="tlbl">整體風格 — 點選套用全部頁面</span>
@@ -875,10 +886,9 @@ function acctExtra(thm,account){ return ''; }
 function mkSlide(id,thm,innerHtml){
   const s=document.createElement('div');s.className='slide';s.id=id;
   s.appendChild(mkControls(id));
-  const variants=['','lv2','lv3','lv4','lv5','lv6','lv7','lv8'];
+  const variants=['lv1','lv2','lv3','lv4','lv5','lv6','lv7','lv8'];
   const _vIdx=window._layoutVariant!==undefined?window._layoutVariant:0;
   const si=document.createElement('div');si.className=`si ${thm} ${variants[_vIdx]}`;
-  // inject hashtag top-left and watermark bottom-center
   const tag='<div class="slide-hashtag">#AS娛樂經紀 大頭</div>';
   const logo='<img class="slide-logo" src="logo.png" alt="logo" onerror="this.style.display=\'none\'">';
   const wm='<div class="slide-watermark">'+( document.getElementById('ai')?.value.trim()||'@angus061855' )+'</div>';
@@ -948,7 +958,31 @@ function render(data,account,thm){
   if(hasSummary) wrap.appendChild(bContent(data.summary,slideIdx++,totalContent,thm));
   wrap.appendChild(bCta(data.cta,account,totalContent,thm));
   E('db').style.display='block';E('rgb').style.display='block';
+  // Show layout picker
+  const lvbar=E('lv-bar');if(lvbar)lvbar.style.display='flex';
+  updateLvButtons();
   updateSlideBadges();
+}
+
+function setLayoutVariant(idx){
+  if(idx===7) idx=Math.floor(Math.random()*7); // ⑧隨機 picks 0-6
+  window._layoutVariant=idx;
+  updateLvButtons();
+  if(currentData){
+    desel();
+    const account=E('ai')?.value.trim()||lastAccount||'@angus061855';
+    render(currentData,account,'t1');
+  }
+}
+
+function updateLvButtons(){
+  const idx=window._layoutVariant||0;
+  document.querySelectorAll('.lv-btn').forEach(btn=>{
+    const lv=parseInt(btn.dataset.lv);
+    btn.classList.toggle('on', lv===idx || (lv===7)); // ⑧隨機 不需要 on 狀態
+    if(lv===7) btn.classList.remove('on'); // 隨機按鈕不顯示 on
+    if(lv===idx) btn.classList.add('on');
+  });
 }
 
 /* ─── regenerate ─── */
@@ -1324,6 +1358,23 @@ function initDefault(){
 
 /* ─── init ─── */
 loadKey();
+window._layoutVariant=0;
+
+// ── back.png: 嘗試載入，成功後套用到所有 bg-el ──
+(function loadBackPng(){
+  // Try relative path first (same-origin / GitHub Pages)
+  const testImg=new Image();
+  testImg.onload=function(){
+    BGU='url("back.png?v='+Date.now()+'")';
+    document.querySelectorAll('.bg-el').forEach(b=>b.style.backgroundImage=BGU);
+  };
+  testImg.onerror=function(){
+    // 如果 back.png 讀不到，保持預設深色背景
+    BGU='url("data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=")';
+    stat('⚠ 找不到 back.png，請用「⊕ 換背景」上傳圖片');
+  };
+  testImg.src='back.png?v='+Date.now();
+})();
 </script>
 </body>
 </html>
