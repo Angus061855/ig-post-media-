@@ -603,4 +603,113 @@ function setMode(mode){
   E('ai-panel').classList.toggle('hidden',mode!=='ai');
   E('manual-panel').classList.toggle('hidden',mode!=='manual');
   E('mbtn-ai').className='mode-btn '+(mode==='ai'?'on':'off');
-  E('mbtn-manual').className='mode-btn '+(mode==='manual'?
+  E('mbtn-manual').className='mode-btn '+(mode==='manual'?'on':'off');
+  if(mode==='manual'&&document.querySelectorAll('.slide').length===0){initDefault();}
+}
+function bgD2(){return '<div class="bg-el deco" style="background-image:'+BGU+';opacity:0.5;background-size:cover;background-position:center"></div>';}
+function ovD2(){return '<div class="ov-el" style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(160deg,rgba(0,0,0,.88) 0%,rgba(14,10,6,.7) 50%,rgba(0,0,0,.93) 100%);opacity:1"></div>';}
+function coverHTML2(d){
+  d=d||{};
+  return bgD2()+ovD2()+
+    '<div class="cw">'+
+      '<div class="tt ed">'+(d.t1||'主題大標')+'</div>'+
+      '<div class="tt ac ed">'+(d.t2||'第二行')+'</div>'+
+      '<div class="sp2 deco"></div>'+
+    '</div>';
+}
+function contentHTML2(d,idx,total){
+  d=d||{};
+  const num=String((idx||0)+1).padStart(2,'0')+' / '+String(total||3).padStart(2,'0');
+  const pts=(d.pts||[{t:'重點一',d:'說明文字'},{t:'重點二',d:'說明文字'},{t:'重點三',d:'說明文字'}]).map(function(p,i){
+    return '<li class="pi"><span class="pn deco">0'+(i+1)+'</span><div><div class="ph2 ed">'+(p.t||'')+'</div><div class="pd ed">'+(p.d||'')+'</div></div></li>';
+  }).join('');
+  return bgD2()+ovD2()+
+    '<div class="nw">'+
+      '<div class="nm deco">'+num+'</div>'+
+      '<div class="tg ed">'+(d.tg||'類別')+'</div>'+
+      '<div class="hd ed">'+(d.hd||'標題')+'</div>'+
+      '<div class="dv deco"></div>'+
+      '<ul class="pl">'+pts+'</ul>'+
+    '</div>';
+}
+function ctaHTML2(d){
+  d=d||{};
+  return bgD2()+ovD2()+
+    '<div class="ctw">'+
+      '<div class="cd deco">◆ ◆ ◆</div>'+
+      '<div class="cm ed">'+(d.cm||'行動呼籲')+'</div>'+
+      '<div class="cs ed">'+(d.cs||'說清楚私訊能得到什麼')+'</div>'+
+      '<div class="cv deco"></div>'+
+      '<div class="cb deco"><div class="cf ed">'+(d.cf||'追蹤帳號獲取更多')+'</div></div>'+
+      '<div class="ca ed">'+(d.ca||'@your.account')+'</div>'+
+    '</div>';
+}
+function addSlide(type,data,thm){
+  type=type||'content';thm=thm||globalTheme;
+  slideCount2++;
+  const id='mslide-'+slideCount2;
+  slideIds2.push(id);
+  const outer=document.createElement('div');outer.className='slide-outer';outer.id='outer-'+id;
+  const bar=document.createElement('div');bar.className='slide-bar';
+  const lbl=document.createElement('span');lbl.className='slbl';lbl.textContent='第'+(document.querySelectorAll('.slide').length+1)+'張';
+  bar.appendChild(lbl);
+  SLIDE_TYPES.forEach(function(st){
+    const btn=document.createElement('button');
+    btn.className='slide-tc'+(st.key===type?' on':'');
+    btn.textContent=st.label;btn.dataset.stype=st.key;
+    btn.onclick=function(){changeSlideType2(id,st.key,bar);};
+    bar.appendChild(btn);
+  });
+  const tlbl=document.createElement('span');tlbl.className='slbl';tlbl.style.marginLeft='6px';tlbl.textContent='風格';
+  bar.appendChild(tlbl);
+  THEMES.forEach(function(t){
+    const btn=document.createElement('button');
+    btn.className='slide-tc'+(t.id===thm?' on':'');
+    btn.textContent=t.name;btn.dataset.t=t.id;
+    btn.onclick=function(){
+      const si=document.querySelector('#'+id+' .si');if(!si)return;
+      si.className='si '+t.id;
+      bar.querySelectorAll('.slide-tc[data-t]').forEach(function(b){b.classList.toggle('on',b.dataset.t===t.id);});
+      desel();
+    };
+    bar.appendChild(btn);
+  });
+  const delBtn=document.createElement('button');delBtn.className='del-slide';delBtn.textContent='✕ 刪除此頁';
+  delBtn.onclick=function(){outer.remove();slideIds2=slideIds2.filter(function(x){return x!==id;});updateMCount();};
+  bar.appendChild(delBtn);
+  outer.appendChild(bar);
+  const slide=document.createElement('div');slide.className='slide';slide.id=id;
+  const si=document.createElement('div');si.className='si '+thm;
+  si.innerHTML=getOverlays()+(type==='cover'?coverHTML2(data):type==='cta'?ctaHTML2(data):contentHTML2(data,0,3));
+  slide.appendChild(si);outer.appendChild(slide);
+  E('wrap').appendChild(outer);
+  att(slide);
+  updateMCount();
+  E('db').style.display='block';
+}
+function changeSlideType2(id,newType,bar){
+  const slide=document.getElementById(id);if(!slide)return;
+  const si=slide.querySelector('.si');
+  const thm=[...si.classList].find(function(c){return c.startsWith('t')&&c.length<=2;})||globalTheme;
+  si.innerHTML=getOverlays()+(newType==='cover'?coverHTML2():newType==='cta'?ctaHTML2():contentHTML2(null,0,3));
+  att(slide);
+  bar.querySelectorAll('.slide-tc[data-stype]').forEach(function(b){b.classList.toggle('on',b.dataset.stype===newType);});
+  desel();
+}
+function updateMCount(){
+  const n=document.querySelectorAll('.slide').length;
+  const el=E('slides-count');if(el)el.textContent=n+' 張';
+}
+function initDefault(){
+  document.querySelectorAll('.slide-outer').forEach(function(o){o.remove();});
+  slideIds2=[];slideCount2=0;
+  addSlide('cover');
+  addSlide('content');
+  addSlide('content');
+  addSlide('content');
+  addSlide('cta');
+}
+loadKey();
+</script>
+</body>
+</html>
