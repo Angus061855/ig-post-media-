@@ -849,6 +849,12 @@ function bCover(d,account,thm){
   const ch=[...(d.title||'')];const mid=Math.ceil(ch.length/2);
   return mkSlide('slide-1',thm,`${bgD(thm)}${ovD(thm)}${tDeco(thm,'cover')}${acctExtra(thm,account)}
     <div class="cw">
+      <div class="bio ed" style="font-size:17px;letter-spacing:.1em;color:rgba(200,175,120,.65);line-height:1.95;margin-bottom:24px;border-bottom:1px solid rgba(200,175,120,.15);padding-bottom:20px">
+        關於 大頭｜AS娛樂經紀<br>
+        <span style="color:var(--g)">靠誠實與信任</span>・七年面試超過 <span style="color:var(--g)">3000+</span><br>
+        不簽合約・不壓薪水・自由排班・隱私安全<br>
+        <span style="color:rgba(200,175,120,.4);font-size:15px">不要讓未來的你，討厭現在的自己</span>
+      </div>
       <div class="ey ed">${d.eyebrow||''}</div>
       <div><span class="tt ed">${ch.slice(0,mid).join('')}</span><span class="tt ac ed">${ch.slice(mid).join('')}</span></div>
       <div class="sp2 deco"></div>
@@ -856,7 +862,6 @@ function bCover(d,account,thm){
       <div class="ac2 ed">${account}</div>
     </div>`);
 }
-
 function bContent(d,idx,total,thm){
   const num=String(idx+1).padStart(2,'0')+' / '+String(total).padStart(2,'0');
   const pts=(d.points||[]).map((p,i)=>`
@@ -967,6 +972,7 @@ function buildPrompt(topic,cfg){
     +'- 禁止明確薪資數字（改為模糊描述）\n'
     +'- 敏感產業詞需弱化（用「工作類型」「環境」取代）\n'
     +'- 禁止過度招募導向，CTA要自然\n'
+    +'帳號定位：幫助 18-30 歲女生不被黑心經紀人騙，想賺錢可以找誠實的經紀人。\n'
     +'主題：'+topic+'\n'
     +'輸出純 JSON，直接從 { 開始，不加任何說明。格式：\n'
     +'{"cover":{"eyebrow":"3~5英文關鍵詞·分隔·全大寫","title":"大問句或數字衝擊\\n可換行","subtitle":"痛點描述\\n讓人有共鳴"},'
