@@ -920,20 +920,7 @@ function att(slideEl){
 
 /* ─── build per-slide theme switcher ─── */
 function mkControls(slideId){
-  const ctrl=document.createElement('div');
-  ctrl.className='slide-controls';
-  const lbl=document.createElement('span');
-  lbl.className='slide-theme-label';lbl.textContent='此頁風格';
-  ctrl.appendChild(lbl);
-  THEMES.forEach(t=>{
-    const btn=document.createElement('button');
-    btn.className='slide-tc'+(t.id===globalTheme?' on':'');
-    btn.dataset.t=t.id;
-    btn.textContent=t.name;
-    btn.onclick=()=>setSlidTheme(slideId,t.id);
-    ctrl.appendChild(btn);
-  });
-  return ctrl;
+  return document.createElement('div');
 }
 
 /* ─── HTML builders ─── */
