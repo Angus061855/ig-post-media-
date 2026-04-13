@@ -855,7 +855,7 @@ function mkSlide(id,thm,innerHtml){
 }
 
 function bCover(d,account,thm){
-  const ch=[...(d.title||'')];const mid=Math.ceil(ch.length/2);
+  const titleParts=(d.title||'').split('\n'); const t1=titleParts[0]||''; const t2=titleParts.slice(1).join('');
   return mkSlide('slide-1',thm,`${bgD(thm)}${ovD(thm)}${tDeco(thm,'cover')}${acctExtra(thm,account)}
     <div class="cw">
       <div class="bio ed" style="font-size:17px;letter-spacing:.1em;color:rgba(200,175,120,.65);line-height:1.95;margin-bottom:24px;border-bottom:1px solid rgba(200,175,120,.15);padding-bottom:20px">
@@ -865,7 +865,7 @@ function bCover(d,account,thm){
         <span style="color:rgba(200,175,120,.4);font-size:15px">不要讓未來的你，討厭現在的自己</span>
       </div>
       <div class="ey ed">${d.eyebrow||''}</div>
-      <div><span class="tt ed">${ch.slice(0,mid).join('')}</span><span class="tt ac ed">${ch.slice(mid).join('')}</span></div>
+      <div><span class="tt ed">${t1}</span><span class="tt ac ed">${t2}</span></div>
       <div class="sp2 deco"></div>
       <div class="sb ed">${(d.subtitle||'').replace(/\n/g,'<br>')}</div>
       <div class="ac2 ed">${account}</div>
