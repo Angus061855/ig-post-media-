@@ -550,13 +550,6 @@ body{background:#0d0d0d;font-family:'Noto Serif TC','CKS','STSong',serif;display
 </head>
 <body>
 
-<!-- Mode toggle -->
-<div id="mode-bar">
-  <button class="mode-btn on" id="mbtn-ai" onclick="setMode('ai')">✦ AI 生成模式</button>
-  <button class="mode-btn off" id="mbtn-manual" onclick="setMode('manual')">✎ 手動填寫模式</button>
-  <span id="mode-note">AI 模式：輸入主題自動產生內容｜手動模式：不需要 API，直接填字</span>
-</div>
-
 <!-- AI panel -->
 <div id="ai-panel">
   <h1 style="font-size:15px;letter-spacing:.22em;color:var(--g);white-space:nowrap">AI 產生</h1>
@@ -569,14 +562,6 @@ body{background:#0d0d0d;font-family:'Noto Serif TC','CKS','STSong',serif;display
   <button class="tb" id="gb" onclick="doGen()" style="background:var(--g);color:#0a0a0a;border:none">✦ 產生</button>
   <button class="tb" id="rgb" style="display:none;background:transparent;color:rgba(200,175,120,.5);border:1px solid #333;font-size:11px" onclick="reGen()">↻ 換個版本</button>
   <span id="st" style="font-size:11px;letter-spacing:.1em;color:rgba(200,175,120,.4);white-space:nowrap"></span>
-</div>
-
-<!-- Manual panel -->
-<div id="manual-panel" class="hidden">
-  <h1 style="font-size:15px;letter-spacing:.22em;color:var(--g);white-space:nowrap">手動編輯</h1>
-  <button class="tb" id="addb" onclick="addSlide()" style="background:transparent;color:rgba(200,175,120,.5);border:1px solid #333;font-size:11px">＋ 新增頁面</button>
-  <button class="tb" id="initb" onclick="initDefault()" style="background:transparent;color:rgba(200,175,120,.4);border:1px solid #2a2a2a;font-size:11px">↺ 重設5張空白</button>
-  <span id="slides-count" style="font-size:11px;letter-spacing:.1em;color:rgba(200,175,120,.35)">5 張</span>
 </div>
 
 <!-- Theme bar -->
@@ -1208,7 +1193,8 @@ async function doGen(){
     if(!data){stat('⚠ 生成失敗，請換個說法');return;}
     window._layoutVariant=Math.floor(Math.random()*8);
     render(data,account,'t1');
-    stat('✓ 完成 · 點選元素編輯 · 上方切換整體風格 · 每張右上可單獨換');
+    genCaption(inp);
+    stat('✓ 完成 · 文案生成中，下載 ZIP 時會一併包含 ig_caption.txt');
   }catch(e){stat('錯誤：'+e.message);console.error(e)}
   finally{E('gb').disabled=false}
 }
@@ -1244,8 +1230,12 @@ async function dlAll(){
       const blob=await new Promise(res=>canvas.toBlob(res,'image/png'));
       zip.file(`slide-${i+1}.png`,blob);
     }
+    if(captionTxt){
+      zip.file('ig_caption.txt', captionTxt);
+}
     stat('壓縮中…');
     const zipBlob=await zip.generateAsync({type:'blob'});
+
     const a=document.createElement('a');
     a.href=URL.createObjectURL(zipBlob);
     a.download='ig_slides.zip';
@@ -1444,6 +1434,55 @@ window._layoutVariant=0;
   };
   img.src='back.png?v='+Date.now();
 })();
+  /* ════ IG 貼文文案生成 ════ */
+let captionTxt = '';
+
+async function genCaption(topic){
+  captionTxt = '';
+  const key = document.getElementById('groq-key')?.value.trim() || loadKey();
+  if(!key) return;
+
+  const prompt = `你是 AS娛樂 的 Reels 貼文文案寫手。
+
+【品牌資訊】
+語氣：直接有力、專業權威、敢說敢講
+禁止：親切陪伴感、模糊說法、不必要的驚嘆號
+CTA：私訊我
+結尾 Slogan（每則必加，放最後一行）：不要讓未來的你，討厭現在的自己
+
+【目標受眾】
+18-30 歲女生，缺錢想賺錢，怕進八大行業被騙
+
+【文案結構】
+- 開頭：痛點直擊 或 反直覺型 Hook（10-20字）
+- 中段：展開內容，每段 2-3 行，段落間空一行，口語化
+- 長度：150-250 字
+- 結尾：CTA「私訊我」→ 空一行 → 不要讓未來的你，討厭現在的自己
+
+【這次主題】
+${topic}
+
+請直接輸出文案，不需要說明。`;
+
+  try{
+    const r = await fetch('https://api.groq.com/openai/v1/chat/completions',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
+      body:JSON.stringify({
+        model:'meta-llama/llama-4-scout-17b-16e-instruct',
+        max_tokens:800,
+        messages:[{role:'user', content:prompt}]
+      })
+    });
+    const j = await r.json();
+    if(j.error) throw new Error(j.error.message);
+    captionTxt = j.choices?.[0]?.message?.content || '';
+    stat('✓ 完成 · 圖片 + 貼文文案都準備好了，按下載 ZIP 一起打包');
+  }catch(e){
+    console.warn('文案生成失敗：', e.message);
+    stat('✓ 圖片完成（文案生成失敗，可重試）');
+  }
+}
 </script>
 </body>
 </html>
