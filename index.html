@@ -1507,6 +1507,7 @@ ${topic}
     captionTxt = j.choices?.[0]?.message?.content || '';
 
     // 顯示預覽
+// 顯示預覽
 let box = document.getElementById('caption-preview');
 if(!box){
   box = document.createElement('div');
@@ -1515,21 +1516,15 @@ if(!box){
   box.innerHTML = `
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
       <span style="font-size:13px;letter-spacing:.2em;color:var(--g)">✦ IG 貼文文案</span>
-      <button onclick="navigator.clipboard.writeText(captionTxt).then(()=>this.textContent='✓ 已複製').catch(()=>{})" 
+      <button onclick="navigator.clipboard.writeText(document.getElementById('caption-pre').value).then(()=>this.textContent='✓ 已複製').catch(()=>{})"
         style="background:transparent;border:1px solid #333;color:rgba(200,175,120,.5);font-family:inherit;font-size:11px;letter-spacing:.1em;padding:4px 10px;cursor:pointer;border-radius:2px">⎘ 複製</button>
     </div>
-    box.innerHTML = `
-  <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
-    <span style="font-size:13px;letter-spacing:.2em;color:var(--g)">✦ IG 貼文文案</span>
-    <button onclick="navigator.clipboard.writeText(document.getElementById('caption-pre').value).then(()=>this.textContent='✓ 已複製').catch(()=>{})" 
-      style="background:transparent;border:1px solid #333;color:rgba(200,175,120,.5);font-family:inherit;font-size:11px;letter-spacing:.1em;padding:4px 10px;cursor:pointer;border-radius:2px">⎘ 複製</button>
-  </div>
-  <textarea id="caption-pre" style="width:100%;background:#0e0e0e;border:1px solid #2a2a2a;border-radius:3px;padding:16px 20px;color:#e0d8c8;font-family:'Noto Serif TC',serif;font-size:13px;letter-spacing:.06em;line-height:2;height:400px;resize:vertical;outline:none;margin:0"></textarea>
-`;
+    <textarea id="caption-pre" style="width:100%;background:#0e0e0e;border:1px solid #2a2a2a;border-radius:3px;padding:16px 20px;color:#e0d8c8;font-family:'Noto Serif TC',serif;font-size:13px;letter-spacing:.06em;line-height:2;height:400px;resize:vertical;outline:none;margin:0"></textarea>
   `;
   document.querySelector('#ai-panel').after(box);
 }
 document.getElementById('caption-pre').value = captionTxt;
+
     stat('✓ 完成 · 圖片 + 貼文文案都準備好了，按下載 ZIP 一起打包');
   }catch(e){
     console.warn('文案生成失敗：', e.message);
