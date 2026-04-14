@@ -915,11 +915,10 @@ function mkControls(slideId){
 
 /* ─── HTML builders ─── */
 function bgD(thm){
-  const opq='0.95';
-  return`<div class="bg-el deco" style="background-image:${BGU};opacity:${opq};background-size:cover;background-position:center;image-rendering:crisp-edges"></div>`;
-}
-function ovD(thm){
-  return`<div class="ov-el" style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(160deg,rgba(0,0,0,.2) 0%,rgba(8,6,3,.2) 55%,rgba(0,0,0,.2) 100%)"></div>`;
+  const url='https://angus061855.github.io/ig-post-media-/back2.png';
+  return`<div class="bg-el deco" style="position:absolute;inset:0;overflow:hidden;opacity:0.95">
+    <img src="${url}" crossorigin="anonymous" style="width:100%;height:100%;object-fit:cover;object-position:center;display:block;" onerror="this.style.display='none'">
+  </div>`;
 }
 
 // deco extras per theme
@@ -1277,7 +1276,13 @@ const DEFAULT_CONTENT={
   cta:{cm:'行動呼籲',cs:'說清楚私訊能得到什麼\n不要模糊',cf:'追蹤帳號獲取更多',ca:'@your.account'},
 };
 
-function bgD2(thm){return`<div class="bg-el deco" style="background-image:${BGU};opacity:${thm==='t8'?'.85':'.5'}"></div>`}
+function bgD2(thm){
+  const url='https://angus061855.github.io/ig-post-media-/back2.png';
+  const op=thm==='t8'?'0.85':'0.5';
+  return`<div class="bg-el deco" style="position:absolute;inset:0;overflow:hidden;opacity:${op}">
+    <img src="${url}" crossorigin="anonymous" style="width:100%;height:100%;object-fit:cover;object-position:center;display:block;" onerror="this.style.display='none'">
+  </div>`;
+}
 function ovD2(thm){return`<div class="ov-el" style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(160deg,rgba(0,0,0,.88) 0%,rgba(14,10,6,.7) 50%,rgba(0,0,0,.93) 100%);opacity:${thm==='t8'?'0':'1'}"></div>`}
 
 function tDeco2(thm,type){
