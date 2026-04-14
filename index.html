@@ -546,6 +546,14 @@ body{background:#0d0d0d;font-family:'Noto Serif TC','CKS','STSong',serif;display
     .t1 .nw::before,
     .t1 .cw::before,
     .t1 .ctw::before{text-shadow:none}
+.refine-chip{
+  background:#111;border:1px solid #2a2a2a;color:rgba(200,175,120,.5);
+  font-family:'Noto Serif TC',serif;font-size:11px;letter-spacing:.12em;
+  padding:7px 12px;cursor:pointer;border-radius:3px;text-align:left;
+  transition:all .15s;
+}
+.refine-chip:hover{border-color:var(--gd);color:var(--g);background:#1a1a1a}
+
 </style>
 </head>
 <body>
@@ -560,7 +568,7 @@ body{background:#0d0d0d;font-family:'Noto Serif TC','CKS','STSong',serif;display
   <input id="ai" type="text" placeholder="@帳號" value="@angus061855" style="background:#111;border:1px solid #282828;color:#e0d8c8;font-family:inherit;font-size:12px;letter-spacing:.07em;padding:6px 10px;outline:none;width:148px;flex-shrink:0;border-radius:2px"/>
   <textarea id="it" placeholder="輸入主題或貼上文章…" style="flex:1;background:#111;border:1px solid #282828;color:#e0d8c8;font-family:inherit;font-size:12px;letter-spacing:.06em;padding:6px 10px;outline:none;height:40px;resize:none;line-height:1.6;min-width:160px;border-radius:2px"></textarea>
   <button class="tb" id="gb" onclick="doGen()" style="background:var(--g);color:#0a0a0a;border:none">✦ 產生</button>
-  <button class="tb" id="rgb" style="display:none;background:transparent;color:rgba(200,175,120,.5);border:1px solid #333;font-size:11px" onclick="reGen()">↻ 換個版本</button>
+  <button class="tb" id="rgb" style="display:none;background:transparent;color:rgba(200,175,120,.5);border:1px solid #333;font-size:11px" onclick="openRefinePanel()">↻ 換個版本</button>
   <span id="st" style="font-size:11px;letter-spacing:.1em;color:rgba(200,175,120,.4);white-space:nowrap"></span>
 </div>
 
@@ -1524,6 +1532,62 @@ document.getElementById('caption-pre').value = captionTxt;
     stat('✓ 圖片完成（文案生成失敗，可重試）');
   }
 }
+function openRefinePanel(){
+  document.getElementById('refine-panel').style.display='block';
+}
+function closeRefinePanel(){
+  document.getElementById('refine-panel').style.display='none';
+}
+function setRefine(txt){
+  document.getElementById('refine-input').value=txt;
+}
+async function doRefine(){
+  const cmd=document.getElementById('refine-input').value.trim();
+  if(!cmd){stat('請輸入指令');return;}
+  if(!lastInput){stat('請先產生一次內容');return;}
+  closeRefinePanel();
+  E('gb').disabled=true;
+  stat('根據指令重新生成…');
+  desel();
+  const modifiedInput=lastInput+'\n\n【調整指令】'+cmd;
+  try{
+    let text=await callAPI(modifiedInput,null,5000);
+    let data=parseJSON(text);
+    if(!data){
+      text=await callAPI(modifiedInput,buildFallbackPrompt(modifiedInput,getCfg()),3000);
+      data=parseJSON(text);
+    }
+    if(!data){stat('⚠ 生成失敗，請再試');return;}
+    render(data,lastAccount,'t1');
+    document.querySelectorAll('.bg-el').forEach(b=>b.style.backgroundImage=BGU);
+    stat('✓ 已根據指令更新');
+  }catch(e){stat('錯誤：'+e.message);}
+  finally{E('gb').disabled=false;}
+}
+
 </script>
+<!-- Refine Panel -->
+<div id="refine-panel" style="display:none;position:fixed;bottom:32px;right:32px;z-index:99999;
+  background:#1d1d1d;border:1px solid #3a3a3a;border-radius:6px;
+  box-shadow:0 12px 48px rgba(0,0,0,.9);padding:20px;width:360px">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+    <span style="font-size:13px;letter-spacing:.2em;color:var(--g)">✦ 調整指令</span>
+    <button onclick="closeRefinePanel()" style="background:transparent;border:none;color:rgba(200,175,120,.4);font-size:18px;cursor:pointer;line-height:1">×</button>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px">
+    <button class="refine-chip" onclick="setRefine('文字描述更長更詳細，每個重點的desc至少40字')">文字長一點</button>
+    <button class="refine-chip" onclick="setRefine('語氣更犀利直接，多用反問句和對比句')">語氣更犀利</button>
+    <button class="refine-chip" onclick="setRefine('標題更有衝擊感，用數字或反直覺的說法')">標題更衝擊</button>
+    <button class="refine-chip" onclick="setRefine('內容更具體，加入真實場景和細節描述')">更有畫面感</button>
+    <button class="refine-chip" onclick="setRefine('換一個完全不同的切入角度重新規劃')">換角度</button>
+  </div>
+  <textarea id="refine-input" placeholder="或自己輸入指令，例如：把觀念①改成講合約陷阱…"
+    style="width:100%;background:#111;border:1px solid #2a2a2a;border-radius:3px;
+    color:#e0d8c8;font-family:'Noto Serif TC',serif;font-size:12px;letter-spacing:.06em;
+    padding:10px;outline:none;resize:none;height:80px;line-height:1.7;margin-bottom:10px"></textarea>
+  <button onclick="doRefine()" style="width:100%;background:var(--g);color:#0a0a0a;border:none;
+    font-family:'Noto Serif TC',serif;font-size:13px;letter-spacing:.2em;padding:10px;
+    cursor:pointer;border-radius:3px">✦ 套用指令重新生成</button>
+</div>
 </body>
 </html>
