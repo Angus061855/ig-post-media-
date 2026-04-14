@@ -1414,26 +1414,6 @@ function initDefault(){
 loadKey();
 window._layoutVariant=0;
 
-// ── https://angus061855.github.io/ig-post-media-/back2.png: 嘗試載入，成功後套用到所有 bg-el ──
-(function loadBackPng(){
-  const img=new Image();
-  img.crossOrigin='anonymous';
-  img.onload=function(){
-    try{
-      const c=document.createElement('canvas');
-      c.width=img.naturalWidth;c.height=img.naturalHeight;
-      c.getContext('2d').drawImage(img,0,0);
-      BGU='url("https://angus061855.github.io/ig-post-media-/back2.png")';
-    }catch(e){
-      BGU='url("https://angus061855.github.io/ig-post-media-/back2.png")';
-    }
-    document.querySelectorAll('.bg-el').forEach(b=>b.style.backgroundImage=BGU);
-  };
-  img.onerror=function(){
-    stat('⚠ 找不到 https://angus061855.github.io/ig-post-media-/back2.png，請用「⊕ 換背景」上傳圖片');
-  };
-  img.src='https://angus061855.github.io/ig-post-media-/back2.png';
-})();
   /* ════ IG 貼文文案生成 ════ */
 let captionTxt = '';
 
