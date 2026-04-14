@@ -953,7 +953,7 @@ function mkSlide(id,thm,innerHtml,pgLabel){
 }
 
 function bCover(d,account,thm,pgLabel){
-  const parts=(d.title||'').split('\\n');
+  const parts=(d.title||'').split('\n');
   const t1=parts[0]||'';
   const t2=parts[1]||'';
   const pgNum=pgLabel?parseInt(pgLabel.split('/')[0])||1:1;
