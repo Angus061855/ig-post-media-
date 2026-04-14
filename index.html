@@ -540,6 +540,7 @@ body{background:#0d0d0d;font-family:'Noto Serif TC','CKS','STSong',serif;display
 /* ── manual panel ── */
 #manual-panel{width:100%;max-width:1220px;background:#161616;border:1px solid #222;border-radius:3px;padding:10px 14px;margin-bottom:16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 #manual-panel.hidden{display:none}
+#reels-panel.hidden{display:none}
 
     .si *{text-shadow:2px 2px 0px rgba(0,0,0,.35), 0 4px 16px rgba(0,0,0,.55)}
     .slide-footer{text-shadow:none}
@@ -554,7 +555,9 @@ body{background:#0d0d0d;font-family:'Noto Serif TC','CKS','STSong',serif;display
 <div id="mode-bar">
   <button class="mode-btn on" id="mbtn-ai" onclick="setMode('ai')">✦ AI 生成模式</button>
   <button class="mode-btn off" id="mbtn-manual" onclick="setMode('manual')">✎ 手動填寫模式</button>
+  <button class="mode-btn off" id="mbtn-reels" onclick="setMode('reels')">▶ Reels 文案</button>
   <span id="mode-note">AI 模式：輸入主題自動產生內容｜手動模式：不需要 API，直接填字</span>
+
 </div>
 
 <!-- AI panel -->
@@ -570,6 +573,19 @@ body{background:#0d0d0d;font-family:'Noto Serif TC','CKS','STSong',serif;display
   <button class="tb" id="rgb" style="display:none;background:transparent;color:rgba(200,175,120,.5);border:1px solid #333;font-size:11px" onclick="reGen()">↻ 換個版本</button>
   <span id="st" style="font-size:11px;letter-spacing:.1em;color:rgba(200,175,120,.4);white-space:nowrap"></span>
 </div>
+
+<!-- Reels panel -->
+<div id="reels-panel" class="hidden" style="width:100%;max-width:1220px;background:#161616;border:1px solid #222;border-radius:3px;padding:14px 18px;margin-bottom:16px;flex-direction:column;gap:12px">
+  <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+    <h1 style="font-size:15px;letter-spacing:.22em;color:var(--g);white-space:nowrap">▶ Reels 文案</h1>
+    <textarea id="reels-topic" placeholder="輸入 Reels 影片主題…" style="flex:1;background:#111;border:1px solid #282828;color:#e0d8c8;font-family:'Noto Serif TC','CKS','STSong',serif;font-size:12px;letter-spacing:.06em;padding:6px 10px;outline:none;height:40px;resize:none;line-height:1.6;min-width:160px;border-radius:2px"></textarea>
+    <button class="tb" id="reels-gen-btn" onclick="doReelsGen()" style="background:var(--g);color:#0a0a0a;border:none">✦ 產生文案</button>
+    <button class="tb" id="reels-copy-btn" onclick="copyReels()" style="display:none;background:transparent;color:rgba(200,175,120,.5);border:1px solid #333;font-size:11px">⎘ 複製</button>
+    <span id="reels-st" style="font-size:11px;letter-spacing:.1em;color:rgba(200,175,120,.4);white-space:nowrap"></span>
+  </div>
+  <div id="reels-output" style="display:none;background:#0e0e0e;border:1px solid #2a2a2a;border-radius:3px;padding:18px 22px;color:#e0d8c8;font-family:'Noto Serif TC','CKS','STSong',serif;font-size:14px;letter-spacing:.06em;line-height:2;white-space:pre-wrap;min-height:120px;max-height:520px;overflow-y:auto;margin-top:10px"></div>
+</div>
+
 
 <!-- Manual panel -->
 <div id="manual-panel" class="hidden">
@@ -1268,12 +1284,85 @@ function setMode(mode){
   currentMode = mode;
   document.getElementById('ai-panel').classList.toggle('hidden', mode!=='ai');
   document.getElementById('manual-panel').classList.toggle('hidden', mode!=='manual');
+  document.getElementById('reels-panel').classList.toggle('hidden', mode!=='reels');
   document.getElementById('mbtn-ai').className = 'mode-btn '+(mode==='ai'?'on':'off');
   document.getElementById('mbtn-manual').className = 'mode-btn '+(mode==='manual'?'on':'off');
+  document.getElementById('mbtn-reels').className = 'mode-btn '+(mode==='reels'?'on':'off');
   if(mode==='manual' && document.querySelectorAll('.slide').length===0){
     initDefault();
   }
 }
+
+/* ════ REELS MODE ════ */
+async function doReelsGen(){
+  const topic = document.getElementById('reels-topic')?.value.trim();
+  if(!topic){ document.getElementById('reels-st').textContent='請輸入主題'; return; }
+  const btn = document.getElementById('reels-gen-btn');
+  btn.disabled = true;
+  document.getElementById('reels-st').textContent = 'AI 寫作中…';
+  document.getElementById('reels-output').style.display = 'none';
+  document.getElementById('reels-copy-btn').style.display = 'none';
+
+  const prompt = `你是 AS娛樂 的 Reels 貼文文案寫手。
+
+【品牌資訊】
+語氣：直接有力、專業權威、敢說敢講
+禁止：親切陪伴感、模糊說法、不必要的驚嘆號
+CTA：私訊我
+結尾 Slogan（每則必加，放最後一行）：不要讓未來的你，討厭現在的自己
+
+【目標受眾】
+18-30 歲女生，缺錢想賺錢，怕進八大行業被騙
+
+【文案結構】
+- 開頭：痛點直擊 或 反直覺型 Hook（10-20字）
+- 中段：展開內容，每段 2-3 行，段落間空一行，口語化
+- 長度：150-250 字
+- 結尾：CTA「私訊我」→ 空一行 → Slogan
+
+【這次主題】
+${topic}
+
+請直接輸出文案，不需要說明。`;
+
+  try{
+    const key = document.getElementById('groq-key')?.value.trim() || loadKey();
+    if(!key){
+      document.getElementById('reels-st').textContent='⚠ 請先在 AI 模式填入 Groq API Key';
+      btn.disabled=false; return;
+    }
+    const r = await fetch('https://api.groq.com/openai/v1/chat/completions',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
+      body:JSON.stringify({
+        model:'meta-llama/llama-4-scout-17b-16e-instruct',
+        max_tokens:1000,
+        messages:[{role:'user',content:prompt}]
+      })
+    });
+    const j = await r.json();
+    if(j.error) throw new Error(j.error.message||'Groq error');
+    const text = j.choices?.[0]?.message?.content||'';
+    const out = document.getElementById('reels-output');
+    out.textContent = text;
+    out.style.display = 'block';
+    document.getElementById('reels-copy-btn').style.display = 'inline-block';
+    document.getElementById('reels-st').textContent = '✓ 完成';
+  }catch(e){
+    document.getElementById('reels-st').textContent = '錯誤：'+e.message;
+  }finally{
+    btn.disabled = false;
+  }
+}
+
+function copyReels(){
+  const text = document.getElementById('reels-output')?.textContent||'';
+  navigator.clipboard.writeText(text).then(()=>{
+    document.getElementById('reels-st').textContent = '✓ 已複製到剪貼簿';
+    setTimeout(()=>{ document.getElementById('reels-st').textContent='✓ 完成'; },2000);
+  });
+}
+
 
 const SLIDE_TYPES=[
   {key:'cover',label:'封面'},
