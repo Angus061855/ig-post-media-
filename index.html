@@ -652,7 +652,7 @@ body{background:#0d0d0d;font-family:'Noto Serif TC','CKS','STSong',serif;display
 const THEMES=[];
 
 let SEL=null,SMODE='txt',savedSel=null;
-let BGU='url("back2.png")';
+let BGU='url("https://angus061855.github.io/ig-post-media-/back2.png")';
 let lastInput='',lastAccount='';
 let currentData=null;
 let globalTheme='t1';
@@ -1432,7 +1432,7 @@ window._layoutVariant=0;
   img.onerror=function(){
     stat('⚠ 找不到 back.png，請用「⊕ 換背景」上傳圖片');
   };
-  img.src='back2.png?v='+Date.now();
+  img.src='https://angus061855.github.io/ig-post-media-/back2.png';
 })();
   /* ════ IG 貼文文案生成 ════ */
 let captionTxt = '';
@@ -1445,6 +1445,9 @@ async function genCaption(topic){
   const prompt = `你是 AS娛樂 的 Reels 貼文文案寫手。
 
 【品牌資訊】
+我是男生 做七年酒店經紀人 我沒有親自做過小姐所以不要代入
+禁止：我也曾經歷過，被經紀當搖錢樹，用盡各種手段榨乾我，讓我更看清這個圈子有多黑暗。
+
 語氣：直接有力、專業權威、敢說敢講
 禁止：親切陪伴感、模糊說法、不必要的驚嘆號
 CTA：私訊我
@@ -1458,6 +1461,31 @@ CTA：私訊我
 - 中段：展開內容，每段 2-3 行，段落間空一行，口語化
 - 長度：150-250 字
 - 結尾：CTA「私訊我」→ 空一行 → 不要讓未來的你，討厭現在的自己
+
+【範例】
+以下是一篇符合風格的範例，請模仿這個語氣和結構：
+
+---
+很多女生入行前問我：「大頭，這行安全嗎？」
+
+我都說，安不安全，取決於你跟誰。
+
+黑心經紀不會在臉上寫「我要坑你」。
+他們會先對你好，讓你覺得找到靠山了，
+等你依賴他了，才開始一點一點拿走你的選擇權。
+
+我做七年，見過太多這種事。
+合約裡埋地雷、薪水被扣一半、說好的條件全部變卦。
+問他，就說「行規就是這樣」。
+
+入行前你要搞清楚三件事：
+合約有沒有違約金、薪水怎麼算、可不可以隨時走。
+這三點說不清楚的，不要簽。
+
+私訊我
+
+不要讓未來的你，討厭現在的自己
+---
 
 【這次主題】
 ${topic}
@@ -1490,11 +1518,18 @@ if(!box){
       <button onclick="navigator.clipboard.writeText(captionTxt).then(()=>this.textContent='✓ 已複製').catch(()=>{})" 
         style="background:transparent;border:1px solid #333;color:rgba(200,175,120,.5);font-family:inherit;font-size:11px;letter-spacing:.1em;padding:4px 10px;cursor:pointer;border-radius:2px">⎘ 複製</button>
     </div>
-    <pre id="caption-pre" style="background:#0e0e0e;border:1px solid #2a2a2a;border-radius:3px;padding:16px 20px;color:#e0d8c8;font-family:'Noto Serif TC',serif;font-size:13px;letter-spacing:.06em;line-height:2;white-space:pre-wrap;max-height:400px;overflow-y:auto;margin:0"></pre>
+    box.innerHTML = `
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+    <span style="font-size:13px;letter-spacing:.2em;color:var(--g)">✦ IG 貼文文案</span>
+    <button onclick="navigator.clipboard.writeText(document.getElementById('caption-pre').value).then(()=>this.textContent='✓ 已複製').catch(()=>{})" 
+      style="background:transparent;border:1px solid #333;color:rgba(200,175,120,.5);font-family:inherit;font-size:11px;letter-spacing:.1em;padding:4px 10px;cursor:pointer;border-radius:2px">⎘ 複製</button>
+  </div>
+  <textarea id="caption-pre" style="width:100%;background:#0e0e0e;border:1px solid #2a2a2a;border-radius:3px;padding:16px 20px;color:#e0d8c8;font-family:'Noto Serif TC',serif;font-size:13px;letter-spacing:.06em;line-height:2;height:400px;resize:vertical;outline:none;margin:0"></textarea>
+`;
   `;
   document.querySelector('#ai-panel').after(box);
 }
-document.getElementById('caption-pre').textContent = captionTxt;
+document.getElementById('caption-pre').value = captionTxt;
     stat('✓ 完成 · 圖片 + 貼文文案都準備好了，按下載 ZIP 一起打包');
   }catch(e){
     console.warn('文案生成失敗：', e.message);
