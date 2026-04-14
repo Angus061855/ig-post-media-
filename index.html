@@ -1019,16 +1019,61 @@ function render(data,account,thm){
   const totalContent=(hasStory?1:0)+cnt.length+(hasSummary?1:0);
   const totalSlides=1+totalContent+1;
   const pg=n=>String(n).padStart(2,'0')+' / '+String(totalSlides).padStart(2,'0');
-  let pgIdx=1; let slideIdx=0;
-  wrap.appendChild(bCover(data.cover,account,thm,pg(pgIdx++)));
-  if(hasStory) wrap.appendChild(bContent(data.story,slideIdx++,totalContent,thm,pg(pgIdx++)));
-  cnt.forEach((c)=>wrap.appendChild(bContent(c,slideIdx++,totalContent,thm,pg(pgIdx++))));
-  if(hasSummary) wrap.appendChild(bContent(data.summary,slideIdx++,totalContent,thm,pg(pgIdx++)));
-  wrap.appendChild(bCta(data.cta,account,totalContent,thm,pg(pgIdx++)));
+  let pgIdx=1;let slideIdx=0;
+
+  // 封面
+  const coverSlide=bCover(data.cover,account,thm,pg(pgIdx++));
+  wrapWithBar(wrap,coverSlide,'slide-1',0,'cover');
+
+  // story
+  if(hasStory){
+    const s=bContent(data.story,slideIdx,totalContent,thm,pg(pgIdx++));
+    wrapWithBar(wrap,s,`slide-${slideIdx+2}`,slideIdx,'content');
+    slideIdx++;
+  }
+
+  // content
+  cnt.forEach(c=>{
+    const s=bContent(c,slideIdx,totalContent,thm,pg(pgIdx++));
+    wrapWithBar(wrap,s,`slide-${slideIdx+2}`,slideIdx,'content');
+    slideIdx++;
+  });
+
+  // summary
+  if(hasSummary){
+    const s=bContent(data.summary,slideIdx,totalContent,thm,pg(pgIdx++));
+    wrapWithBar(wrap,s,`slide-${slideIdx+2}`,slideIdx,'content');
+    slideIdx++;
+  }
+
+  // cta
+  const ctaSlide=bCta(data.cta,account,totalContent,thm,pg(pgIdx++));
+  wrapWithBar(wrap,ctaSlide,`slide-${totalContent+2}`,totalContent,'cta');
+
   E('db').style.display='block';E('rgb').style.display='block';
   const lvbar=E('lv-bar');if(lvbar)lvbar.style.display='flex';
   updateLvButtons();
   updateSlideBadges();
+}
+
+function wrapWithBar(wrap, slideEl, slideId, idx, type){
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='display:flex;flex-direction:column;align-items:flex-start;gap:0';
+  wrapper.appendChild(slideEl);
+  const bar=document.createElement('div');
+  bar.style.cssText='display:flex;align-items:center;gap:6px;padding:5px 0;width:1080px;flex-wrap:wrap';
+  bar.innerHTML=`
+    <span style="font-size:10px;letter-spacing:.18em;color:rgba(200,175,120,.3)">第${slideId.replace('slide-','')}張</span>
+    <button onclick="openSlideRefine('${slideId}','${type}',${idx})"
+      style="background:transparent;border:1px solid #333;color:rgba(200,175,120,.45);
+      font-family:inherit;font-size:10px;letter-spacing:.12em;padding:4px 10px;
+      cursor:pointer;border-radius:2px"
+      onmouseover="this.style.borderColor='rgba(200,175,120,.6)';this.style.color='rgba(200,175,120,.9)'"
+      onmouseout="this.style.borderColor='#333';this.style.color='rgba(200,175,120,.45)'">
+      ↻ 重生此頁
+    </button>`;
+  wrapper.appendChild(bar);
+  wrap.appendChild(wrapper);
 }
 
 function setLayoutVariant(idx){
@@ -1580,19 +1625,28 @@ async function doRefine(){
 
 /* ─── 單張重生 ─── */
 function addSlideRefineBtn(slideEl, slideId, idx, type){
+  // 建一個 wrapper 包住 slide + bar
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='display:flex;flex-direction:column;align-items:flex-start;gap:0';
+  
+  // 把 slideEl 從原本位置移到 wrapper 裡
+  slideEl.parentNode?.insertBefore(wrapper, slideEl);
+  wrapper.appendChild(slideEl);
+
+  // 建 bar
   const bar=document.createElement('div');
-  bar.style.cssText='display:flex;align-items:center;gap:6px;padding:6px 0;width:1080px;flex-wrap:wrap;margin-top:4px';
+  bar.style.cssText='display:flex;align-items:center;gap:6px;padding:5px 0;width:1080px;flex-wrap:wrap';
   bar.innerHTML=`
     <span style="font-size:10px;letter-spacing:.18em;color:rgba(200,175,120,.3)">第${slideId.replace('slide-','')}張</span>
     <button onclick="openSlideRefine('${slideId}','${type}',${idx})"
       style="background:transparent;border:1px solid #333;color:rgba(200,175,120,.45);
       font-family:inherit;font-size:10px;letter-spacing:.12em;padding:4px 10px;
-      cursor:pointer;border-radius:2px;transition:all .15s"
+      cursor:pointer;border-radius:2px"
       onmouseover="this.style.borderColor='rgba(200,175,120,.6)';this.style.color='rgba(200,175,120,.9)'"
       onmouseout="this.style.borderColor='#333';this.style.color='rgba(200,175,120,.45)'">
       ↻ 重生此頁
     </button>`;
-  slideEl.after(bar);
+  wrapper.appendChild(bar);
 }
 
 let _refineSlideId='';
@@ -1668,12 +1722,27 @@ async function doSlideRefine(){
     }
 
     // 換掉舊的，保留背景
-    const nextBar=oldSlide.nextElementSibling;
-    oldSlide.replaceWith(newSlide);
-    if(nextBar&&nextBar.style.cssText.includes('flex'))nextBar.remove();
-    newSlide.querySelector('.bg-el').style.backgroundImage=BGU;
-    stat('✓ 此頁已更新');
-  }catch(e){stat('錯誤：'+e.message);}
+    const oldWrapper=oldSlide.parentNode;
+const wrap=oldWrapper.parentNode;
+// 建新 wrapper
+const newWrapper=document.createElement('div');
+newWrapper.style.cssText='display:flex;flex-direction:column;align-items:flex-start;gap:0';
+newWrapper.appendChild(newSlide);
+const bar=document.createElement('div');
+bar.style.cssText='display:flex;align-items:center;gap:6px;padding:5px 0;width:1080px;flex-wrap:wrap';
+bar.innerHTML=`
+  <span style="font-size:10px;letter-spacing:.18em;color:rgba(200,175,120,.3)">第${_refineSlideId.replace('slide-','')}張</span>
+  <button onclick="openSlideRefine('${_refineSlideId}','${_refineSlideType}',${_refineSlideIdx})"
+    style="background:transparent;border:1px solid #333;color:rgba(200,175,120,.45);
+    font-family:inherit;font-size:10px;letter-spacing:.12em;padding:4px 10px;
+    cursor:pointer;border-radius:2px"
+    onmouseover="this.style.borderColor='rgba(200,175,120,.6)';this.style.color='rgba(200,175,120,.9)'"
+    onmouseout="this.style.borderColor='#333';this.style.color='rgba(200,175,120,.45)'">
+    ↻ 重生此頁
+  </button>`;
+newWrapper.appendChild(bar);
+wrap.replaceChild(newWrapper,oldWrapper);
+newSlide.querySelector('.bg-el').style.backgroundImage=BGU;
 }
 
 /* ─── 文案重生 ─── */
