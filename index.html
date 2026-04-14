@@ -1202,7 +1202,15 @@ async function doGen(){
 /* ─── download ─── */
 async function renderSlideCanvas(si){
   si.querySelectorAll('.ed,.deco').forEach(e=>e.style.outline='none');
-  const c=await html2canvas(si,{scale:1,useCORS:true,allowTaint:true,width:1080,height:1350,backgroundColor:'#0a0a0a',logging:false});
+  const c=await html2canvas(si,{
+  scale:1,
+  useCORS:false,
+  allowTaint:true,
+  width:1080,
+  height:1350,
+  backgroundColor:'#0a0a0a',
+  logging:false
+});
   si.querySelectorAll('.ed,.deco').forEach(e=>e.style.outline='');
   return c;
 }
