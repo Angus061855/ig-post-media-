@@ -66,7 +66,7 @@ body{background:#0d0d0d;font-family:'Noto Serif TC','CKS','STSong',serif;display
   padding:4px 7px;gap:1px;align-items:center;flex-wrap:wrap;
   max-width:760px;border-radius:4px;pointer-events:auto;
 }
-#ftb.on{display:flex}
+#ftb.on{display:flex!important}
 .sp{width:1px;height:19px;background:#2e2e2e;flex-shrink:0;margin:0 2px}
 .fn{background:transparent;border:1px solid transparent;color:rgba(200,175,120,.52);font-family:'Noto Serif TC','CKS','STSong',serif;font-size:11px;padding:3px 6px;cursor:pointer;border-radius:3px;white-space:nowrap;transition:all .1s;display:flex;align-items:center;line-height:1.4}
 .fn:hover,.fn.on{background:#272727;border-color:#4a4a4a;color:var(--g)}
@@ -723,10 +723,14 @@ function uploadBg(e){
 function posTB(e){
   const tb=E('ftb');
   const r=e.getBoundingClientRect();
-  let top=r.top-42+window.scrollY;
-  if(top<52)top=r.bottom+6+window.scrollY;
-  tb.style.top=Math.max(6,top)+'px';
-  tb.style.left=Math.max(6,Math.min(r.left+window.scrollX,window.innerWidth-780))+'px';
+  const tbW=760;
+  let top=r.top-48;
+  if(top<8)top=r.bottom+6;
+  let left=r.left;
+  if(left+tbW>window.innerWidth-8)left=window.innerWidth-tbW-8;
+  if(left<8)left=8;
+  tb.style.top=top+'px';
+  tb.style.left=left+'px';
   tb.classList.add('on');
 }
 function hideTB(){E('ftb').classList.remove('on')}
