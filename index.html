@@ -652,7 +652,7 @@ body{background:#0d0d0d;font-family:'Noto Serif TC','CKS','STSong',serif;display
 const THEMES=[];
 
 let SEL=null,SMODE='txt',savedSel=null;
-let BGU='url("back.png")';
+let BGU='url("back2.png")';
 let lastInput='',lastAccount='';
 let currentData=null;
 let globalTheme='t1';
@@ -1432,7 +1432,7 @@ window._layoutVariant=0;
   img.onerror=function(){
     stat('⚠ 找不到 back.png，請用「⊕ 換背景」上傳圖片');
   };
-  img.src='back.png?v='+Date.now();
+  img.src='back2.png?v='+Date.now();
 })();
   /* ════ IG 貼文文案生成 ════ */
 let captionTxt = '';
@@ -1477,6 +1477,24 @@ ${topic}
     const j = await r.json();
     if(j.error) throw new Error(j.error.message);
     captionTxt = j.choices?.[0]?.message?.content || '';
+
+    // 顯示預覽
+let box = document.getElementById('caption-preview');
+if(!box){
+  box = document.createElement('div');
+  box.id = 'caption-preview';
+  box.style.cssText = 'width:100%;max-width:1220px;background:#161616;border:1px solid #222;border-radius:3px;padding:16px 20px;margin-bottom:16px';
+  box.innerHTML = `
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+      <span style="font-size:13px;letter-spacing:.2em;color:var(--g)">✦ IG 貼文文案</span>
+      <button onclick="navigator.clipboard.writeText(captionTxt).then(()=>this.textContent='✓ 已複製').catch(()=>{})" 
+        style="background:transparent;border:1px solid #333;color:rgba(200,175,120,.5);font-family:inherit;font-size:11px;letter-spacing:.1em;padding:4px 10px;cursor:pointer;border-radius:2px">⎘ 複製</button>
+    </div>
+    <pre id="caption-pre" style="background:#0e0e0e;border:1px solid #2a2a2a;border-radius:3px;padding:16px 20px;color:#e0d8c8;font-family:'Noto Serif TC',serif;font-size:13px;letter-spacing:.06em;line-height:2;white-space:pre-wrap;max-height:400px;overflow-y:auto;margin:0"></pre>
+  `;
+  document.querySelector('#ai-panel').after(box);
+}
+document.getElementById('caption-pre').textContent = captionTxt;
     stat('✓ 完成 · 圖片 + 貼文文案都準備好了，按下載 ZIP 一起打包');
   }catch(e){
     console.warn('文案生成失敗：', e.message);
