@@ -1723,29 +1723,31 @@ async function doSlideRefine(){
 
     // 換掉舊的，保留背景
     const oldWrapper=oldSlide.parentNode;
-const wrap=oldWrapper.parentNode;
-// 建新 wrapper
-const newWrapper=document.createElement('div');
-newWrapper.style.cssText='display:flex;flex-direction:column;align-items:flex-start;gap:0';
-newWrapper.appendChild(newSlide);
-const bar=document.createElement('div');
-bar.style.cssText='display:flex;align-items:center;gap:6px;padding:5px 0;width:1080px;flex-wrap:wrap';
-bar.innerHTML=`
-  <span style="font-size:10px;letter-spacing:.18em;color:rgba(200,175,120,.3)">第${_refineSlideId.replace('slide-','')}張</span>
-  <button onclick="openSlideRefine('${_refineSlideId}','${_refineSlideType}',${_refineSlideIdx})"
-    style="background:transparent;border:1px solid #333;color:rgba(200,175,120,.45);
-    font-family:inherit;font-size:10px;letter-spacing:.12em;padding:4px 10px;
-    cursor:pointer;border-radius:2px"
-    onmouseover="this.style.borderColor='rgba(200,175,120,.6)';this.style.color='rgba(200,175,120,.9)'"
-    onmouseout="this.style.borderColor='#333';this.style.color='rgba(200,175,120,.45)'">
-    ↻ 重生此頁
-  </button>`;
-newWrapper.appendChild(bar);
-wrap.replaceChild(newWrapper,oldWrapper);
-newSlide.querySelector('.bg-el').style.backgroundImage=BGU;
+    const wrap=oldWrapper.parentNode;
+    const newWrapper=document.createElement('div');
+    newWrapper.style.cssText='display:flex;flex-direction:column;align-items:flex-start;gap:0';
+    newWrapper.appendChild(newSlide);
+    const bar=document.createElement('div');
+    bar.style.cssText='display:flex;align-items:center;gap:6px;padding:5px 0;width:1080px;flex-wrap:wrap';
+    bar.innerHTML=`
+      <span style="font-size:10px;letter-spacing:.18em;color:rgba(200,175,120,.3)">第${_refineSlideId.replace('slide-','')}張</span>
+      <button onclick="openSlideRefine('${_refineSlideId}','${_refineSlideType}',${_refineSlideIdx})"
+        style="background:transparent;border:1px solid #333;color:rgba(200,175,120,.45);
+        font-family:inherit;font-size:10px;letter-spacing:.12em;padding:4px 10px;
+        cursor:pointer;border-radius:2px"
+        onmouseover="this.style.borderColor='rgba(200,175,120,.6)';this.style.color='rgba(200,175,120,.9)'"
+        onmouseout="this.style.borderColor='#333';this.style.color='rgba(200,175,120,.45)'">
+        ↻ 重生此頁
+      </button>`;
+    newWrapper.appendChild(bar);
+    wrap.replaceChild(newWrapper,oldWrapper);
+    newSlide.querySelector('.bg-el').style.backgroundImage=BGU;
+    stat('✓ 此頁已更新');
+  }catch(e){stat('錯誤：'+e.message);}
 }
 
 /* ─── 文案重生 ─── */
+
 function openCaptionRefine(){
   document.getElementById('caption-refine-panel').style.display='block';
 }
