@@ -554,9 +554,49 @@ body{background:#0d0d0d;font-family:'Noto Serif TC','CKS','STSong',serif;display
 }
 .refine-chip:hover{border-color:var(--gd);color:var(--g);background:#1a1a1a}
 
+/* ── APP TABS ── */
+#app-tabs{width:100%;max-width:1220px;display:flex;gap:0;border-bottom:1px solid #252525;margin-bottom:0}
+.app-tab{font-family:'Noto Serif TC',serif;font-size:12px;letter-spacing:.2em;padding:10px 28px;cursor:pointer;border:1px solid transparent;border-bottom:none;border-radius:3px 3px 0 0;color:rgba(200,175,120,.4);background:transparent;transition:all .15s;margin-bottom:-1px}
+.app-tab.on{background:#181818;border-color:#252525;color:var(--g);border-bottom-color:#181818}
+.app-tab:hover:not(.on){color:var(--gd)}
+.app-panel{display:none;width:100%;flex-direction:column;align-items:center}
+.app-panel.on{display:flex}
+
+/* ── STORY PANEL ── */
+.story-input-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:20px;width:100%;max-width:1220px}
+.story-card-input{background:#161616;border:1px solid #252525;border-radius:4px;padding:16px}
+.story-card-input h3{font-size:11px;letter-spacing:.22em;color:var(--g);margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.story-card-input h3 span{font-size:10px;color:rgba(200,175,120,.4);letter-spacing:.1em}
+.story-inp{width:100%;background:#0e0e0e;border:1px solid #2a2a2a;color:#e0d8c8;font-family:'Noto Serif TC',serif;font-size:12px;letter-spacing:.06em;padding:8px 10px;outline:none;border-radius:2px;resize:none;line-height:1.7;display:block}
+.story-inp:focus{border-color:var(--gd)}
+.story-inp::placeholder{color:rgba(200,175,120,.18)}
+.story-label{font-size:10px;letter-spacing:.15em;color:rgba(200,175,120,.4);margin-bottom:5px;margin-top:10px;display:block}
+#story-wrap{display:flex;flex-direction:row;gap:24px;align-items:flex-start;overflow-x:auto;padding-bottom:20px;width:100%;max-width:1220px}
+.story-preview-outer{display:flex;flex-direction:column;align-items:flex-start;gap:6px;flex-shrink:0}
+.story-preview-label{font-size:10px;letter-spacing:.18em;color:rgba(200,175,120,.3);padding:0 2px}
+.story-preview-box{width:360px;height:640px;overflow:hidden;position:relative;background:#0a0a0a;flex-shrink:0}
+.story-full-inner{width:1080px;height:1920px;transform:scale(0.3333);transform-origin:top left;position:absolute;top:0;left:0}
+#story-action-bar{width:100%;max-width:1220px;display:flex;align-items:center;gap:10px;margin-bottom:20px;flex-wrap:wrap}
+.sgbtn{font-family:'Noto Serif TC',serif;font-size:12px;letter-spacing:.18em;padding:9px 20px;cursor:pointer;border-radius:2px;transition:all .15s}
+#s-gen-btn{background:var(--g);color:#0a0a0a;border:none}
+#s-gen-btn:hover{opacity:.85}
+#s-dl-btn{background:transparent;color:var(--gd);border:1px solid #383838;display:none}
+#s-dl-btn:hover{border-color:var(--gd);color:var(--g)}
+#s-bg-btn{background:transparent;color:rgba(200,175,120,.4);border:1px solid #2a2a2a;font-size:11px}
+#s-bg-btn:hover{border-color:var(--gd);color:var(--g)}
+#s-st{font-size:11px;letter-spacing:.1em;color:rgba(200,175,120,.4)}
+
+
 </style>
 </head>
 <body>
+
+<div id="app-tabs">
+  <button class="app-tab on" onclick="switchTab('post')">🎠 IG 輪播貼文</button>
+  <button class="app-tab" onclick="switchTab('story')">⚡ 限時動態</button>
+</div>
+<div id="panel-post" class="app-panel on">
+
 
 <!-- AI panel -->
 <div id="ai-panel">
@@ -1176,6 +1216,30 @@ function buildPrompt(topic,cfg){
     +'- CTA語氣直接但不強迫，要有誠意\n'
     +'你的角色：你是一個做了七年的娛樂經紀人（男性），踢爆業界黑心手法，讓18-30歲女生自然找到你。\n'
     +'語氣：內行人說「我見過太多這種事」的口吻，不是受害者。\n'
+    +'你是一位專門做高轉換IG輪播的內容策略師，使用 VIRAL 框架。\n'
+    +'VIRAL 框架說明：\n'
+    +'V（Value Hook）= 封面：大衝擊標題，讓人停下來\n'
+    +'I（Intrigue Story）= 故事：七年親歷，業界亂象，建立信任\n'
+    +'R（Real Method）= 具體方法：3個可執行的觀念或步驟\n'
+    +'A（Authority）= 權威佐證：數字、案例、對比，強化可信度\n'
+    +'L（Lead to Action）= 行動：CTA，說清楚私訊能得到什麼\n\n'
+    +'你的任務：根據輸入主題，生成 7 頁 IG 輪播（VIRAL 結構）：\n'
+    +'第1頁 cover（V）：大問句或數字衝擊 + 痛點，讓人想滑下去\n'
+    +'第2頁 story（I）：「我做了七年，見過太多...」用內行人視角說業界亂象，建立信任感\n'
+    +'第3頁 content[0]（I→R）：點出問題根源，說明為什麼大多數人會被坑，tag用「觀念①」\n'
+    +'第4頁 content[1]（R）：給出具體方法/步驟，讓人知道怎麼做，tag用「觀念②」\n'
+    +'第5頁 content[2]（R+A）：用數字或對比強化，說清楚差異在哪，tag用「觀念③」\n'
+    +'第6頁 summary（A+L）：把所有重點列成清單，heading用問句，預告CTA\n'
+    +'第7頁 cta（L）：踢爆完引導私訊，語氣直接，說清楚私訊能得到什麼\n\n'
+    +'【目標受眾】18-30歲有意願賺錢的女生，想了解八大行業/酒店業秘辛，不想被騙，需要信任感\n'
+    +'【CTA目標】私訊我，讓妳了解更多八大行業的真相；想賺錢的來找我\n'
+    +'寫作風格：語氣像在講現實，不說教，什麼都敢講，有問必答；多用對比、反問句、打臉句；專業、踢爆、誠實\n'
+    +'文字規則：cover的title每行最多6個中文字；content/story/summary的heading每行最多8個中文字；換行必須在完整語意的結尾\n'
+    +'每個point的title：8~15個字；每個point的desc：25~40個字，有畫面感\n'
+    +'JSON必須完整輸出到最後的 } 為止，不可截斷\n'
+    +'風控規則：禁止明確薪資數字；可以用「八大行業」「酒店業」「這個產業」等詞\n'
+    +'主題：'+topic+'\n'
+    +'輸出純 JSON，直接從 { 開始，不加任何說明。格式（content固定3頁）：\n'
     +'主題：'+topic+'\n'
     +'輸出純 JSON，直接從 { 開始，不加任何說明。格式（content固定3頁）：\n'
     +'{"cover":{"eyebrow":"3~5英文關鍵詞·大寫·用·分隔","title":"大問句\\n第二行（若需要）","subtitle":"副標一句話說清楚痛點，同意思不換行"},'
@@ -1891,5 +1955,61 @@ ${topic}
     font-family:'Noto Serif TC',serif;font-size:13px;letter-spacing:.2em;padding:10px;
     cursor:pointer;border-radius:3px">✦ 套用指令重生文案</button>
 </div>
+</div><!-- end panel-post -->
+
+<div id="panel-story" class="app-panel" style="margin-top:20px">
+<div id="story-action-bar">
+  <button class="sgbtn" id="s-gen-btn" onclick="buildStory()">✦ 產生限時動態</button>
+  <button class="sgbtn" id="s-bg-btn" onclick="document.getElementById('story-bgf').click()">⊕ 換背景</button>
+  <input type="file" id="story-bgf" accept="image/*" onchange="uploadStoryBg(event)" style="display:none"/>
+  <button class="sgbtn" id="s-dl-btn" onclick="dlStory()">↓ 下載全部 (ZIP)</button>
+  <span id="s-st"></span>
+</div>
+<div class="story-input-grid">
+  <div class="story-card-input">
+    <h3>第 1 張 <span>V · 價值鉤子</span></h3>
+    <span class="story-label">眉標（英文·用·分隔）</span>
+    <input class="story-inp" id="s1-ey" type="text" value="PROTECT · YOURSELF · NOW"/>
+    <span class="story-label">大標題</span>
+    <textarea class="story-inp" id="s1-t1" rows="2">別被騙了</textarea>
+    <span class="story-label">紅色強調第二行（可空）</span>
+    <input class="story-inp" id="s1-t2" type="text" value="保護妳自己"/>
+    <span class="story-label">副標</span>
+    <textarea class="story-inp" id="s1-sub" rows="2">妳知道黑心經紀怎麼坑人嗎？</textarea>
+  </div>
+  <div class="story-card-input">
+    <h3>第 2 張 <span>I+R · 核心內容</span></h3>
+    <span class="story-label">標籤</span>
+    <input class="story-inp" id="s2-tag" type="text" value="七年親歷"/>
+    <span class="story-label">標題</span>
+    <textarea class="story-inp" id="s2-hd" rows="2">入行前要搞清楚</textarea>
+    <span class="story-label">重點 1 標題</span>
+    <input class="story-inp" id="s2-p1t" type="text" value="合約有沒有違約金"/>
+    <span class="story-label">重點 1 說明</span>
+    <textarea class="story-inp" id="s2-p1d" rows="2">說清楚再簽，跑不掉的合約最危險</textarea>
+    <span class="story-label">重點 2 標題</span>
+    <input class="story-inp" id="s2-p2t" type="text" value="薪水怎麼算"/>
+    <span class="story-label">重點 2 說明</span>
+    <textarea class="story-inp" id="s2-p2d" rows="2">口頭說的不算，要白紙黑字</textarea>
+    <span class="story-label">重點 3 標題</span>
+    <input class="story-inp" id="s2-p3t" type="text" value="可不可以隨時離開"/>
+    <span class="story-label">重點 3 說明</span>
+    <textarea class="story-inp" id="s2-p3d" rows="2">這三點說不清楚的，不要簽</textarea>
+  </div>
+  <div class="story-card-input">
+    <h3>第 3 張 <span>L · 行動呼籲</span></h3>
+    <span class="story-label">主標題</span>
+    <textarea class="story-inp" id="s3-main" rows="2">找對的人才是起點</textarea>
+    <span class="story-label">副文案</span>
+    <textarea class="story-inp" id="s3-sub" rows="3">有任何問題都可以私訊我
+有問必答，不催、不騙</textarea>
+    <span class="story-label">行動按鈕文字</span>
+    <input class="story-inp" id="s3-follow" type="text" value="私訊我了解更多"/>
+    <span class="story-label">帳號</span>
+    <input class="story-inp" id="s3-acct" type="text" value="@angus061855"/>
+  </div>
+</div>
+<div id="story-wrap"></div>
+</div><!-- end panel-story -->
 </body>
 </html>
