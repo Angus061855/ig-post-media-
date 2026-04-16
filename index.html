@@ -1884,7 +1884,6 @@ ${topic}
   }
 }
 
-</script>
 /* ── TAB SWITCH ── */
 function switchTab(tab){
   document.querySelectorAll('.app-panel').forEach(p=>p.classList.remove('on'));
@@ -2017,6 +2016,9 @@ async function dlStory(){
   }catch(e){document.getElementById('s-st').textContent='下載失敗：'+e.message;}
   finally{btn.disabled=false;}
 }
+
+</script>
+
 <!-- Refine Panel -->
 <div id="refine-panel" style="display:none;position:fixed;bottom:32px;right:32px;z-index:99999;
   background:#1d1d1d;border:1px solid #3a3a3a;border-radius:6px;
