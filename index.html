@@ -2017,6 +2017,80 @@ async function dlStory(){
   finally{btn.disabled=false;}
 }
 
+/* ── AI STORY ── */
+async function aiStory(){
+  const topic = document.getElementById('s-topic').value.trim();
+  if(!topic){ document.getElementById('s-st').textContent='請輸入主題'; return; }
+  const key = document.getElementById('groq-key')?.value.trim() || loadKey();
+  if(!key){ document.getElementById('s-st').textContent='⚠ 請先填入 Groq API Key'; return; }
+  const btn = document.getElementById('s-ai-btn');
+  btn.disabled=true;
+  document.getElementById('s-st').textContent='AI 生成中…';
+
+  const prompt = `你是 IG 限時動態文案策略師。根據主題生成 3 張限時動態的文字內容。
+目標受眾：18-30歲想賺錢的女生，怕進八大行業被騙。
+語氣：直接、踢爆、誠實，像業界老司機說話。
+角色：七年娛樂經紀人（男性）。
+
+主題：${topic}
+
+輸出純 JSON，直接從 { 開始：
+{
+  "s1":{"ey":"3個英文關鍵詞·大寫·用·分隔","t1":"大標題（4-6字）","t2":"紅色第二行（可空）","sub":"副標一句話"},
+  "s2":{"tag":"標籤2-4字","hd":"標題6-10字","p1t":"重點1標題","p1d":"說明20-30字","p2t":"重點2標題","p2d":"說明20-30字","p3t":"重點3標題","p3d":"說明20-30字"},
+  "s3":{"main":"主標題4-8字","sub":"副文案，兩行以內","follow":"行動按鈕文字","acct":"@angus061855"}
+}`;
+
+  try{
+    const r = await fetch('https://api.groq.com/openai/v1/chat/completions',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
+      body:JSON.stringify({
+        model:'meta-llama/llama-4-scout-17b-16e-instruct',
+        max_tokens:1000,
+        messages:[{role:'user',content:prompt}]
+      })
+    });
+    const j = await r.json();
+    if(j.error) throw new Error(j.error.message);
+    const text = j.choices?.[0]?.message?.content||'';
+    const s = text.indexOf('{'), e2 = text.lastIndexOf('}');
+    if(s===-1||e2===-1) throw new Error('JSON 解析失敗');
+    const d = JSON.parse(text.slice(s,e2+1));
+
+    // 填入欄位
+    if(d.s1){
+      document.getElementById('s1-ey').value = d.s1.ey||'';
+      document.getElementById('s1-t1').value = d.s1.t1||'';
+      document.getElementById('s1-t2').value = d.s1.t2||'';
+      document.getElementById('s1-sub').value = d.s1.sub||'';
+    }
+    if(d.s2){
+      document.getElementById('s2-tag').value = d.s2.tag||'';
+      document.getElementById('s2-hd').value = d.s2.hd||'';
+      document.getElementById('s2-p1t').value = d.s2.p1t||'';
+      document.getElementById('s2-p1d').value = d.s2.p1d||'';
+      document.getElementById('s2-p2t').value = d.s2.p2t||'';
+      document.getElementById('s2-p2d').value = d.s2.p2d||'';
+      document.getElementById('s2-p3t').value = d.s2.p3t||'';
+      document.getElementById('s2-p3d').value = d.s2.p3d||'';
+    }
+    if(d.s3){
+      document.getElementById('s3-main').value = d.s3.main||'';
+      document.getElementById('s3-sub').value = d.s3.sub||'';
+      document.getElementById('s3-follow').value = d.s3.follow||'';
+      document.getElementById('s3-acct').value = d.s3.acct||'@angus061855';
+    }
+    document.getElementById('s-st').textContent='✓ 內容已填入，渲染中…';
+    buildStory();
+  }catch(e){
+    document.getElementById('s-st').textContent='錯誤：'+e.message;
+  }finally{
+    btn.disabled=false;
+  }
+}
+
+
 </script>
 
 <!-- Refine Panel -->
@@ -2093,7 +2167,21 @@ async function dlStory(){
 
 <div id="panel-story" class="app-panel" style="margin-top:20px">
 <div id="story-action-bar">
-  <button class="sgbtn" id="s-gen-btn" onclick="buildStory()">✦ 產生限時動態</button>
+  <textarea id="s-topic" placeholder="輸入主題，例如：黑心經紀的三個套路…"
+    style="flex:1;background:#111;border:1px solid #2a2a2a;color:#e0d8c8;
+    font-family:'Noto Serif TC',serif;font-size:12px;letter-spacing:.06em;
+    padding:8px 10px;outline:none;height:40px;resize:none;line-height:1.6;
+    min-width:200px;border-radius:2px;max-width:600px"></textarea>
+  <button class="sgbtn" id="s-ai-btn" onclick="aiStory()" 
+    style="background:var(--g);color:#0a0a0a;border:none">✦ AI 產生動態</button>
+  <button class="sgbtn" id="s-gen-btn" onclick="buildStory()"
+    style="background:transparent;color:rgba(200,175,120,.5);border:1px solid #333;font-size:11px">↻ 重新渲染</button>
+  <button class="sgbtn" id="s-bg-btn" onclick="document.getElementById('story-bgf').click()">⊕ 換背景</button>
+  <input type="file" id="story-bgf" accept="image/*" onchange="uploadStoryBg(event)" style="display:none"/>
+  <button class="sgbtn" id="s-dl-btn" onclick="dlStory()">↓ 下載全部 (ZIP)</button>
+  <span id="s-st"></span>
+</div>
+
   <button class="sgbtn" id="s-bg-btn" onclick="document.getElementById('story-bgf').click()">⊕ 換背景</button>
   <input type="file" id="story-bgf" accept="image/*" onchange="uploadStoryBg(event)" style="display:none"/>
   <button class="sgbtn" id="s-dl-btn" onclick="dlStory()">↓ 下載全部 (ZIP)</button>
