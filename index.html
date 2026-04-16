@@ -1932,23 +1932,45 @@ function sHashtag(){return`<div style="position:absolute;top:52px;left:80px;font
 function sWM(acct){return`<div style="position:absolute;bottom:40px;left:50%;transform:translateX(-50%);font-size:20px;letter-spacing:.28em;color:rgba(200,175,120,.3);white-space:nowrap;font-family:'Noto Serif TC',serif">${acct||'@angus061855'}</div>`}
 
 function buildStorySlide1(){
+  const v=window._storyVersion||0;
   const ey=document.getElementById('s1-ey').value||'PROTECT · YOURSELF · NOW';
   const t1=document.getElementById('s1-t1').value||'別被騙了';
   const t2=document.getElementById('s1-t2').value||'';
   const sub=document.getElementById('s1-sub').value||'';
-  return`<div style="position:relative;width:1080px;height:1920px;background:#0a0a0a;overflow:hidden;font-family:'Noto Serif TC',serif">
-    ${sBG()}${sOV()}${sCorners()}${sHashtag()}${sWM()}
+  if(v===0) return `<div style="position:relative;width:1080px;height:1920px;background:#0a0a0a;overflow:hidden;font-family:'Noto Serif TC',serif">
+    ${sBG()}${sOV()}${sHashtag()}${sWM()}
     <div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:180px 100px">
       <div style="font-size:28px;letter-spacing:.35em;color:rgba(200,175,120,.7);margin-bottom:40px">${ey}</div>
-      <div style="font-weight:900;font-size:120px;line-height:1.05;letter-spacing:.1em;color:#fff;text-shadow:0 4px 40px rgba(0,0,0,.8);margin-bottom:12px;word-break:keep-all">${t1}</div>
-      ${t2?`<div style="font-weight:900;font-size:120px;line-height:1.05;letter-spacing:.1em;color:#e8392b;text-shadow:0 4px 40px rgba(0,0,0,.8);margin-bottom:36px;word-break:keep-all">${t2}</div>`:''}
+      <div style="font-weight:900;font-size:96px;line-height:1.05;letter-spacing:.1em;color:#fff;text-shadow:0 4px 40px rgba(0,0,0,.8);margin-bottom:12px;word-break:keep-all">${t1}</div>
+      ${t2?`<div style="font-weight:900;font-size:96px;line-height:1.05;letter-spacing:.1em;color:#e8392b;text-shadow:0 4px 40px rgba(0,0,0,.8);margin-bottom:36px;word-break:keep-all">${t2}</div>`:''}
       <div style="width:130px;height:3px;background:linear-gradient(90deg,rgba(200,175,120,.7),transparent);margin-bottom:40px"></div>
       <div style="font-size:46px;letter-spacing:.15em;color:rgba(210,205,195,.85);line-height:1.8">${sub.replace(/\n/g,'<br>')}</div>
+    </div>
+  </div>`;
+  if(v===1) return `<div style="position:relative;width:1080px;height:1920px;background:#0a0a0a;overflow:hidden;font-family:'Noto Serif TC',serif">
+    ${sBG()}${sOV()}${sHashtag()}${sWM()}
+    <div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:180px 80px">
+      <div style="font-size:26px;letter-spacing:.35em;color:rgba(200,175,120,.7);margin-bottom:40px">${ey}</div>
+      <div style="font-weight:900;font-size:96px;line-height:1.05;letter-spacing:.1em;color:#fff;text-shadow:0 4px 40px rgba(0,0,0,.8);margin-bottom:12px;word-break:keep-all">${t1}</div>
+      ${t2?`<div style="font-weight:900;font-size:96px;line-height:1.05;letter-spacing:.1em;color:#e8392b;text-shadow:0 4px 40px rgba(0,0,0,.8);margin-bottom:36px;word-break:keep-all">${t2}</div>`:''}
+      <div style="width:130px;height:3px;background:linear-gradient(90deg,transparent,rgba(200,175,120,.7),transparent);margin:0 auto 40px"></div>
+      <div style="font-size:44px;letter-spacing:.15em;color:rgba(210,205,195,.85);line-height:1.8">${sub.replace(/\n/g,'<br>')}</div>
+    </div>
+  </div>`;
+  return `<div style="position:relative;width:1080px;height:1920px;background:#0d0d0d;overflow:hidden;font-family:'Noto Serif TC',serif">
+    ${sHashtag()}${sWM()}
+    <div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:180px 100px">
+      <div style="font-size:22px;letter-spacing:.5em;color:rgba(200,175,120,.4);margin-bottom:52px">${ey}</div>
+      <div style="width:60px;height:2px;background:rgba(200,175,120,.5);margin-bottom:48px"></div>
+      <div style="font-weight:900;font-size:96px;line-height:1.05;letter-spacing:.1em;color:#fff;margin-bottom:12px;word-break:keep-all">${t1}</div>
+      ${t2?`<div style="font-weight:900;font-size:96px;line-height:1.05;letter-spacing:.1em;color:#e8392b;margin-bottom:36px;word-break:keep-all">${t2}</div>`:''}
+      <div style="font-size:40px;letter-spacing:.12em;color:rgba(200,175,120,.55);line-height:1.9;margin-top:40px">${sub.replace(/\n/g,'<br>')}</div>
     </div>
   </div>`;
 }
 
 function buildStorySlide2(){
+  const v=window._storyVersion||0;
   const tag=document.getElementById('s2-tag').value||'七年親歷';
   const hd=document.getElementById('s2-hd').value||'入行前要搞清楚';
   const p1t=document.getElementById('s2-p1t').value||'';const p1d=document.getElementById('s2-p1d').value||'';
@@ -1962,8 +1984,8 @@ function buildStorySlide2(){
         <div style="font-size:28px;letter-spacing:.05em;color:rgba(210,205,195,.85);line-height:1.75;margin-top:10px">${p[1].replace(/\n/g,'<br>')}</div>
       </div>
     </div>`).join('');
-  return`<div style="position:relative;width:1080px;height:1920px;background:#0a0a0a;overflow:hidden;font-family:'Noto Serif TC',serif">
-    ${sBG()}${sOV()}${sCorners()}${sHashtag()}${sWM()}
+  if(v===0) return `<div style="position:relative;width:1080px;height:1920px;background:#0a0a0a;overflow:hidden;font-family:'Noto Serif TC',serif">
+    ${sBG()}${sOV()}${sHashtag()}${sWM()}
     <div style="position:absolute;left:100px;top:64px;bottom:64px;width:1px;background:rgba(200,175,120,.18)"></div>
     <div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:180px 100px 180px 136px">
       <div style="display:inline-block;font-size:30px;letter-spacing:.3em;color:rgba(200,175,120,1);border:1px solid rgba(200,175,120,.3);padding:7px 20px;margin-bottom:36px;align-self:flex-start">${tag}</div>
@@ -1972,24 +1994,77 @@ function buildStorySlide2(){
       ${ptsHTML}
     </div>
   </div>`;
+  if(v===1){
+    const ptsCenterHTML=[[p1t,p1d],[p2t,p2d],[p3t,p3d]].map((p,i)=>`
+      <div style="text-align:center;margin-bottom:44px">
+        <div style="font-size:30px;letter-spacing:.2em;color:rgba(200,175,120,1);margin-bottom:10px">0${i+1}</div>
+        <div style="font-weight:900;font-size:40px;letter-spacing:.08em;color:#fff;line-height:1.4">${p[0]}</div>
+        <div style="font-size:28px;letter-spacing:.05em;color:rgba(210,205,195,.85);line-height:1.75;margin-top:10px">${p[1].replace(/\n/g,'<br>')}</div>
+      </div>`).join('');
+    return `<div style="position:relative;width:1080px;height:1920px;background:#0a0a0a;overflow:hidden;font-family:'Noto Serif TC',serif">
+      ${sBG()}${sOV()}${sHashtag()}${sWM()}
+      <div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:180px 80px">
+        <div style="font-size:28px;letter-spacing:.3em;color:rgba(200,175,120,1);border:1px solid rgba(200,175,120,.3);padding:7px 20px;margin-bottom:36px">${tag}</div>
+        <div style="font-weight:900;font-size:68px;letter-spacing:.12em;color:#fff;line-height:1.18;margin-bottom:52px;word-break:keep-all">${hd.replace(/\n/g,'<br>')}</div>
+        <div style="width:68px;height:1px;background:rgba(200,175,120,.55);margin-bottom:48px"></div>
+        ${ptsCenterHTML}
+      </div>
+    </div>`;
+  }
+  const ptsCardHTML=[[p1t,p1d],[p2t,p2d],[p3t,p3d]].map((p,i)=>`
+    <div style="border-left:3px solid rgba(200,175,120,.6);padding:16px 24px;margin-bottom:28px;background:rgba(200,175,120,.04)">
+      <div style="font-weight:900;font-size:38px;letter-spacing:.08em;color:#fff;line-height:1.4">${p[0]}</div>
+      <div style="font-size:26px;letter-spacing:.05em;color:rgba(210,205,195,.8);line-height:1.75;margin-top:8px">${p[1].replace(/\n/g,'<br>')}</div>
+    </div>`).join('');
+  return `<div style="position:relative;width:1080px;height:1920px;background:#0d0d0d;overflow:hidden;font-family:'Noto Serif TC',serif">
+    ${sHashtag()}${sWM()}
+    <div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:180px 90px">
+      <div style="font-size:22px;letter-spacing:.3em;color:rgba(200,175,120,.6);margin-bottom:20px">${tag}</div>
+      <div style="font-weight:900;font-size:64px;letter-spacing:.1em;color:#fff;line-height:1.2;margin-bottom:48px;word-break:keep-all">${hd.replace(/\n/g,'<br>')}</div>
+      ${ptsCardHTML}
+    </div>
+  </div>`;
 }
 
 function buildStorySlide3(){
+  const v=window._storyVersion||0;
   const main=document.getElementById('s3-main').value||'找對的人才是起點';
   const sub=document.getElementById('s3-sub').value||'';
   const follow=document.getElementById('s3-follow').value||'私訊我了解更多';
   const acct=document.getElementById('s3-acct').value||'@angus061855';
-  return`<div style="position:relative;width:1080px;height:1920px;background:#0a0a0a;overflow:hidden;font-family:'Noto Serif TC',serif">
-    ${sBG()}${sOV()}${sCorners()}${sHashtag()}${sWM(acct)}
+  if(v===0) return `<div style="position:relative;width:1080px;height:1920px;background:#0a0a0a;overflow:hidden;font-family:'Noto Serif TC',serif">
+    ${sBG()}${sOV()}${sHashtag()}${sWM(acct)}
     <div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:160px 100px">
       <div style="font-size:30px;letter-spacing:.5em;color:rgba(200,175,120,.7);margin-bottom:52px">◆ ◆ ◆</div>
-      <div style="font-weight:900;font-size:108px;letter-spacing:.08em;color:#fff;line-height:1.15;text-shadow:0 4px 40px rgba(0,0,0,.8);margin-bottom:36px;word-break:keep-all">${main.replace(/\n/g,'<br>')}</div>
+      <div style="font-weight:900;font-size:100px;letter-spacing:.08em;color:#fff;line-height:1.15;text-shadow:0 4px 40px rgba(0,0,0,.8);margin-bottom:36px;word-break:keep-all">${main.replace(/\n/g,'<br>')}</div>
       <div style="font-size:40px;letter-spacing:.1em;color:rgba(210,205,195,.85);line-height:1.9;margin-bottom:64px;max-width:880px;word-break:keep-all">${sub.replace(/\n/g,'<br>')}</div>
       <div style="width:1px;height:64px;background:linear-gradient(to bottom,rgba(200,175,120,.6),transparent);margin-bottom:44px"></div>
-      <div style="border:1px solid rgba(200,175,120,.35);padding:20px 56px;margin-bottom:36px;max-width:880px">
-        <div style="font-size:38px;letter-spacing:.12em;color:rgba(200,175,120,1);word-break:keep-all">${follow}</div>
+      <div style="border:1px solid rgba(200,175,120,.35);padding:20px 56px;margin-bottom:36px">
+        <div style="font-size:38px;letter-spacing:.12em;color:rgba(200,175,120,1)">${follow}</div>
       </div>
       <div style="font-size:32px;letter-spacing:.22em;color:rgba(200,175,120,.7)">${acct}</div>
+    </div>
+  </div>`;
+  if(v===1) return `<div style="position:relative;width:1080px;height:1920px;background:#0a0a0a;overflow:hidden;font-family:'Noto Serif TC',serif">
+    ${sBG()}${sOV()}${sHashtag()}${sWM(acct)}
+    <div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:160px 80px">
+      <div style="font-weight:900;font-size:116px;letter-spacing:.08em;color:#fff;line-height:1.1;text-shadow:0 4px 40px rgba(0,0,0,.8);margin-bottom:48px;word-break:keep-all">${main.replace(/\n/g,'<br>')}</div>
+      <div style="width:200px;height:2px;background:linear-gradient(90deg,transparent,rgba(200,175,120,.7),transparent);margin-bottom:48px"></div>
+      <div style="font-size:42px;letter-spacing:.1em;color:rgba(210,205,195,.85);line-height:1.9;margin-bottom:72px;max-width:880px">${sub.replace(/\n/g,'<br>')}</div>
+      <div style="background:rgba(200,175,120,1);padding:22px 64px;margin-bottom:36px">
+        <div style="font-size:38px;letter-spacing:.15em;color:#0a0a0a;font-weight:900">${follow}</div>
+      </div>
+      <div style="font-size:30px;letter-spacing:.22em;color:rgba(200,175,120,.6)">${acct}</div>
+    </div>
+  </div>`;
+  return `<div style="position:relative;width:1080px;height:1920px;background:#0d0d0d;overflow:hidden;font-family:'Noto Serif TC',serif">
+    ${sHashtag()}${sWM(acct)}
+    <div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:160px 100px">
+      <div style="width:60px;height:2px;background:rgba(200,175,120,.5);margin-bottom:48px"></div>
+      <div style="font-weight:900;font-size:100px;letter-spacing:.08em;color:#fff;line-height:1.1;margin-bottom:40px;word-break:keep-all">${main.replace(/\n/g,'<br>')}</div>
+      <div style="font-size:38px;letter-spacing:.1em;color:rgba(200,175,120,.6);line-height:1.9;margin-bottom:60px">${sub.replace(/\n/g,'<br>')}</div>
+      <div style="font-size:36px;letter-spacing:.15em;color:rgba(200,175,120,.9);border-bottom:1px solid rgba(200,175,120,.3);padding-bottom:24px;margin-bottom:32px">${follow} →</div>
+      <div style="font-size:28px;letter-spacing:.22em;color:rgba(200,175,120,.4)">${acct}</div>
     </div>
   </div>`;
 }
@@ -2090,6 +2165,16 @@ async function aiStory(){
   }
 }
 
+function switchStoryVersion(v){
+  window._storyVersion=v;
+  [0,1,2].forEach(i=>{
+    const btn=document.getElementById('sv-'+i);
+    if(!btn)return;
+    if(i===v){btn.style.background='var(--g)';btn.style.color='#0a0a0a';btn.style.border='none';}
+    else{btn.style.background='transparent';btn.style.color='rgba(200,175,120,.5)';btn.style.border='1px solid #333';}
+  });
+  buildStory();
+}
 
 </script>
 
@@ -2166,6 +2251,12 @@ async function aiStory(){
 </div><!-- end panel-post -->
 
 <div id="panel-story" class="app-panel" style="margin-top:20px">
+<div id="story-version-bar" style="width:100%;max-width:1220px;display:flex;align-items:center;gap:8px;margin-bottom:12px;margin-top:16px">
+  <span style="font-size:11px;letter-spacing:.18em;color:rgba(200,175,120,.35)">版本：</span>
+  <button onclick="switchStoryVersion(0)" id="sv-0" style="background:var(--g);color:#0a0a0a;border:none;font-family:inherit;font-size:11px;letter-spacing:.12em;padding:5px 14px;cursor:pointer;border-radius:2px">① 標準</button>
+  <button onclick="switchStoryVersion(1)" id="sv-1" style="background:transparent;color:rgba(200,175,120,.5);border:1px solid #333;font-family:inherit;font-size:11px;letter-spacing:.12em;padding:5px 14px;cursor:pointer;border-radius:2px">② 置中</button>
+  <button onclick="switchStoryVersion(2)" id="sv-2" style="background:transparent;color:rgba(200,175,120,.5);border:1px solid #333;font-family:inherit;font-size:11px;letter-spacing:.12em;padding:5px 14px;cursor:pointer;border-radius:2px">③ 極簡</button>
+</div>
 <div id="story-action-bar">
   <textarea id="s-topic" placeholder="輸入主題，例如：黑心經紀的三個套路…"
     style="flex:1;background:#111;border:1px solid #2a2a2a;color:#e0d8c8;
@@ -2182,11 +2273,6 @@ async function aiStory(){
   <span id="s-st"></span>
 </div>
 
-  <button class="sgbtn" id="s-bg-btn" onclick="document.getElementById('story-bgf').click()">⊕ 換背景</button>
-  <input type="file" id="story-bgf" accept="image/*" onchange="uploadStoryBg(event)" style="display:none"/>
-  <button class="sgbtn" id="s-dl-btn" onclick="dlStory()">↓ 下載全部 (ZIP)</button>
-  <span id="s-st"></span>
-</div>
 <div class="story-input-grid">
   <div class="story-card-input">
     <h3>第 1 張 <span>V · 價值鉤子</span></h3>
