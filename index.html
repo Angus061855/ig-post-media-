@@ -110,18 +110,18 @@ body{background:#0d0d0d;font-family:'Noto Serif TC','CKS','STSong',serif;display
 .t1 .tt{font-weight:900;word-break:keep-all;overflow-wrap:anywhere;font-size:108px;line-height:1.05;letter-spacing:.12em;color:var(--cr);text-shadow:0 4px 40px rgba(0,0,0,.7);display:block}
 .t1 .tt.ac{color:#e8392b !important;-webkit-text-fill-color:#e8392b !important}
 .t1 .sp2{width:100px;height:2px;margin:24px 0;background:linear-gradient(90deg,rgba(200,175,120,.6),transparent)}
-.t1 .sb{font-size:54px;letter-spacing:.22em;color:var(--grey);line-height:1.85;margin-bottom:64px}
+.t1 .sb{font-size:64px;letter-spacing:.22em;color:var(--grey);line-height:1.85;margin-bottom:64px}
 .t1 .ac2{font-size:28px;letter-spacing:.2em;color:var(--gd);border-top:1px solid rgba(200,175,120,.15);padding-top:14px}
 .t1 .nw{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:110px 100px 110px 136px}
 .t1 .nm{font-size:28px;letter-spacing:.3em;color:var(--gd);margin-bottom:44px}
-.t1 .tg{display:inline-block;font-size:30px;letter-spacing:.3em;color:var(--g);border:1px solid rgba(200,175,120,.26);padding:5px 16px;margin-bottom:30px}
-.t1 .hd{font-weight:900;word-break:keep-all;overflow-wrap:anywhere;font-size:68px;letter-spacing:.14em;color:#ffffff;line-height:1.18;margin-bottom:48px;text-shadow:0 3px 30px rgba(0,0,0,.6)}
+.t1 .tg{display:inline-block;font-size:36px;letter-spacing:.3em;color:var(--g);border:1px solid rgba(200,175,120,.26);padding:5px 16px;margin-bottom:30px}
+.t1 .hd{font-weight:900;word-break:keep-all;overflow-wrap:anywhere;font-size:80px;letter-spacing:.14em;color:#ffffff;line-height:1.18;margin-bottom:48px;text-shadow:0 3px 30px rgba(0,0,0,.6)}
 .t1 .dv{width:64px;height:1px;margin-bottom:44px;background:rgba(200,175,120,.55)}
 .t1 .pl{list-style:none;display:flex;flex-direction:column;gap:40px}
 .t1 .pi{display:flex;align-items:flex-start;gap:44px}
 .t1 .pn{font-size:34px;letter-spacing:.1em;color:var(--g);padding-top:6px;flex-shrink:0;width:44px;text-align:left;line-height:1;font-weight:900}
-.t1 .ph2{font-weight:900;font-size:46px;letter-spacing:.08em;color:#ffffff;line-height:1.4}
-.t1 .pd{font-size:32px;letter-spacing:.05em;color:var(--grey);line-height:1.75;margin-top:10px}
+.t1 .ph2{font-weight:900;font-size:56px;letter-spacing:.08em;color:#ffffff;line-height:1.4}
+.t1 .pd{font-size:38px;letter-spacing:.05em;color:var(--grey);line-height:1.75;margin-top:10px}
 .t1 .ctw{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:96px}
 .t1 .cd{font-size:30px;letter-spacing:.5em;color:var(--gd);margin-bottom:36px}
 .t1 .cm{font-weight:900;font-size:108px;letter-spacing:.08em;color:var(--cr);line-height:1.2;text-shadow:0 4px 40px rgba(0,0,0,.7);margin-bottom:28px;word-break:keep-all;overflow-wrap:anywhere}
@@ -1008,16 +1008,16 @@ function bCover(d,account,thm,pgLabel){
   const pgNum=pgLabel?parseInt(pgLabel.split('/')[0])||1:1;
   const s=mkSlide('slide-1',thm,`${bgD(thm)}${ovD(thm)}${tDeco(thm,'cover')}${acctExtra(thm,account)}
     <div class="cw" data-idx="${pgNum}">
-      <div class="bio ed" style="font-size:20px;letter-spacing:.12em;color:rgba(200,175,120,.72);line-height:2.1;margin-bottom:32px;border-bottom:1px solid rgba(200,175,120,.18);padding-bottom:24px">
+      <div class="ey ed">${d.eyebrow||''}</div>
+      <div><span class="tt ed">${t1}</span>${t2?`<span class="tt ac ed">${t2}</span>`:''}</div>
+      <div class="sp2 deco"></div>
+      <div class="sb ed" style="font-size:30px;letter-spacing:.18em;line-height:1.85;margin-bottom:40px;color:rgba(210,205,195,.9)">${(d.subtitle||'').replace(/\n/g,'<br>')}</div>
+    <div class="bio ed" style="font-size:20px;letter-spacing:.12em;color:rgba(200,175,120,.72);line-height:2.1;margin-bottom:32px;border-bottom:1px solid rgba(200,175,120,.18);padding-bottom:24px">
         <span style="font-size:22px;font-weight:700;color:rgba(200,175,120,.9);letter-spacing:.18em">關於 大頭｜AS娛樂經紀</span><br>
         <span style="color:var(--g)">靠誠實與信任</span>・七年面試超過 <span style="color:var(--g)">3000+</span><br>
         不簽合約・不壓薪水・自由排班・隱私安全<br>
         <span style="color:rgba(200,175,120,.45);font-size:18px">不要讓未來的你 討厭現在的自己</span>
       </div>
-      <div class="ey ed">${d.eyebrow||''}</div>
-      <div><span class="tt ed">${t1}</span>${t2?`<span class="tt ac ed">${t2}</span>`:''}</div>
-      <div class="sp2 deco"></div>
-      <div class="sb ed" style="font-size:30px;letter-spacing:.18em;line-height:1.85;margin-bottom:40px;color:rgba(210,205,195,.9)">${(d.subtitle||'').replace(/\n/g,'<br>')}</div>
     </div>`,pgLabel);
   addSlideRefineBtn(s,'slide-1',0,'cover');
   return s;
@@ -1947,7 +1947,7 @@ function sCorners(){return`
   <div style="position:absolute;width:48px;height:48px;top:64px;right:64px;border-top:2px solid rgba(200,175,120,.2);border-right:2px solid rgba(200,175,120,.2)"></div>
   <div style="position:absolute;width:48px;height:48px;bottom:64px;left:64px;border-bottom:2px solid rgba(200,175,120,.2);border-left:2px solid rgba(200,175,120,.2)"></div>
   <div style="position:absolute;width:48px;height:48px;bottom:64px;right:64px;border-bottom:2px solid rgba(200,175,120,.2);border-right:2px solid rgba(200,175,120,.2)"></div>`}
-function sHashtag(){return`<div style="position:absolute;top:52px;left:80px;font-size:20px;letter-spacing:.18em;color:rgba(200,175,120,.7);font-family:'Noto Serif TC',serif">#AS娛樂經紀 大頭</div>`}
+function sHashtag(){return`<div style="position:absolute;top:80px;left:120px;font-size:26px;letter-spacing:.18em;color:rgba(200,175,120,.7);font-family:'Noto Serif TC',serif">#AS娛樂經紀 大頭</div>`}
 function sWM(acct){return`<div style="position:absolute;bottom:40px;left:50%;transform:translateX(-50%);font-size:20px;letter-spacing:.28em;color:rgba(200,175,120,.3);white-space:nowrap;font-family:'Noto Serif TC',serif">${acct||'@angus061855'}</div>`}
 
 function buildStorySlide1(){
