@@ -1279,7 +1279,7 @@ async function callAPI(inp,sys,max){
     stat('⚠ 請先填入 Groq API Key');
     throw new Error('No API key');
   }
-  const systemPrompt = sys || buildPrompt(inp, getCfg());
+  const systemPrompt = (sys && sys.trim()) ? sys : buildPrompt(inp, getCfg());
   const r=await fetch('https://api.groq.com/openai/v1/chat/completions',{
     method:'POST',
     headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
@@ -1287,9 +1287,9 @@ async function callAPI(inp,sys,max){
       model:'meta-llama/llama-4-scout-17b-16e-instruct',
       max_tokens:max||5000,
       messages:[
-        {role:'system',content:systemPrompt},
-        {role:'user',content:inp}
-      ]
+        {role:'system', content: systemPrompt || '你是一個助手'},
+        {role:'user', content: inp}
+]
     })
   });
   const j=await r.json();
