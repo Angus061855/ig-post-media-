@@ -2102,12 +2102,22 @@ async function aiStory(){
   btn.disabled=true;
   document.getElementById('s-st').textContent='AI 生成中…';
 
-  const prompt = `你是 IG 限時動態文案策略師。根據主題生成 3 張限時動態的文字內容。
+  const prompt = `你是 IG 限時動態文案策略師。根據下方主題，生成 3 張限時動態的文字內容。
+
+角色設定：七年娛樂經紀人（男性），踢爆業界黑心手法。
 目標受眾：18-30歲想賺錢的女生，怕進八大行業被騙。
 語氣：直接、踢爆、誠實，像業界老司機說話。
-角色：七年娛樂經紀人（男性）。
 
-主題：${topic}
+輸出規則：
+- 只輸出 JSON，從 { 開始，到 } 結束
+- 不加任何說明、不加 markdown、不加反引號
+- 所有 value 都必須是合法 JSON 字串，禁止在字串裡使用未跳脫的雙引號
+- 禁止使用中文引號「」，改用 【】 或直接不用引號
+
+JSON 格式如下（括號內是說明，輸出時換成真實內容）：
+{"s1":{"ey":"英文關鍵詞大寫用點分隔","t1":"大標題4到6字","t2":"紅色第二行可空白","sub":"副標一句話說清楚痛點"},"s2":{"tag":"標籤2到4字","hd":"標題6到10字","p1t":"重點1標題","p1d":"說明20到30字","p2t":"重點2標題","p2d":"說明20到30字","p3t":"重點3標題","p3d":"說明20到30字"},"s3":{"main":"主標題4到8字","sub":"副文案兩行以內","follow":"行動按鈕文字","acct":"@angus061855"}}
+
+主題：${topic}`;
 
 輸出純 JSON，直接從 { 開始：
 {
@@ -2123,7 +2133,10 @@ async function aiStory(){
       body:JSON.stringify({
         model:'meta-llama/llama-4-scout-17b-16e-instruct',
         max_tokens:1000,
-        messages:[{role:'user',content:prompt}]
+        messages:[
+  {role:'system',content:'你是 IG 限時動態文案策略師，只輸出純 JSON，不加任何說明。'},
+  {role:'user',content:prompt}
+]
       })
     });
     const j = await r.json();
@@ -2132,19 +2145,29 @@ async function aiStory(){
     const s = text.indexOf('{'), e2 = text.lastIndexOf('}');
     if(s===-1||e2===-1) throw new Error('JSON 解析失敗');
     let jsonStr = text.slice(s, e2+1);
-// 清理常見問題字元
 jsonStr = jsonStr
-  .replace(/[\u0000-\u001F\u007F]/g, ' ')  // 控制字元
-  .replace(/,\s*}/g, '}')                   // 尾逗號
-  .replace(/,\s*]/g, ']');                  // 尾逗號
+  .replace(/[\u0000-\u001F\u007F]/g, ' ')
+  .replace(/,\s*}/g, '}')
+  .replace(/,\s*]/g, ']')
+  .replace(/「/g, '"').replace(/」/g, '"')   // 中文引號換成英文
+  .replace(/『/g, '"').replace(/』/g, '"')
+  .replace(/\t/g, ' ');                       // tab 換空格
 let d;
 try{
   d = JSON.parse(jsonStr);
 }catch(err){
-  document.getElementById('s-st').textContent='JSON 錯誤，重試中…';
-  // 再試一次，用更寬鬆的方式
-  throw new Error('JSON 解析失敗：'+err.message);
+  // 最後手段：把所有 value 裡的雙引號跳脫
+  try{
+    const safe = jsonStr.replace(/:(\s*)"((?:[^"\\]|\\.)*)"/g, (m,colon,val)=>{
+      return ':'+colon+'"'+val.replace(/"/g,'\\"')+'"';
+    });
+    d = JSON.parse(safe);
+  }catch(err2){
+    document.getElementById('s-st').textContent='JSON 解析失敗，請換短一點的主題再試';
+    throw new Error('JSON 解析失敗：'+err2.message);
+  }
 }
+
 
     // 填入欄位
     if(d.s1){
