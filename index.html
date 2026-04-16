@@ -2131,7 +2131,20 @@ async function aiStory(){
     const text = j.choices?.[0]?.message?.content||'';
     const s = text.indexOf('{'), e2 = text.lastIndexOf('}');
     if(s===-1||e2===-1) throw new Error('JSON 解析失敗');
-    const d = JSON.parse(text.slice(s,e2+1));
+    let jsonStr = text.slice(s, e2+1);
+// 清理常見問題字元
+jsonStr = jsonStr
+  .replace(/[\u0000-\u001F\u007F]/g, ' ')  // 控制字元
+  .replace(/,\s*}/g, '}')                   // 尾逗號
+  .replace(/,\s*]/g, ']');                  // 尾逗號
+let d;
+try{
+  d = JSON.parse(jsonStr);
+}catch(err){
+  document.getElementById('s-st').textContent='JSON 錯誤，重試中…';
+  // 再試一次，用更寬鬆的方式
+  throw new Error('JSON 解析失敗：'+err.message);
+}
 
     // 填入欄位
     if(d.s1){
