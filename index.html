@@ -1192,7 +1192,10 @@ function getCfg(){
   return { mode:'balance', intensity:0.7, revealLevel:0.5 };
 }
 function buildPrompt(topic, cfg) {
-  return '你是七年娛樂經紀人（男性），專業、誠實、說到做到，以「踢爆業界黑心手法」聞名。\n'
+  return 
+    + '【重要】根據我提供的核心論點和具體細節素材來生成，不要自己發明不相關的內容。\n'
+    + '素材裡有的具體數字、案例、說法，必須保留在輸出裡。\n\n'
+    + '你是七年娛樂經紀人（男性），專業、誠實、說到做到，以「踢爆業界黑心手法」聞名。\n'
     + '說話直接不畫大餅，是新人女孩的安全守護者。\n\n'
     + '【目標受眾】18-30歲想賺錢但內心不安的女生，害怕進入八大行業被騙、被限制人身自由、遇到不負責的經紀人。\n\n'
     + '【你的任務】根據主題，生成 7 頁 IG 輪播貼文（VIRAL 結構）：\n'
@@ -1215,7 +1218,7 @@ function buildPrompt(topic, cfg) {
     + '- cover 的 title：每行最多 6 個中文字，只有語意需要才換行，換行必須在完整詞語的結尾\n'
     + '- story/content/summary 的 heading：每行最多 8 個中文字，換行在語意轉折處\n'
     + '- 同一個意思不換行，不要為了排版硬斷句\n'
-    + '- 每個 point 的 title：8~15 字，一句話說清楚\n'
+    + '- 每個 point 的 title：8~10 字，一句話說清楚\n'
     + '- 每個 point 的 desc：15-20 字，有畫面感，說清楚細節\n'
     + '- 每頁 3 個 points 全部填完，不能留空\n\n'
     + '【風控規則】\n'
@@ -1304,27 +1307,74 @@ function parseJSON(text){
 }
 
 async function doGen(){
-  const inp=E('it').value.trim();
-  const account=E('ai').value.trim()||'@your.account';
-  if(!inp){stat('請輸入主題或文章');return}
-  lastInput=inp;lastAccount=account;
-  E('gb').disabled=true;stat('AI 規劃中…');desel();
+  const inp = E('it').value.trim();
+  const account = E('ai').value.trim() || '@your.account';
+  if(!inp){ stat('請輸入主題或文章'); return; }
+  lastAccount = account;
+  E('gb').disabled = true;
+  stat('理解內容中…');
+  desel();
+
   try{
-    const cfg=getCfg();
-    let text=await callAPI(inp,null,5000);
-    let data=parseJSON(text);
+    // ── 步驟一：先理解口語內容，萃取核心論點 ──
+    const understandPrompt = 
+      '你是一個內容編輯，任務是把口語文章理解後，萃取出乾淨的結構化摘要。\n\n'
+    + '規則：\n'
+    + '1. 找出核心主題（一句話）\n'
+    + '2. 找出 3~5 個核心論點（每個論點一句話說清楚）\n'
+    + '3. 找出說話者的立場和語氣（是踢爆？教學？價值觀？）\n'
+    + '4. 找出 CTA 方向（說話者希望受眾做什麼？）\n'
+    + '5. 保留所有具體細節、數字、案例（這些是最重要的素材）\n\n'
+    + '輸出格式（純 JSON）：\n'
+    + '{\n'
+    + '  "topic": "核心主題一句話",\n'
+    + '  "angle": "知識科普 或 價值觀 或 踢爆",\n'
+    + '  "points": ["論點1", "論點2", "論點3"],\n'
+    + '  "details": ["具體細節或數字1", "具體細節2"],\n'
+    + '  "cta": "希望受眾做什麼"\n'
+    + '}\n\n'
+    + '原文：\n' + inp;
+
+    const understandText = await callAPI(inp, understandPrompt, 1000);
+    const s = understandText.indexOf('{');
+    const e2 = understandText.lastIndexOf('}');
+    let understood = null;
+    if(s !== -1 && e2 !== -1){
+      try{ understood = JSON.parse(understandText.slice(s, e2+1)); }catch(e){}
+    }
+
+    // ── 步驟二：把理解結果組合成強化主題，交給輪播 prompt ──
+    let enhancedTopic = inp; // 預設直接用原文
+    if(understood){
+      enhancedTopic = 
+        '【主題】' + understood.topic + '\n'
+      + '【切入角度】' + understood.angle + '\n'
+      + '【核心論點】\n' + (understood.points||[]).map((p,i)=>`${i+1}. ${p}`).join('\n') + '\n'
+      + '【具體細節素材】\n' + (understood.details||[]).join('\n') + '\n'
+      + '【CTA方向】' + understood.cta + '\n\n'
+      + '【原始口語內容，請忠實根據這段生成，不要自己發揮不相關的內容】\n' + inp;
+    }
+
+    lastInput = enhancedTopic;
+    stat('生成輪播中…');
+
+    // ── 步驟三：正常生成 ──
+    let text = await callAPI(enhancedTopic, null, 5000);
+    let data = parseJSON(text);
     if(!data){
       stat('備用方案中…');
-      text=await callAPI(inp,buildFallbackPrompt(inp,cfg),3000);
-      data=parseJSON(text);
+      text = await callAPI(enhancedTopic, buildFallbackPrompt(enhancedTopic, getCfg()), 3000);
+      data = parseJSON(text);
     }
-    if(!data){stat('⚠ 生成失敗，請換個說法');return;}
-    window._layoutVariant=Math.floor(Math.random()*8);
-    render(data,account,'t1');
-    genCaption(inp);
-    stat('✓ 完成 · 文案生成中，下載 ZIP 時會一併包含 ig_caption.txt');
-  }catch(e){stat('錯誤：'+e.message);console.error(e)}
-  finally{E('gb').disabled=false}
+    if(!data){ stat('⚠ 生成失敗，請換個說法'); return; }
+
+    window._layoutVariant = Math.floor(Math.random() * 8);
+    render(data, account, 't1');
+    genCaption(inp); // 文案用原始輸入
+    stat('✓ 完成');
+
+  }catch(e){ stat('錯誤：' + e.message); console.error(e); }
+  finally{ E('gb').disabled = false; }
 }
 
 /* ─── download ─── */
