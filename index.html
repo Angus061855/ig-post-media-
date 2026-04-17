@@ -2054,16 +2054,15 @@ function buildStory(){
   document.getElementById('s-st').textContent='✓ 完成，可下載';
 }
 
-function sBG(){return`<div class="s-bg" style="position:absolute;inset:0;background-image:${storyBGU};background-size:cover;background-position:center;opacity:.95"></div>`}
+function sBG(){return`<div class="s-bg" style="position:absolute;inset:0;background-image:url('back2.png');background-size:cover;background-position:center;opacity:1"></div>`}
 function sOV(){return`<div style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(160deg,rgba(0,0,0,.2) 0%,rgba(8,6,3,.2) 55%,rgba(0,0,0,.2) 100%)"></div>`}
 function sCorners(){return`
   <div style="position:absolute;width:48px;height:48px;top:64px;left:64px;border-top:2px solid rgba(200,175,120,.2);border-left:2px solid rgba(200,175,120,.2)"></div>
   <div style="position:absolute;width:48px;height:48px;top:64px;right:64px;border-top:2px solid rgba(200,175,120,.2);border-right:2px solid rgba(200,175,120,.2)"></div>
   <div style="position:absolute;width:48px;height:48px;bottom:64px;left:64px;border-bottom:2px solid rgba(200,175,120,.2);border-left:2px solid rgba(200,175,120,.2)"></div>
   <div style="position:absolute;width:48px;height:48px;bottom:64px;right:64px;border-bottom:2px solid rgba(200,175,120,.2);border-right:2px solid rgba(200,175,120,.2)"></div>`}
-function sHashtag(){return`<div style="position:absolute;top:80px;left:120px;font-size:26px;letter-spacing:.18em;color:rgba(200,175,120,.7);font-family:'Noto Serif TC',serif">#AS娛樂經紀 大頭</div>`}
 function sLogo(){
-  return `<img src="logo.png" alt="" style="position:absolute;top:32px;right:40px;width:90px;height:90px;object-fit:contain;z-index:10;opacity:.92;" onerror="this.style.display='none'">`;
+  return `<img src="logo.png" alt="" style="position:absolute;bottom:80px;left:80px;width:160px;height:160px;object-fit:contain;z-index:10;opacity:.92;" onerror="this.style.display='none'">`;
 }
 function sWM(acct){return`<div style="position:absolute;bottom:40px;left:50%;transform:translateX(-50%);font-size:20px;letter-spacing:.28em;color:rgba(200,175,120,.3);white-space:nowrap;font-family:'Noto Serif TC',serif">${acct||'@angus061855'}</div>`}
 
@@ -2168,7 +2167,7 @@ function buildStorySlide3(){
   const follow=E('s3-follow').value||'私訊我了解更多';
   const acct=E('s3-acct').value||'@angus061855';
   if(v===0) return `<div style="position:relative;width:1080px;height:1920px;background:#0a0a0a;overflow:hidden;font-family:'Noto Serif TC',serif">
-    ${sBG()}${sOV()}${sHashtag()}${sWM(acct)}
+    ${sBG()}${sOV()}${sHashtag()}${sLogo()}${sWM(acct)}
     <div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:160px 100px">
       <div style="font-size:30px;letter-spacing:.5em;color:rgba(200,175,120,.7);margin-bottom:52px">◆ ◆ ◆</div>
       <div class="s-ed" style="font-weight:900;font-size:116px;letter-spacing:.08em;color:#fff;line-height:1.15;text-shadow:0 4px 40px rgba(0,0,0,.8);margin-bottom:36px;word-break:keep-all">${main.replace(/\n/g,'<br>')}</div>
@@ -2181,7 +2180,7 @@ function buildStorySlide3(){
     </div>
   </div>`;
   if(v===1) return `<div style="position:relative;width:1080px;height:1920px;background:#0a0a0a;overflow:hidden;font-family:'Noto Serif TC',serif">
-    ${sBG()}${sOV()}${sHashtag()}${sWM(acct)}
+    ${sBG()}${sOV()}${sHashtag()}${sLogo()}${sWM(acct)}
     <div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:160px 80px">
       <div class="s-ed" style="font-weight:900;font-size:128px;letter-spacing:.08em;color:#fff;line-height:1.1;text-shadow:0 4px 40px rgba(0,0,0,.8);margin-bottom:48px;word-break:keep-all">${main.replace(/\n/g,'<br>')}</div>
       <div style="width:200px;height:2px;background:linear-gradient(90deg,transparent,rgba(200,175,120,.7),transparent);margin-bottom:48px"></div>
@@ -2193,7 +2192,7 @@ function buildStorySlide3(){
     </div>
   </div>`;
   return `<div style="position:relative;width:1080px;height:1920px;background:#0d0d0d;overflow:hidden;font-family:'Noto Serif TC',serif">
-    ${sHashtag()}${sWM(acct)}
+    ${sHashtag()}${sLogo()}${sWM(acct)}
     <div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:160px 100px">
       <div style="width:60px;height:2px;background:rgba(200,175,120,.5);margin-bottom:48px"></div>
       <div class="s-ed" style="font-weight:900;font-size:116px;letter-spacing:.08em;color:#fff;line-height:1.1;margin-bottom:40px;word-break:keep-all">${main.replace(/\n/g,'<br>')}</div>
