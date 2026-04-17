@@ -1030,7 +1030,7 @@ function bContent(d,idx,total,thm,pgLabel){
   const s=mkSlide(slideId,thm,`${bgD(thm)}${ovD(thm)}${tDeco(thm,'content')}
     <div class="nw" data-idx="${pgNum}">
       <div class="nm deco">${num}</div>
-      <div class="tg ed">${d.tag||''}</div>
+      ${d.tag ? `<div class="tg ed">${d.tag}</div>` : ''}
       <div class="hd ed">${(d.heading||'').replace(/\n/g,'<br>')}</div>
       <div class="dv deco"></div>
       <ul class="pl">${pts}</ul>
@@ -2062,6 +2062,9 @@ function sCorners(){return`
   <div style="position:absolute;width:48px;height:48px;bottom:64px;left:64px;border-bottom:2px solid rgba(200,175,120,.2);border-left:2px solid rgba(200,175,120,.2)"></div>
   <div style="position:absolute;width:48px;height:48px;bottom:64px;right:64px;border-bottom:2px solid rgba(200,175,120,.2);border-right:2px solid rgba(200,175,120,.2)"></div>`}
 function sHashtag(){return`<div style="position:absolute;top:80px;left:120px;font-size:26px;letter-spacing:.18em;color:rgba(200,175,120,.7);font-family:'Noto Serif TC',serif">#AS娛樂經紀 大頭</div>`}
+function sLogo(){
+  return `<img src="logo.png" alt="" style="position:absolute;top:32px;right:40px;width:90px;height:90px;object-fit:contain;z-index:10;opacity:.92;" onerror="this.style.display='none'">`;
+}
 function sWM(acct){return`<div style="position:absolute;bottom:40px;left:50%;transform:translateX(-50%);font-size:20px;letter-spacing:.28em;color:rgba(200,175,120,.3);white-space:nowrap;font-family:'Noto Serif TC',serif">${acct||'@angus061855'}</div>`}
 
 function buildStorySlide1(){
@@ -2071,7 +2074,7 @@ function buildStorySlide1(){
   const t2=E('s1-t2').value||'';
   const sub=E('s1-sub').value||'';
   if(v===0) return `<div style="position:relative;width:1080px;height:1920px;background:#0a0a0a;overflow:hidden;font-family:'Noto Serif TC',serif">
-    ${sBG()}${sOV()}${sHashtag()}${sWM()}
+    ${sBG()}${sOV()}${sHashtag()}${sLogo()}${sWM()}
     <div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:180px 100px">
       <div class="s-ed" style="font-size:28px;letter-spacing:.35em;color:rgba(200,175,120,.7);margin-bottom:40px">${ey}</div>
       <div class="s-ed" style="font-weight:900;font-size:112px;line-height:1.05;letter-spacing:.1em;color:#fff;text-shadow:0 4px 40px rgba(0,0,0,.8);margin-bottom:12px;word-break:keep-all">${t1}</div>
@@ -2081,7 +2084,7 @@ function buildStorySlide1(){
     </div>
   </div>`;
   if(v===1) return `<div style="position:relative;width:1080px;height:1920px;background:#0a0a0a;overflow:hidden;font-family:'Noto Serif TC',serif">
-    ${sBG()}${sOV()}${sHashtag()}${sWM()}
+    ${sBG()}${sOV()}${sHashtag()}${sLogo()}${sWM()}
     <div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:180px 80px">
       <div class="s-ed" style="font-size:26px;letter-spacing:.35em;color:rgba(200,175,120,.7);margin-bottom:40px">${ey}</div>
       <div class="s-ed" style="font-weight:900;font-size:112px;line-height:1.05;letter-spacing:.1em;color:#fff;text-shadow:0 4px 40px rgba(0,0,0,.8);margin-bottom:12px;word-break:keep-all">${t1}</div>
@@ -2091,7 +2094,7 @@ function buildStorySlide1(){
     </div>
   </div>`;
   return `<div style="position:relative;width:1080px;height:1920px;background:#0d0d0d;overflow:hidden;font-family:'Noto Serif TC',serif">
-    ${sHashtag()}${sWM()}
+    ${sHashtag()}${sLogo()}${sWM()}
     <div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:180px 100px">
       <div style="width:60px;height:2px;background:rgba(200,175,120,.5);margin-bottom:48px"></div>
       <div class="s-ed" style="font-size:22px;letter-spacing:.5em;color:rgba(200,175,120,.4);margin-bottom:52px">${ey}</div>
@@ -2118,7 +2121,7 @@ function buildStorySlide2(){
       </div>
     </div>`).join('');
   if(v===0) return `<div style="position:relative;width:1080px;height:1920px;background:#0a0a0a;overflow:hidden;font-family:'Noto Serif TC',serif">
-    ${sBG()}${sOV()}${sHashtag()}${sWM()}
+    ${sBG()}${sOV()}${sHashtag()}${sLogo()}${sWM()}
     <div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:180px 100px 180px 136px">
       <div class="s-ed" style="display:inline-block;font-size:30px;letter-spacing:.3em;color:rgba(200,175,120,1);border:1px solid rgba(200,175,120,.3);padding:7px 20px;margin-bottom:36px;align-self:flex-start">${tag}</div>
       <div class="s-ed" style="font-weight:900;font-size:76px;letter-spacing:.12em;color:#fff;line-height:1.18;margin-bottom:52px;text-shadow:0 3px 30px rgba(0,0,0,.6);word-break:keep-all">${hd.replace(/\n/g,'<br>')}</div>
@@ -2134,7 +2137,7 @@ function buildStorySlide2(){
         <div class="s-ed" style="font-size:32px;letter-spacing:.05em;color:rgba(210,205,195,.85);line-height:1.75;margin-top:10px">${p[1].replace(/\n/g,'<br>')}</div>
       </div>`).join('');
     return `<div style="position:relative;width:1080px;height:1920px;background:#0a0a0a;overflow:hidden;font-family:'Noto Serif TC',serif">
-      ${sBG()}${sOV()}${sHashtag()}${sWM()}
+      ${sBG()}${sOV()}${sHashtag()}${sLogo()}${sWM()}
       <div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:180px 80px">
         <div class="s-ed" style="font-size:28px;letter-spacing:.3em;color:rgba(200,175,120,1);border:1px solid rgba(200,175,120,.3);padding:7px 20px;margin-bottom:36px">${tag}</div>
         <div class="s-ed" style="font-weight:900;font-size:76px;letter-spacing:.12em;color:#fff;line-height:1.18;margin-bottom:52px;word-break:keep-all">${hd.replace(/\n/g,'<br>')}</div>
@@ -2149,7 +2152,7 @@ function buildStorySlide2(){
       <div class="s-ed" style="font-size:30px;letter-spacing:.05em;color:rgba(210,205,195,.8);line-height:1.75;margin-top:8px">${p[1].replace(/\n/g,'<br>')}</div>
     </div>`).join('');
   return `<div style="position:relative;width:1080px;height:1920px;background:#0d0d0d;overflow:hidden;font-family:'Noto Serif TC',serif">
-    ${sHashtag()}${sWM()}
+    ${sHashtag()}${sLogo()}${sWM()}
     <div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:180px 90px">
       <div class="s-ed" style="font-size:22px;letter-spacing:.3em;color:rgba(200,175,120,.6);margin-bottom:20px">${tag}</div>
       <div class="s-ed" style="font-weight:900;font-size:72px;letter-spacing:.1em;color:#fff;line-height:1.2;margin-bottom:48px;word-break:keep-all">${hd.replace(/\n/g,'<br>')}</div>
