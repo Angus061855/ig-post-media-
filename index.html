@@ -633,14 +633,11 @@ body{background:#0d0d0d;font-family:'Noto Serif TC','CKS','STSong',serif;display
   <span class="lv-lbl">排版：</span>
   <button class="lv-btn on" data-lv="0" onclick="setLayoutVariant(0)">① 標準左</button>
   <button class="lv-btn" data-lv="1" onclick="setLayoutVariant(1)">② 置中</button>
-  <button class="lv-btn" data-lv="2" onclick="setLayoutVariant(2)">③ 標題置頂</button>
   <button class="lv-btn" data-lv="3" onclick="setLayoutVariant(3)">④ 卡片·左框</button>
   <button class="lv-btn" data-lv="4" onclick="setLayoutVariant(4)">⑤ 大標置中</button>
-  <button class="lv-btn" data-lv="5" onclick="setLayoutVariant(5)">⑥ 靠底</button>
   <button class="lv-btn" data-lv="6" onclick="setLayoutVariant(6)">⑦ 大數字</button>
   <button class="lv-btn" data-lv="7" onclick="setLayoutVariant(7)">⑧ 超大標</button>
   <button class="lv-btn" data-lv="8" onclick="setLayoutVariant(8)">⑨ 卡片·置中</button>
-  <button class="lv-btn" data-lv="9" onclick="setLayoutVariant(9)">⑩ 卡片·靠底</button>
   <button class="lv-btn" data-lv="10" onclick="setLayoutVariant(10)">⑪ 卡片·分隔線</button>
   <button class="lv-btn" data-lv="11" onclick="setLayoutVariant(11)">⑫ 卡片·全框</button>
   <button class="lv-btn" data-lv="12" onclick="setLayoutVariant(12)">🎲 隨機</button>
@@ -1010,9 +1007,8 @@ function bCover(d,account,thm,pgLabel){
     <div class="cw" data-idx="${pgNum}">
       <div class="ey ed">${d.eyebrow||''}</div>
       <div><span class="tt ed">${t1}</span>${t2?`<span class="tt ac ed">${t2}</span>`:''}</div>
-      <div class="sp2 deco"></div>
       <div class="sb ed" style="font-size:30px;letter-spacing:.18em;line-height:1.85;margin-bottom:40px;color:rgba(210,205,195,.9)">${(d.subtitle||'').replace(/\n/g,'<br>')}</div>
-    <div class="bio ed" style="font-size:20px;letter-spacing:.12em;color:rgba(200,175,120,.72);line-height:2.1;margin-bottom:32px;border-bottom:1px solid rgba(200,175,120,.18);padding-bottom:24px">
+    <div class="bio ed" style="font-size:20px;letter-spacing:.12em;color:rgba(200,175,120,.72);line-height:2.1;margin-bottom:32px;">
         <span style="font-size:22px;font-weight:700;color:rgba(200,175,120,.9);letter-spacing:.18em">關於 大頭｜AS娛樂經紀</span><br>
         <span style="color:var(--g)">靠誠實與信任</span>・七年面試超過 <span style="color:var(--g)">3000+</span><br>
         不簽合約・不壓薪水・自由排班・隱私安全<br>
@@ -1192,7 +1188,7 @@ function getCfg(){
   return { mode:'balance', intensity:0.7, revealLevel:0.5 };
 }
 function buildPrompt(topic, cfg) {
-  return ''
+  return ' 你是 IG 輪播貼文策略師。只輸出純 JSON，從 { 開始到 } 結束，不加任何說明。
     + '【重要】根據我提供的核心論點和具體細節素材來生成，不要自己發明不相關的內容。\n'
     + '素材裡有的具體數字、案例、說法，必須保留在輸出裡。\n\n'
     + '你是七年娛樂經紀人（男性），專業、誠實、說到做到，以「踢爆業界黑心手法」聞名。\n'
@@ -1248,15 +1244,22 @@ function buildPrompt(topic, cfg) {
 function buildFallbackPrompt(topic, cfg) {
   return '你是七年娛樂經紀人（男性），踢爆業界黑心手法，說話直接誠實。只輸出JSON從{開始。\n'
     + '主題：' + topic + '\n'
-    + '目標受眾：18-30歲想賺錢的女生，怕入八大行業被騙\n'
+    + '【重要】根據我提供的核心論點和具體細節素材來生成，不要自己發明不相關的內容。\n'
+    + '素材裡有的具體數字、案例、說法，必須保留在輸出裡。\n\n'
+    + '你是七年娛樂經紀人（男性），專業、誠實、說到做到，以「踢爆業界黑心手法」聞名。\n'
+    + '說話直接不畫大餅，是新人女孩的安全守護者。\n\n'
+    + '【目標受眾】18-30歲想賺錢但內心不安的女生，害怕進入八大行業被騙、被限制人身自由、遇到不負責的經紀人。\n\n'
     + '結構：cover → story → content（觀念①②③）→ summary → cta\n'
-    + '語氣：踢爆、誠實、直接，多用對比和反問句，禁止空洞勵志語\n'
-    + 'cover title 每行最多6字；heading 每行最多8字；desc 每個25~40字\n'
-    + '輸出純 JSON，直接從 { 開始。\n'
+    + '【cover title 強制規則 - 最重要】\n'
+    + 'title 必須包含 \\n 換行，格式：第一行白字（問題/衝擊）+ \\n + 第二行紅字（答案/強調）\n'
+    + '第一行最多6字，第二行最多6字，兩行缺一不可。\n'
+    + '正確範例：{"title":"別被騙了\\n選對經紀人"}\n'
+    + '錯誤範例：{"title":"別被騙了，選對經紀人"} ← 沒有換行，紅字不會出現\n\n'
+    + '輸出純 JSON，直接從 { 開始，不加任何說明。\n'
     + '{ "cover": { "eyebrow": string, "title": string, "subtitle": string },\n'
     + '"story": { "tag": string, "heading": string, "points": [{ "title": string, "desc": string }, x3] },\n'
     + '"content": [\n'
-    + '  { "tag": "觀念①", "heading": string, "points": [x3] },\n'
+    + '  { "tag": "觀念①", "heading": string, "points": [{ "title": string, "desc": string }, x3] },\n'
     + '  { "tag": "觀念②", "heading": string, "points": [x3] },\n'
     + '  { "tag": "觀念③", "heading": string, "points": [x3] } ],\n'
     + '"summary": { "tag": string, "heading": string, "points": [x3] },\n'
