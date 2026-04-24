@@ -114,14 +114,82 @@ body{background:#0d0d0d;font-family:'Noto Serif TC','CKS','STSong',serif;display
 .t1 .ac2{font-size:28px;letter-spacing:.2em;color:var(--gd);border-top:1px solid rgba(200,175,120,.15);padding-top:14px}
 .t1 .nw{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:110px 100px 110px 136px}
 .t1 .nm{font-size:28px;letter-spacing:.3em;color:var(--gd);margin-bottom:44px}
-.t1 .tg{display:inline-block;font-size:36px;letter-spacing:.3em;color:var(--g);border:1px solid rgba(200,175,120,.26);padding:5px 16px;margin-bottom:30px}
-.t1 .hd{font-weight:900;word-break:keep-all;overflow-wrap:anywhere;font-size:80px;letter-spacing:.14em;color:#ffffff;line-height:1.18;margin-bottom:48px;text-shadow:0 3px 30px rgba(0,0,0,.6)}
-.t1 .dv{width:64px;height:1px;margin-bottom:44px;background:rgba(200,175,120,.55)}
+.t1 .tg{
+  display:inline-block;
+  font-size:34px;
+  letter-spacing:.3em;
+  color:rgba(200,175,120,1);
+  border:1px solid rgba(200,175,120,.4);
+  padding:5px 16px;
+  margin-bottom:30px;
+  background:rgba(200,175,120,.07);    /* ← 加淡金底色 */
+  box-shadow:inset 0 0 20px rgba(200,175,120,.05);
+}
+
+.t1 .hd{
+  font-weight:900;
+  word-break:keep-all;
+  overflow-wrap:anywhere;
+  font-size:80px;
+  letter-spacing:.14em;
+  color:#ffffff;
+  line-height:1.18;
+  margin-bottom:48px;
+  text-shadow:
+    0 2px 0px rgba(200,175,120,.3),   /* ← 金色底邊光 */
+    0 4px 24px rgba(0,0,0,.7),
+    0 8px 48px rgba(0,0,0,.4);
+}
+
+.t1 .dv{
+  width:64px;
+  height:2px;                          /* ← 加粗一點 */
+  margin-bottom:44px;
+  background:linear-gradient(90deg, rgba(200,175,120,.9), rgba(200,175,120,.1));
+}
+
 .t1 .pl{list-style:none;display:flex;flex-direction:column;gap:40px}
 .t1 .pi{display:flex;align-items:flex-start;gap:44px}
-.t1 .pn{font-size:34px;letter-spacing:.1em;color:var(--g);padding-top:6px;flex-shrink:0;width:44px;text-align:left;line-height:1;font-weight:900}
-.t1 .ph2{font-weight:900;font-size:56px;letter-spacing:.08em;color:#ffffff;line-height:1.4}
-.t1 .pd{font-size:38px;letter-spacing:.05em;color:var(--grey);line-height:1.75;margin-top:10px}
+.t1 .pn{
+  font-size:34px;
+  letter-spacing:.1em;
+  color:rgba(200,175,120,1);
+  padding-top:6px;
+  flex-shrink:0;
+  width:44px;
+  text-align:left;
+  line-height:1;
+  font-weight:900;
+  text-shadow:0 0 20px rgba(200,175,120,.5);  /* ← 金色光暈 */
+}
+
+.t1 .ph2{
+  font-weight:900;
+  font-size:56px;
+  letter-spacing:.08em;
+  color:#ffffff;
+  line-height:1.4;
+  text-shadow:0 2px 12px rgba(0,0,0,.6);
+}
+
+/* 讓每個 ph2 第一行自動帶金色底線裝飾 */
+.t1 .ph2::after{
+  content:'';
+  display:block;
+  width:36px;
+  height:2px;
+  background:rgba(200,175,120,.6);
+  margin-top:8px;
+}
+
+.t1 .pd{
+  font-size:36px;
+  letter-spacing:.06em;
+  color:rgba(220,215,200,.75);   /* ← 比原本更亮更暖 */
+  line-height:1.8;
+  margin-top:10px;
+}
+
 .t1 .ctw{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:96px}
 .t1 .cd{font-size:30px;letter-spacing:.5em;color:var(--gd);margin-bottom:36px}
 .t1 .cm{font-weight:900;font-size:108px;letter-spacing:.08em;color:var(--cr);line-height:1.2;text-shadow:0 4px 40px rgba(0,0,0,.7);margin-bottom:28px;word-break:keep-all;overflow-wrap:anywhere}
@@ -541,7 +609,12 @@ body{background:#0d0d0d;font-family:'Noto Serif TC','CKS','STSong',serif;display
 #manual-panel{width:100%;max-width:1220px;background:#161616;border:1px solid #222;border-radius:3px;padding:10px 14px;margin-bottom:16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 #manual-panel.hidden{display:none}
 
-    .si *{text-shadow:2px 2px 0px rgba(0,0,0,.35), 0 4px 16px rgba(0,0,0,.55)}
+    .si *{
+  text-shadow:
+    1px 1px 0px rgba(0,0,0,.5),
+    0 3px 12px rgba(0,0,0,.6),
+    0 6px 32px rgba(0,0,0,.35);
+}
     .slide-footer{text-shadow:none}
     .t1 .nw::before,
     .t1 .cw::before,
