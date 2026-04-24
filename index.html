@@ -172,16 +172,6 @@ body{background:#0d0d0d;font-family:'Noto Serif TC','CKS','STSong',serif;display
   text-shadow:0 2px 12px rgba(0,0,0,.6);
 }
 
-/* 讓每個 ph2 第一行自動帶金色底線裝飾 */
-.t1 .ph2::after{
-  content:'';
-  display:block;
-  width:36px;
-  height:2px;
-  background:rgba(200,175,120,.6);
-  margin-top:8px;
-}
-
 .t1 .pd{
   font-size:36px;
   letter-spacing:.06em;
@@ -1068,7 +1058,7 @@ function bCover(d,account,thm,pgLabel){
   const t2=parts[1]||'';
   const pgNum=pgLabel?parseInt(pgLabel.split('/')[0])||1:1;
   const s=mkSlide('slide-1',thm,`${bgD(thm)}${ovD(thm)}${tDeco(thm,'cover')}${acctExtra(thm,account)}
-    <div class="cw" data-idx="${pgNum}" style="justify-content:flex-end;padding:80px 80px 110px 80px">
+    <div class="cw" data-idx="${pgNum}" style="justify-content:center!important;padding:120px 80px 100px 80px!important">
 
       <div style="margin-bottom:18px">
         <span class="tt ed" style="font-size:72px;line-height:1.1;letter-spacing:.08em;display:block">${t1}</span>
