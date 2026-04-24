@@ -4,1423 +4,206 @@
 <meta charset="UTF-8">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@700;900&display=swap" rel="stylesheet">
-<title>IG 圖文產生器</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<title>IG 圖文產生器 · 高質感版</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
-@font-face{font-family:'CKS';src:url('ChiKuSung.otf') format('opentype');font-weight:normal;font-style:normal}
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--g:rgba(200,175,120,1);--gd:rgba(200,175,120,.6);--gf:rgba(200,175,120,.18);--cr:#ffffff;--red:#e8392b;--grey:rgba(210,205,195,.85)}
-body{background:#0d0d0d;font-family:'Noto Serif TC','CKS','STSong',serif;display:flex;flex-direction:column;align-items:center;padding:28px 20px 120px;min-height:100vh}
+:root{
+  --gold-pure:rgba(200,175,120,1);
+  --gold-med:rgba(200,175,120,0.82);
+  --gold-light:rgba(200,175,120,0.6);
+  --gold-pale:rgba(200,175,120,0.35);
+  --text-h1:#ffffff;
+  --text-h2:rgba(220,215,200,1);
+  --text-body:rgba(210,205,195,0.88);
+  --accent-red:#e8392b;
+}
 
-/* ── topbar ── */
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0d0d0d;font-family:'Noto Serif TC',serif;display:flex;flex-direction:column;align-items:center;padding:28px 20px 120px;min-height:100vh}
+
 #topbar{width:100%;max-width:1220px;display:flex;align-items:center;gap:8px;background:#181818;border:1px solid #252525;padding:11px 16px;margin-bottom:22px;flex-wrap:wrap;border-radius:3px}
-#topbar h1{font-size:15px;letter-spacing:.22em;color:var(--g);white-space:nowrap}
-#ai{background:#111;border:1px solid #282828;color:#e0d8c8;font-family:'Noto Serif TC','CKS','STSong',serif;font-size:12px;letter-spacing:.07em;padding:6px 10px;outline:none;width:148px;flex-shrink:0;border-radius:2px}
-#ai:focus,#it:focus{border-color:var(--gd)}
-#it{flex:1;background:#111;border:1px solid #282828;color:#e0d8c8;font-family:'Noto Serif TC','CKS','STSong',serif;font-size:12px;letter-spacing:.06em;padding:6px 10px;outline:none;height:40px;resize:none;line-height:1.6;min-width:160px;border-radius:2px}
-#ai::placeholder,#it::placeholder{color:rgba(200,175,120,.18)}
-.tb{font-family:'Noto Serif TC','CKS','STSong',serif;font-size:12px;letter-spacing:.15em;padding:7px 13px;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:opacity .2s,border-color .2s,color .2s;border-radius:2px}
-#gb{background:var(--g);color:#0a0a0a;border:none}
+#topbar h1{font-size:15px;letter-spacing:.22em;color:var(--gold-pure);white-space:nowrap;font-weight:700}
+#ai,#it{background:#111;border:1px solid #282828;color:#e0d8c8;font-family:inherit;font-size:12px;padding:6px 10px;outline:none;border-radius:2px}
+#it{flex:1;height:40px;resize:none;min-width:160px}
+.tb{font-family:inherit;font-size:12px;letter-spacing:.15em;padding:7px 13px;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all .2s;border-radius:2px}
+#gb{background:var(--gold-pure);color:#0a0a0a;border:none;font-weight:700}
 #gb:hover{opacity:.85}#gb:disabled{opacity:.35;cursor:not-allowed}
-#db{background:transparent;color:var(--gd);border:1px solid #383838;display:none}
-#db:hover{border-color:var(--gd);color:var(--g)}
-#bb{background:transparent;color:rgba(200,175,120,.4);border:1px solid #2a2a2a;font-size:11px}
-#bb:hover{border-color:var(--gd);color:var(--g)}
-#bgf{display:none}
-#st{font-size:11px;letter-spacing:.1em;color:rgba(200,175,120,.4);white-space:nowrap}
 
-/* ── theme bar ── */
-#tbar{width:100%;max-width:1220px;display:none;margin-bottom:20px;background:#161616;border:1px solid #222;border-radius:3px;padding:10px 14px}
-#tbar .tlbl{font-size:10px;letter-spacing:.22em;color:rgba(200,175,120,.35);margin-bottom:10px;display:block}
-#tbar .chips{display:flex;gap:7px;flex-wrap:wrap;align-items:flex-end}
-.chip{display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;transition:opacity .15s}
-.chip:hover{opacity:.85}
-.chip .prev{width:38px;height:48px;border-radius:2px;overflow:hidden;border:1.5px solid transparent;transition:border-color .15s;flex-shrink:0;position:relative}
-.chip.on .prev{border-color:var(--g)}
-.chip span{font-family:'Noto Serif TC','CKS','STSong',serif;font-size:9px;letter-spacing:.1em;color:rgba(200,175,120,.45);text-align:center;max-width:52px;line-height:1.4}
-.chip.on span{color:var(--g)}
-#tbar .note{font-size:10px;letter-spacing:.1em;color:rgba(200,175,120,.2);margin-top:8px}
+#design-ref{position:fixed;top:12px;right:12px;z-index:10000;width:360px;max-height:85vh;overflow-y:auto;background:#1a1a1a;border:1px solid #333;border-radius:4px;padding:16px;display:none;font-size:12px;color:rgba(200,175,120,.6)}
+#design-ref::-webkit-scrollbar{width:6px}
+#design-ref::-webkit-scrollbar-track{background:#111}
+#design-ref::-webkit-scrollbar-thumb{background:#333;border-radius:3px}
+#design-ref::-webkit-scrollbar-thumb:hover{background:#444}
 
-/* ── per-slide theme switcher ── */
-.slide-controls{
-  position:absolute;top:-38px;right:0;
-  display:flex;gap:4px;align-items:center;
-}
-.slide-tc{
-  background:#1a1a1a;border:1px solid #2e2e2e;
-  padding:3px 8px;cursor:pointer;border-radius:2px;
-  font-family:'Noto Serif TC','CKS','STSong',serif;font-size:10px;letter-spacing:.12em;
-  color:rgba(200,175,120,.45);transition:border-color .12s,color .12s;
-  white-space:nowrap;
-}
-.slide-tc:hover{border-color:var(--gd);color:var(--g)}
-.slide-tc.on{border-color:var(--g);color:var(--g);background:#222}
-.slide-theme-label{font-size:10px;letter-spacing:.12em;color:rgba(200,175,120,.3);padding:0 4px}
-
-/* ── floating toolbar ── */
-#ftb{
-  position:fixed;z-index:9999;display:none;
-  background:#1d1d1d;border:1px solid #363636;
-  box-shadow:0 8px 36px rgba(0,0,0,.85);
-  padding:4px 7px;gap:1px;align-items:center;flex-wrap:wrap;
-  max-width:760px;border-radius:4px;pointer-events:auto;
-}
-#ftb.on{display:flex!important}
-.sp{width:1px;height:19px;background:#2e2e2e;flex-shrink:0;margin:0 2px}
-.fn{background:transparent;border:1px solid transparent;color:rgba(200,175,120,.52);font-family:'Noto Serif TC','CKS','STSong',serif;font-size:11px;padding:3px 6px;cursor:pointer;border-radius:3px;white-space:nowrap;transition:all .1s;display:flex;align-items:center;line-height:1.4}
-.fn:hover,.fn.on{background:#272727;border-color:#4a4a4a;color:var(--g)}
-.fn.on{border-color:var(--gd)}
-.fn.x{color:rgba(255,85,85,.5)}.fn.x:hover{background:rgba(255,40,40,.07);border-color:rgba(255,70,70,.3);color:#ff5555}
-.fl{font-size:9px;letter-spacing:.1em;color:rgba(200,175,120,.28);padding:0 2px;white-space:nowrap}
-.fst{display:flex;align-items:center;gap:1px}
-.fst button{background:#0e0e0e;border:1px solid #272727;color:rgba(200,175,120,.42);width:17px;height:19px;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;border-radius:2px;transition:background .1s;flex-shrink:0}
-.fst button:hover{background:#272727;color:var(--g)}
-.fst span{min-width:28px;text-align:center;font-size:11px;color:rgba(200,175,120,.68);letter-spacing:.03em}
-.fco{width:20px;height:20px;border:1px solid #3e3e3e;cursor:pointer;border-radius:2px;padding:2px;background:#0e0e0e;flex-shrink:0}
-.fsl{display:flex;align-items:center;gap:3px}
-.fsl input[type=range]{width:65px;accent-color:var(--g);height:3px;cursor:pointer}
-.fsl span{font-size:9px;color:rgba(200,175,120,.38);min-width:24px}
-#gtx,#gdc,#gbg{display:none;align-items:center;gap:1px;flex-wrap:wrap}
-#gtx.on,#gdc.on,#gbg.on{display:flex}
-
-/* ── slides ── */
 #wrap{display:flex;flex-direction:column;align-items:center;gap:52px;width:100%}
 .slide{position:relative;width:1080px;height:1350px;overflow:visible;background:#0a0a0a;flex-shrink:0}
 .si{position:absolute;inset:0;overflow:hidden;width:1080px;height:1350px}
-.bg-el{position:absolute;inset:0;background-size:cover;background-position:center;background-repeat:no-repeat;cursor:pointer;image-rendering:-webkit-optimize-contrast}
+.bg-el{position:absolute;inset:0;background-size:cover;background-position:center}
 .ov-el{position:absolute;inset:0;pointer-events:none}
 .deco{cursor:pointer;transition:outline .1s}
 .deco:hover{outline:2px dashed rgba(200,175,120,.28);outline-offset:3px}
-.deco.sel{outline:2px dashed rgba(200,175,120,.82)!important;outline-offset:3px}
 .ed{cursor:text;border-radius:2px;outline:2px solid transparent;outline-offset:3px;transition:outline .1s}
 .ed:hover{outline:2px solid rgba(200,175,120,.2)}
-.ed.sel{outline:2px solid rgba(200,175,120,.78)!important}
-.ph{display:flex;align-items:center;justify-content:center;width:1080px;height:220px;background:#141414;border:1px dashed #242424;color:rgba(200,175,120,.16);font-size:14px;letter-spacing:.25em}
 
-/* ════════════ T1 IMPERIAL ════════════ */
+/* T1 IMPERIAL */
 .t1{background:#0a0a0a}
 .t1 .corner{position:absolute;width:40px;height:40px;border-color:rgba(200,175,120,.18);border-style:solid}
 .t1 .tl{top:56px;left:56px;border-width:2px 0 0 2px}.t1 .tr{top:56px;right:56px;border-width:2px 2px 0 0}
 .t1 .bl{bottom:56px;left:56px;border-width:0 0 2px 2px}.t1 .br{bottom:56px;right:56px;border-width:0 2px 2px 0}
-.t1 .hl{position:absolute;left:56px;right:56px;height:1px;background:rgba(200,175,120,.13)}
-.t1 .vl{position:absolute;left:100px;top:56px;bottom:56px;width:1px;background:rgba(200,175,120,.18)}
 .t1 .cw{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:110px 100px}
-.t1 .ey{font-size:30px;letter-spacing:.35em;color:var(--gd);margin-bottom:28px}
-.t1 .tt{font-weight:900;word-break:keep-all;overflow-wrap:anywhere;font-size:108px;line-height:1.05;letter-spacing:.12em;color:var(--cr);text-shadow:0 4px 40px rgba(0,0,0,.7);display:block}
-.t1 .tt.ac{color:#e8392b !important;-webkit-text-fill-color:#e8392b !important}
-.t1 .sp2{width:100px;height:2px;margin:24px 0;background:linear-gradient(90deg,rgba(200,175,120,.6),transparent)}
-.t1 .sb{font-size:64px;letter-spacing:.22em;color:var(--grey);line-height:1.85;margin-bottom:64px}
-.t1 .ac2{font-size:28px;letter-spacing:.2em;color:var(--gd);border-top:1px solid rgba(200,175,120,.15);padding-top:14px}
 .t1 .nw{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:110px 100px 110px 136px}
-.t1 .nm{font-size:28px;letter-spacing:.3em;color:var(--gd);margin-bottom:44px}
-.t1 .tg{
-  display:inline-block;
-  font-size:34px;
-  letter-spacing:.3em;
-  color:rgba(200,175,120,1);
-  border:1px solid rgba(200,175,120,.4);
-  padding:5px 16px;
-  margin-bottom:30px;
-  background:rgba(200,175,120,.07);    /* ← 加淡金底色 */
-  box-shadow:inset 0 0 20px rgba(200,175,120,.05);
-}
+.t1 .ctw{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:96px}
 
-.t1 .hd{
-  font-weight:900;
-  word-break:keep-all;
-  overflow-wrap:anywhere;
-  font-size:80px;
-  letter-spacing:.14em;
-  color:#ffffff;
-  line-height:1.18;
-  margin-bottom:48px;
-  text-shadow:
-    0 2px 0px rgba(200,175,120,.3),   /* ← 金色底邊光 */
-    0 4px 24px rgba(0,0,0,.7),
-    0 8px 48px rgba(0,0,0,.4);
-}
+.t1 .ey{font-size:28px;letter-spacing:.35em;color:var(--gold-light);margin-bottom:28px;font-weight:600;text-transform:uppercase;opacity:0.85}
+.t1 .tt{font-weight:900;font-size:108px;line-height:1.05;letter-spacing:.12em;color:var(--text-h1);text-shadow:0 4px 40px rgba(0,0,0,.7);margin-bottom:8px;word-break:keep-all;overflow-wrap:anywhere}
+.t1 .tt.ac{color:var(--accent-red)!important}
+.t1 .sp2{width:100px;height:2px;margin:24px 0;background:linear-gradient(90deg,var(--gold-med),transparent)}
+.t1 .sb{font-size:28px;letter-spacing:.15em;color:var(--text-body);line-height:1.8;margin-bottom:32px;font-weight:500}
+.t1 .ac2{font-size:22px;letter-spacing:.18em;color:var(--gold-light);border-top:1px solid rgba(200,175,120,.15);padding-top:14px;font-weight:600}
 
-.t1 .dv{
-  width:64px;
-  height:2px;                          /* ← 加粗一點 */
-  margin-bottom:44px;
-  background:linear-gradient(90deg, rgba(200,175,120,.9), rgba(200,175,120,.1));
-}
-
+.t1 .nm{font-size:28px;letter-spacing:.28em;color:var(--gold-light);margin-bottom:32px;font-weight:600;text-transform:uppercase}
+.t1 .tg{display:inline-block;font-size:32px;letter-spacing:.28em;color:var(--gold-pure);border:1px solid rgba(200,175,120,.4);padding:6px 16px;margin-bottom:28px;background:rgba(200,175,120,.06);font-weight:700}
+.t1 .hd{font-weight:900;font-size:80px;letter-spacing:.12em;color:var(--text-h1);line-height:1.18;margin-bottom:40px;text-shadow:0 2px 12px rgba(200,175,120,.2),0 4px 24px rgba(0,0,0,.7);word-break:keep-all;overflow-wrap:anywhere}
+.t1 .dv{width:64px;height:2px;margin-bottom:40px;background:linear-gradient(90deg,var(--gold-med),transparent)}
 .t1 .pl{list-style:none;display:flex;flex-direction:column;gap:40px}
 .t1 .pi{display:flex;align-items:flex-start;gap:44px}
-.t1 .pn{
-  font-size:34px;
-  letter-spacing:.1em;
-  color:rgba(200,175,120,1);
-  padding-top:6px;
-  flex-shrink:0;
-  width:44px;
-  text-align:left;
-  line-height:1;
-  font-weight:900;
-  text-shadow:0 0 20px rgba(200,175,120,.5);  /* ← 金色光暈 */
-}
+.t1 .pn{font-size:32px;letter-spacing:.12em;color:var(--gold-pure);padding-top:6px;flex-shrink:0;width:44px;font-weight:900;text-shadow:0 0 16px rgba(200,175,120,.4)}
+.t1 .ph2{font-weight:900;font-size:50px;letter-spacing:.08em;color:var(--text-h2);line-height:1.4;text-shadow:0 2px 12px rgba(0,0,0,.6)}
+.t1 .ph2::after{content:'';display:block;width:32px;height:2px;background:var(--gold-med);margin-top:8px}
+.t1 .pd{font-size:32px;letter-spacing:.08em;color:var(--text-body);line-height:1.7;margin-top:8px;font-weight:500}
+
+.t1 .cd{font-size:28px;letter-spacing:.5em;color:var(--gold-light);margin-bottom:32px;font-weight:600}
+.t1 .cm{font-weight:900;font-size:96px;letter-spacing:.1em;color:var(--text-h1);line-height:1.2;text-shadow:0 4px 40px rgba(0,0,0,.7);margin-bottom:24px;word-break:keep-all;overflow-wrap:anywhere}
+.t1 .cs{font-size:38px;letter-spacing:.1em;color:var(--text-body);line-height:1.8;margin-bottom:44px;max-width:780px;word-break:keep-all;overflow-wrap:anywhere;font-weight:500}
+.t1 .cv{width:1px;height:56px;background:linear-gradient(to bottom,var(--gold-med),transparent);margin:0 auto 32px}
+.t1 .cb{border:1px solid rgba(200,175,120,.3);padding:16px 48px;margin-bottom:28px;max-width:840px;word-break:keep-all}
+.t1 .cf{font-size:32px;letter-spacing:.12em;color:var(--gold-pure);word-break:keep-all;overflow-wrap:anywhere;font-weight:700}
+.t1 .ca{font-size:28px;letter-spacing:.18em;color:var(--gold-light);font-weight:600}
+
+.t1 .nw::before,.t1 .cw::before,.t1 .ctw::before{content:attr(data-idx);position:absolute;font-size:480px;font-weight:900;color:rgba(200,175,120,.05);right:-40px;bottom:-100px;line-height:1;pointer-events:none}
 
-.t1 .ph2{
-  font-weight:900;
-  font-size:56px;
-  letter-spacing:.08em;
-  color:#ffffff;
-  line-height:1.4;
-  text-shadow:0 2px 12px rgba(0,0,0,.6);
-}
-
-/* 讓每個 ph2 第一行自動帶金色底線裝飾 */
-.t1 .ph2::after{
-  content:'';
-  display:block;
-  width:36px;
-  height:2px;
-  background:rgba(200,175,120,.6);
-  margin-top:8px;
-}
-
-.t1 .pd{
-  font-size:36px;
-  letter-spacing:.06em;
-  color:rgba(220,215,200,.75);   /* ← 比原本更亮更暖 */
-  line-height:1.8;
-  margin-top:10px;
-}
-
-.t1 .ctw{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:96px}
-.t1 .cd{font-size:30px;letter-spacing:.5em;color:var(--gd);margin-bottom:36px}
-.t1 .cm{font-weight:900;font-size:108px;letter-spacing:.08em;color:var(--cr);line-height:1.2;text-shadow:0 4px 40px rgba(0,0,0,.7);margin-bottom:28px;word-break:keep-all;overflow-wrap:anywhere}
-.t1 .cs{font-size:42px;letter-spacing:.08em;color:var(--grey);line-height:1.9;margin-bottom:48px;max-width:780px;word-break:keep-all;overflow-wrap:anywhere}
-.t1 .cv{width:1px;height:56px;background:linear-gradient(to bottom,rgba(200,175,120,.55),transparent);margin:0 auto 36px}
-.t1 .cb{border:1px solid rgba(200,175,120,.3);padding:16px 48px;margin-bottom:32px;max-width:840px;word-break:keep-all}
-.t1 .cf{font-size:34px;letter-spacing:.12em;color:var(--g);word-break:keep-all;overflow-wrap:anywhere}
-.t1 .ca{font-size:30px;letter-spacing:.2em;color:var(--gd)}
-
-/* ════════════ T2 MINIMAL ════════════ */
-.t2{background:#080808}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* ════════════ T3 EDITORIAL ════════════ */
-.t3{background:#060606}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* ════════════ T4 NOIR ════════════ */
-.t4{background:#030303}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* ════════════ T5 WABI ════════════ */
-.t5{background:#070707}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* ════════════ T6 CINNABAR 朱砂 ════════════ */
-.t6{background:#0d0504}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* ════════════ T7 CELADON 石青 ════════════ */
-.t7{background:#04070e}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* ════════════ T8 PAPER 素白 ════════════ */
-.t8{background:#f5f2ec}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* paper needs light bg for ov */
-
-
-/* ── slide overlay labels ── */
-.slide-logo{
-  position:absolute;top:32px;right:40px;
-  width:100px;height:100px;
-  object-fit:contain;z-index:10;pointer-events:none;
-  opacity:.92;
-}
-/* ── slide overlay labels ── */
-.slide-hashtag{
-  position:absolute;top:44px;left:52px;
-  font-family:'Noto Serif TC','CKS','STSong',serif;font-size:16px;letter-spacing:.18em;
-  color:rgba(200,175,120,.75);z-index:10;pointer-events:none;
-}
-.slide-watermark{
-  position:absolute;bottom:28px;left:50%;transform:translateX(-50%);
-  font-family:'Noto Serif TC','CKS','STSong',serif;font-size:16px;letter-spacing:.28em;
-  color:rgba(200,175,120,.35);z-index:10;pointer-events:none;white-space:nowrap;
-}
-.slide-footer{
-  position:absolute;bottom:28px;right:52px;
-  font-family:'Noto Serif TC','CKS','STSong',serif;
-  font-size:22px;letter-spacing:.2em;font-weight:700;
-  color:rgba(200,175,120,.38);z-index:10;pointer-events:none;white-space:nowrap;
-}
-
-/* ── layout picker ── */
-#lv-bar{width:100%;max-width:1220px;display:none;align-items:center;gap:6px;margin-bottom:12px;flex-wrap:wrap}
-#lv-bar .lv-lbl{font-size:10px;letter-spacing:.2em;color:rgba(200,175,120,.35);white-space:nowrap}
-.lv-btn{background:#1a1a1a;border:1px solid #2a2a2a;color:rgba(200,175,120,.4);font-family:inherit;font-size:10px;letter-spacing:.1em;padding:5px 10px;cursor:pointer;border-radius:2px;transition:all .15s;white-space:nowrap}
-.lv-btn:hover{border-color:var(--gd);color:var(--g)}
-.lv-btn.on{border-color:var(--g);color:var(--g);background:#222}
-
-/* ══ Layout Variants — 8 種排版 ══ */
-
-/* ── lv1 (idx=0): 左對齊·內容置中偏上 ── */
-.lv1 .nw{justify-content:center;padding:100px 100px 100px 120px}
 .lv1 .cw{justify-content:center;padding:100px 100px}
+.slide-hashtag{position:absolute;top:44px;left:52px;font-size:16px;letter-spacing:.18em;color:var(--gold-light);z-index:10;pointer-events:none;font-weight:600}
+.slide-watermark{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);font-size:16px;letter-spacing:.26em;color:var(--gold-pale);z-index:10;pointer-events:none;white-space:nowrap;font-weight:600}
 
-/* ── lv2 (idx=1): 置中·所有元素居中 ── */
-.lv2 .cw{align-items:center;text-align:center;padding:110px 90px}
-.lv2 .tt,.lv2 .sb,.lv2 .ey,.lv2 .ac2,.lv2 .bio{text-align:center}
-.lv2 .sp2{margin:24px auto}
-.lv2 .nw{align-items:center;text-align:center;padding:100px 90px}
-.lv2 .hd,.lv2 .tg,.lv2 .nm{text-align:center}
-.lv2 .dv{margin:0 auto 44px}
-.lv2 .pl{align-items:center}
-.lv2 .pi{flex-direction:column;align-items:center;text-align:center;gap:10px}
-.lv2 .pn{width:auto;text-align:center}
-.lv2 .ph2,.lv2 .pd{text-align:center}
+#st{font-size:11px;letter-spacing:.1em;color:var(--gold-pale);white-space:nowrap}
+.ph{display:flex;align-items:center;justify-content:center;width:1080px;height:220px;background:#141414;border:1px dashed #242424;color:var(--gold-pale);font-size:14px;letter-spacing:.25em}
 
-/* ── lv3 (idx=2): 左對齊·標題在上·內容靠頂 ── */
-.lv3 .cw{justify-content:flex-start;padding-top:160px;padding-left:100px;padding-right:100px}
-.lv3 .bio{margin-bottom:18px}
-.lv3 .nw{justify-content:flex-start;padding-top:140px;padding-left:120px;padding-right:100px}
-.lv3 .hd{font-size:64px!important;margin-bottom:52px}
-.lv3 .dv{display:none}
-.lv3 .nm{margin-bottom:28px}
-
-/* ── lv4 (idx=3): 左對齊·卡片式points ── */
-.lv4 .nw{padding:80px 70px 80px 90px}
-.lv4 .hd{font-size:52px!important;margin-bottom:36px}
-.lv4 .dv{display:none}
-.lv4 .pl{gap:0}
-.lv4 .pi{padding:22px 26px;margin-bottom:14px;background:rgba(200,175,120,.05);border-left:3px solid rgba(200,175,120,.5);border-radius:0 4px 4px 0;gap:28px;align-items:flex-start}
-.lv4 .pn{font-size:26px!important;color:var(--g)!important;width:32px;text-align:left}
-.lv4 .ph2{font-size:34px!important;line-height:1.3}
-.lv4 .pd{font-size:24px!important;margin-top:4px}
-
-/* ── lv5 (idx=4): 置中·大標題·超衝擊 ── */
-.lv5 .nw{align-items:center;text-align:center;padding:80px 80px;justify-content:center}
-.lv5 .hd{font-size:72px!important;line-height:1.1;text-align:center;margin-bottom:52px}
-.lv5 .tg{text-align:center}
-.lv5 .nm{text-align:center}
-.lv5 .dv{margin:0 auto 44px}
-.lv5 .pl{align-items:center}
-.lv5 .pi{flex-direction:column;align-items:center;text-align:center;gap:8px;max-width:800px}
-.lv5 .pn{width:auto;text-align:center;font-size:30px!important;color:var(--g)!important}
-.lv5 .ph2,.lv5 .pd{text-align:center}
-
-/* ── lv6 (idx=5): 左對齊·內容靠底 ── */
-.lv6 .nw{justify-content:flex-end;padding-bottom:110px;padding-left:120px;padding-right:100px;padding-top:80px}
-.lv6 .nm{position:absolute;top:100px;left:120px;margin-bottom:0}
-.lv6 .tg{position:absolute;top:155px;left:120px;margin-bottom:0}
-.lv6 .hd{font-size:60px!important;margin-bottom:40px;border-top:2px solid rgba(200,175,120,.2);padding-top:32px}
-.lv6 .dv{display:none}
-.lv6 .pl{gap:28px}
-.lv6 .cw{justify-content:flex-end;padding-bottom:140px;padding-left:100px;padding-right:100px}
-
-/* ── 全版型：大數字頁碼浮水印（所有版本都有）── */
-.t1 .nw::before,
-.t1 .cw::before,
-.t1 .ctw::before{
-  content:attr(data-idx);
-  position:absolute;
-  font-size:480px;font-weight:900;
-  color:rgba(200,175,120,.06);
-  right:-40px;bottom:-100px;
-  line-height:1;pointer-events:none;
-  font-family:'Noto Serif TC','CKS','STSong',serif;
-  letter-spacing:-.02em;
-}
-
-/* ── lv7 (idx=6): 左對齊·大數字更明顯 ── */
-.lv7 .nw::before{font-size:560px;color:rgba(200,175,120,.08);right:-60px;bottom:-130px}
-.lv7 .nw{padding:100px 100px 100px 120px;justify-content:center}
-.lv7 .hd{font-size:60px!important;margin-bottom:44px}
-.lv7 .pn{font-size:38px!important;color:rgba(200,175,120,.85)!important;font-weight:900}
-
-/* ── lv8 (idx=7): 置中·標題特大·底留白 ── */
-.lv8 .nw{align-items:center;text-align:center;justify-content:flex-start;padding:160px 80px 80px}
-.lv8 .nm{text-align:center;margin-bottom:20px}
-.lv8 .tg{text-align:center;margin-bottom:24px}
-.lv8 .hd{font-size:76px!important;line-height:1.12;text-align:center;margin-bottom:56px;letter-spacing:.1em}
-.lv8 .dv{margin:0 auto 48px;width:120px;height:3px;background:linear-gradient(90deg,transparent,var(--g),transparent)}
-.lv8 .pl{align-items:center;gap:32px}
-.lv8 .pi{flex-direction:column;align-items:center;text-align:center;gap:8px;max-width:820px}
-.lv8 .pn{width:auto;text-align:center}
-.lv8 .ph2,.lv8 .pd{text-align:center}
-
-/* ── lv9 (idx=8): 卡片·置中·上下等分 ── */
-.lv9 .nw{align-items:center;text-align:center;padding:80px 80px}
-.lv9 .hd{font-size:54px!important;margin-bottom:36px;text-align:center}
-.lv9 .tg,.lv9 .nm{text-align:center}
-.lv9 .dv{display:none}
-.lv9 .pl{gap:0;align-items:stretch;width:100%}
-.lv9 .pi{padding:20px 32px;margin-bottom:12px;background:rgba(200,175,120,.05);border-left:3px solid rgba(200,175,120,.5);border-radius:0 4px 4px 0;gap:24px;align-items:center;text-align:left}
-.lv9 .pn{font-size:26px!important;color:var(--g)!important;width:32px;flex-shrink:0}
-.lv9 .ph2{font-size:34px!important;line-height:1.3}
-.lv9 .pd{font-size:24px!important;margin-top:4px}
-
-/* ── lv10 (idx=9): 卡片·靠底·號碼大且金色 ── */
-.lv10 .nw{justify-content:flex-end;padding-bottom:100px;padding-left:100px;padding-right:80px;padding-top:80px}
-.lv10 .nm{position:absolute;top:100px;left:100px;margin-bottom:0}
-.lv10 .tg{position:absolute;top:155px;left:100px;margin-bottom:0}
-.lv10 .hd{font-size:56px!important;margin-bottom:36px}
-.lv10 .dv{display:none}
-.lv10 .pl{gap:0}
-.lv10 .pi{padding:20px 24px;margin-bottom:12px;background:rgba(200,175,120,.06);border-left:4px solid rgba(200,175,120,.6);border-radius:0 4px 4px 0;gap:24px;align-items:center}
-.lv10 .pn{font-size:32px!important;color:var(--g)!important;font-weight:900;width:40px;flex-shrink:0}
-.lv10 .ph2{font-size:32px!important;line-height:1.3}
-.lv10 .pd{font-size:22px!important;margin-top:4px}
-
-/* ── lv11 (idx=10): 卡片·分隔線取代左邊框·簡潔 ── */
-.lv11 .nw{padding:90px 90px 90px 110px;justify-content:center}
-.lv11 .hd{font-size:56px!important;margin-bottom:40px}
-.lv11 .dv{display:none}
-.lv11 .pl{gap:0}
-.lv11 .pi{padding:24px 20px;border-bottom:1px solid rgba(200,175,120,.15);margin-bottom:0;gap:32px;align-items:flex-start;background:transparent}
-.lv11 .pn{font-size:28px!important;color:rgba(200,175,120,.5)!important;width:36px;flex-shrink:0;padding-top:4px}
-.lv11 .ph2{font-size:34px!important;line-height:1.3}
-.lv11 .pd{font-size:24px!important;margin-top:6px}
-
-/* ── lv12 (idx=11): 卡片·全框·暗底·最強存在感 ── */
-.lv12 .nw{padding:70px 70px 70px 90px;justify-content:center}
-.lv12 .hd{font-size:50px!important;margin-bottom:32px}
-.lv12 .dv{display:none}
-.lv12 .pl{gap:16px}
-.lv12 .pi{padding:22px 28px;background:rgba(0,0,0,.45);border:1px solid rgba(200,175,120,.2);border-left:4px solid rgba(200,175,120,.7);border-radius:0 4px 4px 0;gap:28px;align-items:flex-start}
-.lv12 .pn{font-size:28px!important;color:var(--g)!important;font-weight:900;width:36px;flex-shrink:0;padding-top:4px}
-.lv12 .ph2{font-size:34px!important;line-height:1.3;color:#fff}
-.lv12 .pd{font-size:23px!important;margin-top:6px;color:rgba(210,205,195,.8)}
-
-/* ── manual slide controls ── */
-.slide-outer{display:flex;flex-direction:column;align-items:flex-start;gap:0}
-.slide-bar{display:flex;align-items:center;gap:5px;padding:5px 0;width:1080px;flex-wrap:wrap}
-.slide-bar .slbl{font-size:10px;letter-spacing:.18em;color:rgba(200,175,120,.3)}
-.slide-tc{background:#1a1a1a;border:1px solid #2a2a2a;padding:3px 7px;cursor:pointer;border-radius:2px;font-family:inherit;font-size:9px;letter-spacing:.12em;color:rgba(200,175,120,.38);transition:border-color .12s,color .12s;white-space:nowrap}
-.slide-tc:hover{border-color:var(--gd);color:var(--g)}
-.slide-tc.on{border-color:var(--g);color:var(--g);background:#222}
-.del-slide{background:transparent;border:1px solid rgba(255,60,60,.2);color:rgba(255,80,80,.4);font-family:inherit;font-size:9px;letter-spacing:.1em;padding:3px 7px;cursor:pointer;border-radius:2px;transition:all .12s;margin-left:auto}
-.del-slide:hover{border-color:rgba(255,60,60,.5);color:#ff5555;background:rgba(255,40,40,.06)}
-
-/* ── mode toggle ── */
-#mode-bar{width:100%;max-width:1220px;display:flex;align-items:center;gap:8px;margin-bottom:16px}
-.mode-btn{font-family:inherit;font-size:12px;letter-spacing:.18em;padding:8px 20px;cursor:pointer;border-radius:2px;transition:all .15s}
-.mode-btn.on{background:var(--g);color:#0a0a0a;border:none}
-.mode-btn.off{background:transparent;color:rgba(200,175,120,.5);border:1px solid #333}
-.mode-btn.off:hover{border-color:var(--gd);color:var(--g)}
-#mode-note{font-size:10px;letter-spacing:.1em;color:rgba(200,175,120,.25)}
-
-/* ── ai panel ── */
-#ai-panel{width:100%;max-width:1220px;background:#161616;border:1px solid #222;border-radius:3px;padding:10px 14px;margin-bottom:16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-#ai-panel.hidden{display:none}
-
-/* ── manual panel ── */
-#manual-panel{width:100%;max-width:1220px;background:#161616;border:1px solid #222;border-radius:3px;padding:10px 14px;margin-bottom:16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-#manual-panel.hidden{display:none}
-
-   text-shadow:
-.refine-chip{
-  background:#111;border:1px solid #2a2a2a;color:rgba(200,175,120,.5);
-  font-family:'Noto Serif TC',serif;font-size:11px;letter-spacing:.12em;
-  padding:7px 12px;cursor:pointer;border-radius:3px;text-align:left;
-  transition:all .15s;
-}
-.refine-chip:hover{border-color:var(--gd);color:var(--g);background:#1a1a1a}
-
-/* ── APP TABS ── */
-#app-tabs{width:100%;max-width:1220px;display:flex;gap:0;border-bottom:1px solid #252525;margin-bottom:0}
-.app-tab{font-family:'Noto Serif TC',serif;font-size:12px;letter-spacing:.2em;padding:10px 28px;cursor:pointer;border:1px solid transparent;border-bottom:none;border-radius:3px 3px 0 0;color:rgba(200,175,120,.4);background:transparent;transition:all .15s;margin-bottom:-1px}
-.app-tab.on{background:#181818;border-color:#252525;color:var(--g);border-bottom-color:#181818}
-.app-tab:hover:not(.on){color:var(--gd)}
-.app-panel{display:none;width:100%;flex-direction:column;align-items:center}
-.app-panel.on{display:flex}
-
-/* ── STORY PANEL ── */
-.story-input-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:20px;width:100%;max-width:1220px}
-.story-card-input{background:#161616;border:1px solid #252525;border-radius:4px;padding:16px}
-.story-card-input h3{font-size:11px;letter-spacing:.22em;color:var(--g);margin-bottom:12px;display:flex;align-items:center;gap:6px}
-.story-card-input h3 span{font-size:10px;color:rgba(200,175,120,.4);letter-spacing:.1em}
-.story-inp{width:100%;background:#0e0e0e;border:1px solid #2a2a2a;color:#e0d8c8;font-family:'Noto Serif TC',serif;font-size:12px;letter-spacing:.06em;padding:8px 10px;outline:none;border-radius:2px;resize:none;line-height:1.7;display:block}
-.story-inp:focus{border-color:var(--gd)}
-.story-inp::placeholder{color:rgba(200,175,120,.18)}
-.story-label{font-size:10px;letter-spacing:.15em;color:rgba(200,175,120,.4);margin-bottom:5px;margin-top:10px;display:block}
-#story-wrap{display:flex;flex-direction:row;gap:24px;align-items:flex-start;overflow-x:auto;padding-bottom:20px;width:100%;max-width:1220px}
-.story-preview-outer{display:flex;flex-direction:column;align-items:flex-start;gap:6px;flex-shrink:0}
-.story-preview-label{font-size:10px;letter-spacing:.18em;color:rgba(200,175,120,.3);padding:0 2px}
-.story-preview-box{width:360px;height:640px;overflow:hidden;position:relative;background:#0a0a0a;flex-shrink:0}
-.story-full-inner{width:1080px;height:1920px;transform:scale(0.3333);transform-origin:top left;position:absolute;top:0;left:0}
-#story-action-bar{width:100%;max-width:1220px;display:flex;align-items:center;gap:10px;margin-bottom:20px;flex-wrap:wrap}
-.sgbtn{font-family:'Noto Serif TC',serif;font-size:12px;letter-spacing:.18em;padding:9px 20px;cursor:pointer;border-radius:2px;transition:all .15s}
-#s-gen-btn{background:var(--g);color:#0a0a0a;border:none}
-#s-gen-btn:hover{opacity:.85}
-#s-dl-btn{background:transparent;color:var(--gd);border:1px solid #383838;display:none}
-#s-dl-btn:hover{border-color:var(--gd);color:var(--g)}
-#s-bg-btn{background:transparent;color:rgba(200,175,120,.4);border:1px solid #2a2a2a;font-size:11px}
-#s-bg-btn:hover{border-color:var(--gd);color:var(--g)}
-#s-st{font-size:11px;letter-spacing:.1em;color:rgba(200,175,120,.4)}
-
-.story-input-grid { display:none !important; }
-
-.s-t1{font-size:112px !important}
-.s-t2{font-size:112px !important;color:#e8392b !important}
-.s-sub{font-size:52px !important}
-.s-hd{font-size:76px !important}
-.s-pt{font-size:46px !important}
-.s-pd{font-size:32px !important}
-.s-main{font-size:116px !important}
-.s-csub{font-size:46px !important}
 </style>
 </head>
 <body>
 
-<div id="app-tabs">
-  <button class="app-tab on" onclick="switchTab('post')">🎠 IG 輪播貼文</button>
-  <button class="app-tab" onclick="switchTab('story')">⚡ 限時動態</button>
-</div>
-<div id="panel-post" class="app-panel on">
-
-
-<!-- AI panel -->
-<div id="ai-panel">
-  <h1 style="font-size:15px;letter-spacing:.22em;color:var(--g);white-space:nowrap">AI 產生</h1>
-  <input id="groq-key" type="password" placeholder="貼上 Groq API Key (gsk_...)" 
-    style="background:#111;border:1px solid #2e2e2e;color:#e0d8c8;font-family:inherit;font-size:11px;
-    letter-spacing:.05em;padding:6px 10px;outline:none;width:220px;flex-shrink:0;border-radius:2px"
-    oninput="saveKey(this.value)"/>
-  <input id="ai" type="text" placeholder="@帳號" value="@angus061855" style="background:#111;border:1px solid #282828;color:#e0d8c8;font-family:inherit;font-size:12px;letter-spacing:.07em;padding:6px 10px;outline:none;width:148px;flex-shrink:0;border-radius:2px"/>
-  <textarea id="it" placeholder="輸入主題或貼上文章…" style="flex:1;background:#111;border:1px solid #282828;color:#e0d8c8;font-family:inherit;font-size:12px;letter-spacing:.06em;padding:6px 10px;outline:none;height:40px;resize:none;line-height:1.6;min-width:160px;border-radius:2px"></textarea>
-  <button class="tb" id="gb" onclick="doGen()" style="background:var(--g);color:#0a0a0a;border:none">✦ 產生</button>
-  <button class="tb" id="rgb" style="display:none;background:transparent;color:rgba(200,175,120,.5);border:1px solid #333;font-size:11px" onclick="openRefinePanel()">↻ 換個版本</button>
-  <span id="st" style="font-size:11px;letter-spacing:.1em;color:rgba(200,175,120,.4);white-space:nowrap"></span>
-</div>
-
-<!-- Theme bar -->
-<div id="shared-bar" style="width:100%;max-width:1220px;display:flex;align-items:center;gap:8px;margin-bottom:8px">
-  <button class="tb" id="bb" onclick="document.getElementById('bgf').click()" style="background:transparent;color:rgba(200,175,120,.4);border:1px solid #2a2a2a;font-size:11px">⊕ 換背景</button>
-  <input type="file" id="bgf" accept="image/*" onchange="uploadBg(event)" style="display:none"/>
-  <button class="tb" id="db" onclick="dlAll()" style="display:none;background:var(--g);color:#0a0a0a;border:none">↓ 下載全部 (ZIP)</button>
-</div>
-
-<!-- Layout variant picker -->
-<div id="lv-bar">
-  <span class="lv-lbl">排版：</span>
-  <button class="lv-btn on" data-lv="0" onclick="setLayoutVariant(0)">① 標準左</button>
-  <button class="lv-btn" data-lv="1" onclick="setLayoutVariant(1)">② 置中</button>
-  <button class="lv-btn" data-lv="3" onclick="setLayoutVariant(3)">④ 卡片·左框</button>
-  <button class="lv-btn" data-lv="4" onclick="setLayoutVariant(4)">⑤ 大標置中</button>
-  <button class="lv-btn" data-lv="6" onclick="setLayoutVariant(6)">⑦ 大數字</button>
-  <button class="lv-btn" data-lv="7" onclick="setLayoutVariant(7)">⑧ 超大標</button>
-  <button class="lv-btn" data-lv="8" onclick="setLayoutVariant(8)">⑨ 卡片·置中</button>
-  <button class="lv-btn" data-lv="10" onclick="setLayoutVariant(10)">⑪ 卡片·分隔線</button>
-  <button class="lv-btn" data-lv="11" onclick="setLayoutVariant(11)">⑫ 卡片·全框</button>
-  <button class="lv-btn" data-lv="12" onclick="setLayoutVariant(12)">🎲 隨機</button>
-</div>
-<div id="tbar" style="display:none">
-  <span class="tlbl">整體風格 — 點選套用全部頁面</span>
-  <div class="chips" id="chips"></div>
-  <div class="note">切換後可繼續個別調整每張風格 ↓</div>
+<!-- 設計參考面板 -->
+<div id="design-ref">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+    <span style="font-size:13px;font-weight:700;color:var(--gold-pure);letter-spacing:.2em">🎨 色彩系統</span>
+    <button onclick="document.getElementById('design-ref').style.display='none'" style="background:none;border:none;color:rgba(200,175,120,.4);cursor:pointer;font-size:16px;line-height:1">✕</button>
+  </div>
+  
+  <div style="background:#111;border:1px solid #252525;border-radius:3px;padding:12px;margin-bottom:12px">
+    <div style="color:var(--gold-pure);font-weight:700;margin-bottom:10px;letter-spacing:.1em;font-size:11px">🟡 金色五層</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:10px">
+      <div style="background:rgba(200,175,120,1);color:#0a0a0a;padding:6px;border-radius:2px;text-align:center;font-weight:700">純金<br>序號</div>
+      <div style="background:rgba(200,175,120,0.82);color:#fff;padding:6px;border-radius:2px;text-align:center;font-weight:600">中金<br>線條</div>
+      <div style="background:rgba(200,175,120,0.6);color:#fff;padding:6px;border-radius:2px;text-align:center;font-weight:600">淡金<br>眉標</div>
+      <div style="background:rgba(200,175,120,0.35);color:#fff;padding:6px;border-radius:2px;text-align:center;font-weight:600">極淡<br>標籤</div>
+    </div>
+  </div>
+  
+  <div style="background:#111;border:1px solid #252525;border-radius:3px;padding:12px;margin-bottom:12px">
+    <div style="color:var(--gold-pure);font-weight:700;margin-bottom:8px;letter-spacing:.1em;font-size:11px">⚪ 文字色階</div>
+    <div style="display:flex;flex-direction:column;gap:6px;font-size:9px;line-height:1.4">
+      <div style="display:flex;align-items:center;gap:6px"><div style="width:30px;height:18px;background:#ffffff;border-radius:2px"></div><span>H1: 108px 大標</span></div>
+      <div style="display:flex;align-items:center;gap:6px"><div style="width:30px;height:18px;background:rgba(220,215,200,1);border-radius:2px"></div><span>H2: 56-80px 副標</span></div>
+      <div style="display:flex;align-items:center;gap:6px"><div style="width:30px;height:18px;background:rgba(210,205,195,0.88);border-radius:2px"></div><span>Body: 28-36px 正文</span></div>
+      <div style="display:flex;align-items:center;gap:6px"><div style="width:30px;height:18px;background:rgba(200,190,170,0.72);border-radius:2px"></div><span>Meta: 18-24px 說明</span></div>
+    </div>
+  </div>
+  
+  <div style="background:#111;border:1px solid #252525;border-radius:3px;padding:12px">
+    <div style="color:var(--gold-pure);font-weight:700;margin-bottom:8px;letter-spacing:.1em;font-size:11px">📐 設計檢核</div>
+    <ul style="margin:0;padding-left:14px;font-size:10px;line-height:1.8;color:rgba(200,175,120,.5)">
+      <li>🔴 紅色只在第二行？</li>
+      <li>⚪ 大標用純白嗎？</li>
+      <li>🟡 序號用純金色？</li>
+      <li>📦 標籤有邊框？</li>
+      <li>〰️ 分隔線漸淡？</li>
+      <li>💬 字級遞進？</li>
+    </ul>
+  </div>
 </div>
 
-<!-- Floating toolbar -->
-<div id="ftb">
-  <span id="gtx">
-    <button class="fn" id="bb2" onclick="fmt('b')"><b>B</b></button>
-    <button class="fn" id="bs2" onclick="fmt('s')"><s>S</s></button>
-    <div class="sp"></div>
-    <span class="fl">選取色</span>
-    <input type="color" class="fco" id="fcs" value="#c8af78" oninput="fmt('c',this.value)"/>
-    <div class="sp"></div>
-    <span class="fl">字級</span>
-    <div class="fst"><button onclick="adj('fs',-2)">−</button><span id="vfs">28px</span><button onclick="adj('fs',2)">＋</button></div>
-    <div class="sp"></div>
-    <span class="fl">字距</span>
-    <div class="fst"><button onclick="adj('ls',-1)">−</button><span id="vls">0px</span><button onclick="adj('ls',1)">＋</button></div>
-    <div class="sp"></div>
-    <span class="fl">行高</span>
-    <div class="fst"><button onclick="adj('lh',-.1)">−</button><span id="vlh">1.5</span><button onclick="adj('lh',.1)">＋</button></div>
-    <div class="sp"></div>
-    <span class="fl">全色</span>
-    <input type="color" class="fco" id="fca" oninput="adj('col',this.value)"/>
-    <div class="sp"></div>
-    <span class="fl">透明</span>
-    <div class="fsl"><input type="range" id="fop" min="0" max="100" step="1" value="100" oninput="adj('op',this.value)"/><span id="vop">100%</span></div>
-    <div class="sp"></div>
-    <button class="fn x" onclick="delEl()">✕</button>
-  </span>
-  <span id="gdc">
-    <span class="fl" id="dlbl">線條</span>
-    <div class="sp"></div>
-    <span class="fl">顏色</span>
-    <input type="color" class="fco" id="fdc" value="#c8af78" oninput="da('col',this.value)"/>
-    <div class="sp"></div>
-    <span class="fl">透明</span>
-    <div class="fsl"><input type="range" id="fdo" min="0" max="100" step="1" value="100" oninput="da('op',this.value)"/><span id="vdo">100%</span></div>
-    <div class="sp"></div>
-    <span class="fl">粗細</span>
-    <div class="fst"><button onclick="da('sz',-1)">−</button><span id="vdsz">1</span><button onclick="da('sz',1)">＋</button></div>
-    <span class="fl" id="dwl" style="display:none">寬</span>
-    <div class="fst" id="dwc" style="display:none"><button onclick="da('w',-10)">−</button><span id="vdw">64</span><button onclick="da('w',10)">＋</button></div>
-    <div class="sp"></div>
-    <button class="fn x" onclick="delEl()">✕</button>
-  </span>
-  <span id="gbg">
-    <span class="fl">背景</span>
-    <div class="fsl"><input type="range" id="fbg" min="0" max="100" step="1" value="50" oninput="ba('bg',this.value)"/><span id="vbg">50%</span></div>
-    <div class="sp"></div>
-    <span class="fl">遮罩</span>
-    <div class="fsl"><input type="range" id="fov" min="0" max="100" step="1" value="100" oninput="ba('ov',this.value)"/><span id="vov">100%</span></div>
-  </span>
+<div id="topbar">
+  <h1>✦ IG 輪播 · 高質感版</h1>
+  <input id="ai" type="text" placeholder="@帳號" value="@angus061855" style="width:148px"/>
+  <textarea id="it" placeholder="輸入主題或貼上文章…"></textarea>
+  <button class="tb" id="gb" onclick="doGen()">✦ 產生</button>
+  <button class="tb" id="rgb" style="display:none;color:rgba(200,175,120,.5);border:1px solid #333;font-size:11px" onclick="reGen()">↻ 換版本</button>
+  <button class="tb" style="color:rgba(200,175,120,.5);border:1px solid #333;font-size:11px;margin-left:auto" onclick="toggleDesignRef()" title="切換設計參考面板">🎨 參考</button>
+  <span id="st"></span>
 </div>
 
 <div id="wrap"><div class="ph">輸入內容後按「✦ 產生」</div></div>
 
 <script>
-/* ─── data ─── */
-const THEMES=[];
+function toggleDesignRef(){
+  const ref = document.getElementById('design-ref');
+  ref.style.display = ref.style.display === 'none' ? 'block' : 'none';
+}
 
-let SEL=null,SMODE='txt',savedSel=null;
+let SEL=null,SMODE='txt';
 let BGU='url("back.png")';
 let lastInput='',lastAccount='';
 let currentData=null;
 let globalTheme='t1';
-let slideThemes={};
 const E=id=>document.getElementById(id);
-const SS=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
-const SG=(id,v)=>{const el=document.getElementById(id);if(el)el.value=v;};
-const stat=m=>{const el=document.getElementById('st');if(el)el.textContent=m;};
+const stat=m=>{const el=E('st');if(el)el.textContent=m};
 
-function applyGlobalTheme(tid){
-  globalTheme=tid;
-  if(!currentData)return;
-  desel();
-  // Apply to all slides
-  document.querySelectorAll('.si').forEach(si=>{
-    const sid=si.closest('.slide')?.id;
-    if(sid){
-      slideThemes[sid]=tid;
-      si.className='si '+tid;
-    }
-  });
-  // Rebuild overlay for paper theme
-  document.querySelectorAll('.ov-el').forEach(ov=>{
-    if(tid==='t8'){ov.style.cssText='position:absolute;inset:0;pointer-events:none;opacity:0'}
-    else{ov.style.cssText=`position:absolute;inset:0;pointer-events:none;background:linear-gradient(160deg,rgba(0,0,0,.88) 0%,rgba(14,10,6,.7) 50%,rgba(0,0,0,.93) 100%);opacity:1`}
-  });
-  updateSlideBadges();
-  stat('✓ 已套用 '+THEMES.find(t=>t.id===tid).name);
-}
+function getCfg(){ return { mode:'balance', intensity:0.7, revealLevel:0.5 }; }
 
-/* ─── per-slide theme ─── */
-function setSlidTheme(slideId, tid){
-  slideThemes[slideId]=tid;
-  const slide=document.getElementById(slideId);
-  if(!slide)return;
-  const si=slide.querySelector('.si');
-  si.className='si '+tid;
-  const ov=si.querySelector('.ov-el');
-  if(ov){
-    if(tid==='t8'){ov.style.cssText='position:absolute;inset:0;pointer-events:none;opacity:0'}
-    else{ov.style.cssText=`position:absolute;inset:0;pointer-events:none;background:linear-gradient(160deg,rgba(0,0,0,.88) 0%,rgba(14,10,6,.7) 50%,rgba(0,0,0,.93) 100%);opacity:1`}
-  }
-  updateSlideBadges();
-  desel();
-}
+function bgD(thm){ return`<div class="bg-el deco" style="background-image:${BGU};opacity:0.95;background-size:cover;background-position:center;image-rendering:crisp-edges"></div>`; }
+function ovD(thm){ return`<div class="ov-el" style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(160deg,rgba(0,0,0,.2) 0%,rgba(8,6,3,.2) 55%,rgba(0,0,0,.2) 100%)"></div>`; }
 
-function updateSlideBadges(){
-  document.querySelectorAll('.slide').forEach(s=>{
-    const ctrl=s.querySelector('.slide-controls');
-    if(!ctrl)return;
-    const sid=s.id;
-    const tid=slideThemes[sid]||globalTheme;
-    ctrl.querySelectorAll('.slide-tc').forEach(tc=>{
-      tc.classList.toggle('on',tc.dataset.t===tid);
-    });
-  });
-}
-
-/* ─── bg upload ─── */
-function uploadBg(e){
-  const f=e.target.files[0];if(!f)return;
-  const r=new FileReader();
-  r.onload=ev=>{BGU=`url("${ev.target.result}")`;document.querySelectorAll('.bg-el').forEach(b=>b.style.backgroundImage=BGU);stat('✓ 背景已更新')};
-  r.readAsDataURL(f);e.target.value='';
-}
-
-/* ─── toolbar ─── */
-function posTB(e){
-  const tb=E('ftb');
-  const r=e.getBoundingClientRect();
-  const tbW=760;
-  let top=r.top-48;
-  if(top<8)top=r.bottom+6;
-  let left=r.left;
-  if(left+tbW>window.innerWidth-8)left=window.innerWidth-tbW-8;
-  if(left<8)left=8;
-  tb.style.top=top+'px';
-  tb.style.left=left+'px';
-  tb.classList.add('on');
-}
-function hideTB(){E('ftb').classList.remove('on')}
-function repTB(){if(SEL)posTB(SEL)}
-
-function showTB(e,mode){
-  SEL=e;SMODE=mode;
-  E('gtx').className='gtx'+(mode==='txt'?' on':'');
-  E('gdc').className='gdc'+(mode==='deco'?' on':'');
-  E('gbg').className='gbg'+(mode==='bg'?' on':'');
-  posTB(e);
-  if(mode==='txt')syncTxt(e);
-  else if(mode==='deco')syncDeco(e);
-  else if(mode==='bg')syncBg(e);
-}
-
-function syncTxt(e){
-  const cs=getComputedStyle(e);
-  const fs=parseFloat(cs.fontSize)||28;
-  const ls=parseFloat(cs.letterSpacing)||0;
-  const lh=parseFloat(cs.lineHeight)||(fs*1.5);
-  SS('vfs',Math.round(fs)+'px');
-  SS('vls',Math.round(ls)+'px');
-  SS('vlh',(Math.round(lh/fs*10)/10).toFixed(1));
-  const rgb=cs.color.match(/[\d.]+/g);
-  if(rgb&&rgb.length>=3)SG('fca','#'+[rgb[0],rgb[1],rgb[2]].map(v=>parseInt(v).toString(16).padStart(2,'0')).join(''));
-  const op=Math.round((parseFloat(e.style.opacity)||1)*100);
-  SG('fop',op);SS('vop',op+'%');
-  E('bb2').classList.toggle('on',cs.fontWeight==='700');
-  E('bs2').classList.toggle('on',cs.textDecoration.includes('line-through'));
-}
-
-function dType(e){
-  const c=(e.className||'').toString();
-  if(c.includes('corner'))return 'corner';
-  if(c.includes('hl ')||c.includes('hl\n')||/ hl$/.test(c)||c==='hl deco sel'||c.trim().split(' ').includes('hl'))return 'hl';
-  if(c.includes('vl ')||c.includes('vl\n')||/ vl$/.test(c)||c.trim().split(' ').includes('vl'))return 'vl';
-  if(c.includes('sb2'))return 'sb2';
-  if(c.includes('rl'))return 'rl';
-  if(c.includes('sp2'))return 'sp2';
-  if(c.includes('dv'))return 'dv';
-  if(c.includes('cv'))return 'cv';
-  if(c.includes('nm'))return 'num';
-  if(c.includes('cd'))return 'dots';
-  if(c.includes('pn'))return 'pnum';
-  if(c.includes('cb'))return 'cbox';
-  return 'other';
-}
-
-function syncDeco(e){
-  const t=dType(e);
-  const lm={corner:'角框',hl:'橫線',vl:'直線',sb2:'側邊條',rl:'右側條',sp2:'分隔線',dv:'分隔線',cv:'垂直線',num:'頁碼',dots:'裝飾點',pnum:'序號',cbox:'邊框',other:'裝飾'};
-  SS('dlbl',lm[t]||'裝飾');
-  const cs=getComputedStyle(e);
-  const op=Math.round((parseFloat(e.style.opacity)||1)*100);
-  SG('fdo',op);SS('vdo',op+'%');
-  const isT=['num','dots','pnum'].includes(t);
-  const isL=['hl','vl','sp2','dv','cv','sb2','rl'].includes(t);
-  let hex='#c8af78';
-  if(isT){const rgb=cs.color.match(/[\d.]+/g);if(rgb&&rgb.length>=3)hex='#'+[rgb[0],rgb[1],rgb[2]].map(v=>parseInt(v).toString(16).padStart(2,'0')).join('');}
-  else if(isL){const rgb=(cs.backgroundColor||'').match(/[\d.]+/g);if(rgb&&rgb.length>=3)hex='#'+[rgb[0],rgb[1],rgb[2]].map(v=>parseInt(v).toString(16).padStart(2,'0')).join('');}
-  else if(t==='corner'){const rgb=cs.borderTopColor.match(/[\d.]+/g);if(rgb&&rgb.length>=3)hex='#'+[rgb[0],rgb[1],rgb[2]].map(v=>parseInt(v).toString(16).padStart(2,'0')).join('');}
-  else if(t==='cbox'){const rgb=cs.borderTopColor.match(/[\d.]+/g);if(rgb&&rgb.length>=3)hex='#'+[rgb[0],rgb[1],rgb[2]].map(v=>parseInt(v).toString(16).padStart(2,'0')).join('');}
-  SG('fdc',hex);
-  const sz=isT?Math.round(parseFloat(cs.fontSize)||16):t==='corner'?Math.round(parseFloat(cs.borderTopWidth)||1):1;
-  SS('vdsz',sz);
-  const sw=['sp2','dv','hl'].includes(t);
-  E('dwl').style.display=sw?'':'none';
-  E('dwc').style.display=sw?'flex':'none';
-  if(sw)SS('vdw',Math.round(parseFloat(cs.width)||64));
-}
-
-function syncBg(e){
-  const si=e.closest('.si');
-  const bg=si?.querySelector('.bg-el'),ov=si?.querySelector('.ov-el');
-  if(bg){const v=Math.round((parseFloat(bg.style.opacity)||.5)*100);SG('fbg',v);SS('vbg',v+'%')}
-  if(ov){const v=Math.round((parseFloat(ov.style.opacity)||1)*100);SG('fov',v);SS('vov',v+'%')}
-}
-
-/* ─── partial selection ─── */
-function saveSel(){const s=window.getSelection();if(s&&s.rangeCount>0&&!s.isCollapsed){savedSel=s.getRangeAt(0).cloneRange();return true}return false}
-function restSel(){if(!savedSel)return false;const s=window.getSelection();s.removeAllRanges();s.addRange(savedSel);return true}
-E('ftb').addEventListener('mousedown',()=>saveSel());
-
-/* ─── format ─── */
-function fmt(cmd,val){
-  restSel();
-  const sel=window.getSelection();
-  const has=sel&&!sel.isCollapsed&&SEL&&SEL.contains(sel.anchorNode);
-  if(cmd==='b'){
-    if(has)document.execCommand('bold',false,null);
-    else if(SEL){const w=getComputedStyle(SEL).fontWeight;SEL.style.fontWeight=(w==='700'||w==='bold')?'normal':'bold';}
-    E('bb2').classList.toggle('on',getComputedStyle(SEL||document.body).fontWeight==='700');
-  }else if(cmd==='s'){
-    if(has)document.execCommand('strikeThrough',false,null);
-    else if(SEL){const d=getComputedStyle(SEL).textDecoration;SEL.style.textDecoration=d.includes('line-through')?'none':'line-through';}
-    E('bs2').classList.toggle('on',getComputedStyle(SEL||document.body).textDecoration.includes('line-through'));
-  }else if(cmd==='c'&&has){
-    document.execCommand('foreColor',false,val);
-  }
-}
-
-function adj(prop,val){
-  if(!SEL)return;
-  const cs=getComputedStyle(SEL);
-  if(prop==='fs'){const v=Math.max(8,parseFloat(cs.fontSize)+val);SEL.style.fontSize=v+'px';SS('vfs',Math.round(v)+'px');repTB()}
-  else if(prop==='ls'){const v=parseFloat(cs.letterSpacing)+val;SEL.style.letterSpacing=v+'px';SS('vls',Math.round(v)+'px')}
-  else if(prop==='lh'){const fs=parseFloat(cs.fontSize)||28;const lh=parseFloat(cs.lineHeight)||(fs*1.5);const r=Math.max(.8,Math.round((lh/fs+val)*10)/10);SEL.style.lineHeight=r;SS('vlh',r.toFixed(1))}
-  else if(prop==='col')SEL.style.color=val;
-  else if(prop==='op'){SEL.style.opacity=val/100;SS('vop',val+'%')}
-}
-
-function da(prop,val){
-  if(!SEL)return;
-  const t=dType(SEL);
-  const isT=['num','dots','pnum'].includes(t);
-  const isL=['hl','vl','sp2','dv','cv','sb2','rl'].includes(t);
-  if(prop==='col'){
-    if(isT)SEL.style.color=val;
-    else if(isL){SEL.style.background=val;SEL.style.backgroundColor=val;}
-    else if(t==='corner'||t==='cbox')SEL.style.borderColor=val;
-  }else if(prop==='op'){SEL.style.opacity=val/100;SS('vdo',val+'%')}
-  else if(prop==='sz'){
-    if(isT){const v=Math.max(8,parseFloat(getComputedStyle(SEL).fontSize)+val);SEL.style.fontSize=v+'px';SS('vdsz',Math.round(v))}
-    else if(t==='corner'){const bw=Math.max(1,(parseFloat(SEL.style.borderTopWidth)||1)+val);SEL.style.borderWidth=bw+'px';SS('vdsz',Math.round(bw));const sz=Math.max(14,(parseFloat(getComputedStyle(SEL).width)||36)+val*2);SEL.style.width=sz+'px';SEL.style.height=sz+'px';}
-    else if(isL){const p=['hl','sp2','dv'].includes(t)?'height':'width';const v=Math.max(1,(parseFloat(SEL.style[p])||1)+val);SEL.style[p]=v+'px';SS('vdsz',Math.round(v))}
-  }else if(prop==='w'){const v=Math.max(10,(parseFloat(getComputedStyle(SEL).width)||64)+val);SEL.style.width=v+'px';SS('vdw',Math.round(v))}
-}
-
-function ba(prop,val){
-  if(!SEL)return;
-  const si=SEL.closest('.si');
-  if(prop==='bg'){const b=si?.querySelector('.bg-el');if(b){b.style.opacity=val/100;SS('vbg',val+'%')}}
-  if(prop==='ov'){const o=si?.querySelector('.ov-el');if(o){o.style.opacity=val/100;SS('vov',val+'%')}}
-}
-
-function delEl(){if(!SEL)return;hideTB();SEL.remove();SEL=null;}
-
-/* ─── selection ─── */
-function selEl(e,mode){
-  if(SEL&&SEL!==e)SEL.classList.remove('sel');
-  SEL=e;SMODE=mode;e.classList.add('sel');showTB(e,mode);
-}
-function desel(){
-  if(SEL){SEL.classList.remove('sel');SEL=null;}
-  savedSel=null;hideTB();
-}
-document.addEventListener('mousedown',e=>{
-  if(!e.target.closest('.slide')&&!e.target.closest('#ftb')&&!e.target.closest('#tbar'))desel();
-});
-window.addEventListener('scroll',repTB);
-document.addEventListener('keydown',e=>{
-  if(!SEL)return;
-  if(e.key!=='Delete'&&e.key!=='Backspace')return;
-  const inEd=document.activeElement?.getAttribute('contenteditable')==='true';
-  if(!inEd){e.preventDefault();delEl();}
-});
-
-/* ─── attach to slide ─── */
-function att(slideEl){
-  const si=slideEl.querySelector('.si');
-  si.querySelectorAll('.ed').forEach(e=>{
-    e.setAttribute('contenteditable','true');
-    e.setAttribute('spellcheck','false');
-    e.addEventListener('mousedown',ev=>{
-      ev.stopPropagation();
-      if(SEL===e){setTimeout(()=>showTB(e,'txt'),0);return;}
-      selEl(e,'txt');
-    });
-    e.addEventListener('mouseup',ev=>{ev.stopPropagation();setTimeout(()=>showTB(e,'txt'),0)});
-    e.addEventListener('keydown',ev=>{if(ev.key==='Escape')ev.target.blur()});
-    e.addEventListener('input',repTB);
-  });
-  si.querySelectorAll('.deco').forEach(e=>{
-    e.addEventListener('mousedown',ev=>{
-      ev.stopPropagation();
-      selEl(e,e.classList.contains('bg-el')?'bg':'deco');
-    });
-  });
-}
-
-/* ─── build per-slide theme switcher ─── */
-function mkControls(slideId){
-  return document.createElement('div');
-}
-
-/* ─── HTML builders ─── */
-function bgD(thm){
-  const opq='0.95';
-  return`<div class="bg-el deco" style="background-image:${BGU};opacity:${opq};background-size:cover;background-position:center;image-rendering:crisp-edges"></div>`;
-}
-function ovD(thm){
-  return`<div class="ov-el" style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(160deg,rgba(0,0,0,.2) 0%,rgba(8,6,3,.2) 55%,rgba(0,0,0,.2) 100%)"></div>`;
-}
-
-// deco extras per theme
-function tDeco(thm,type){ return ''; }
-function acctExtra(thm,account){ return ''; }
-
-function mkSlide(id,thm,innerHtml,pgLabel){
-  const s=document.createElement('div');s.className='slide';s.id=id;
-  s.appendChild(mkControls(id));
-  const variants=['lv1','lv2','lv3','lv4','lv5','lv6','lv7','lv8','lv9','lv10','lv11','lv12'];
-  const _vIdx=window._layoutVariant!==undefined?window._layoutVariant:0;
-  const si=document.createElement('div');si.className=`si ${thm} ${variants[_vIdx]}`;
-  const tag='<div class="slide-hashtag">#AS娛樂經紀 大頭</div>';
-  const logo='<img class="slide-logo" src="logo.png" alt="logo" onerror="this.style.display=\'none\'">';
-  const wm='<div class="slide-watermark">'+( document.getElementById('ai')?.value.trim()||'@angus061855' )+'</div>';
-  si.innerHTML=logo+tag+innerHtml+wm;s.appendChild(si);att(s);
-  slideThemes[id]=thm;
-  return s;
-}
-
-function bCover(d,account,thm,pgLabel){
-  const parts=(d.title||'').split('\n');
-  const t1=parts[0]||'';
-  const t2=parts[1]||'';
-  const pgNum=pgLabel?parseInt(pgLabel.split('/')[0])||1:1;
-  const s=mkSlide('slide-1',thm,`${bgD(thm)}${ovD(thm)}${tDeco(thm,'cover')}${acctExtra(thm,account)}
-    <div class="cw" data-idx="${pgNum}">
-      <div class="ey ed">${d.eyebrow||''}</div>
-      <div><span class="tt ed">${t1}</span>${t2?`<span class="tt ac ed">${t2}</span>`:''}</div>
-      <div class="sb ed" style="font-size:30px;letter-spacing:.18em;line-height:1.85;margin-bottom:40px;color:rgba(210,205,195,.9)">${(d.subtitle||'').replace(/\n/g,'<br>')}</div>
-    <div class="bio ed" style="font-size:20px;letter-spacing:.12em;color:rgba(200,175,120,.72);line-height:2.1;margin-bottom:32px;">
-        <span style="font-size:22px;font-weight:700;color:rgba(200,175,120,.9);letter-spacing:.18em">關於 大頭｜AS娛樂經紀</span><br>
-        <span style="color:var(--g)">靠誠實與信任</span>・七年面試超過 <span style="color:var(--g)">3000+</span><br>
-        不簽合約・不壓薪水・自由排班・隱私安全<br>
-        <span style="color:rgba(200,175,120,.45);font-size:18px">不要讓未來的你 討厭現在的自己</span>
-      </div>
-    </div>`,pgLabel);
-  addSlideRefineBtn(s,'slide-1',0,'cover');
-  return s;
-}
-function bContent(d,idx,total,thm,pgLabel){
-  const num=String(idx+1).padStart(2,'0')+' / '+String(total).padStart(2,'0');
-  const pgNum=pgLabel?parseInt(pgLabel.split('/')[0])||idx+1:idx+1;
-  const pts=(d.points||[]).map((p,i)=>`
-    <li class="pi">
-      <span class="pn deco">0${i+1}</span>
-      <div><div class="ph2 ed">${p.title||''}</div><div class="pd ed">${p.desc||''}</div></div>
-    </li>`).join('');
-  const slideId=`slide-${idx+2}`;
-  const s=mkSlide(slideId,thm,`${bgD(thm)}${ovD(thm)}${tDeco(thm,'content')}
-    <div class="nw" data-idx="${pgNum}">
-      <div class="nm deco">${num}</div>
-      ${d.tag ? `<div class="tg ed">${d.tag}</div>` : ''}
-      <div class="hd ed">${(d.heading||'').replace(/\n/g,'<br>')}</div>
-      <div class="dv deco"></div>
-      <ul class="pl">${pts}</ul>
-    </div>`,pgLabel);
-  addSlideRefineBtn(s, slideId, idx, 'content');
-  return s;
-}
-
-function bCta(d,account,idx,thm,pgLabel){
-  const pgNum=pgLabel?parseInt(pgLabel.split('/')[0])||idx+2:idx+2;
-  const s=mkSlide(`slide-${idx+2}`,thm,`${bgD(thm)}${ovD(thm)}${tDeco(thm,'cta')}
-    <div class="ctw" data-idx="${pgNum}">
-      <div class="cd deco">◆ ◆ ◆</div>
-      <div class="cm ed">${(d.main||'').replace(/\n/g,'<br>')}</div>
-      <div class="cs ed">${(d.sub||'').replace(/\n/g,'<br>')}</div>
-      <div class="cv deco"></div>
-      <div class="cb deco"><div class="cf ed">${d.follow||''}</div></div>
-      <div class="ca ed">${account}</div>
-    </div>`,pgLabel);
-  addSlideRefineBtn(s,`slide-${idx+2}`,idx,'cta');
-  return s;
-}
-
-function render(data,account,thm){
-  currentData=data;
-  const wrap=E('wrap');wrap.innerHTML='';
-  slideThemes={};
-  const cnt=data.content||[];
-  const hasStory=!!(data.story&&data.story.heading);
-  const hasSummary=!!(data.summary&&data.summary.heading);
-  const totalContent=(hasStory?1:0)+cnt.length+(hasSummary?1:0);
-  const totalSlides=1+totalContent+1;
-  const pg=n=>String(n).padStart(2,'0')+' / '+String(totalSlides).padStart(2,'0');
-  let pgIdx=1;let slideIdx=0;
-
-  // 封面
-  const coverSlide=bCover(data.cover,account,thm,pg(pgIdx++));
-  wrapWithBar(wrap,coverSlide,'slide-1',0,'cover');
-
-  // story
-  if(hasStory){
-    const s=bContent(data.story,slideIdx,totalContent,thm,pg(pgIdx++));
-    wrapWithBar(wrap,s,`slide-${slideIdx+2}`,slideIdx,'content');
-    slideIdx++;
-  }
-
-  // content
-  cnt.forEach(c=>{
-    const s=bContent(c,slideIdx,totalContent,thm,pg(pgIdx++));
-    wrapWithBar(wrap,s,`slide-${slideIdx+2}`,slideIdx,'content');
-    slideIdx++;
-  });
-
-  // summary
-  if(hasSummary){
-    const s=bContent(data.summary,slideIdx,totalContent,thm,pg(pgIdx++));
-    wrapWithBar(wrap,s,`slide-${slideIdx+2}`,slideIdx,'content');
-    slideIdx++;
-  }
-
-  // cta
-  const ctaSlide=bCta(data.cta,account,totalContent,thm,pg(pgIdx++));
-  wrapWithBar(wrap,ctaSlide,`slide-${totalContent+2}`,totalContent,'cta');
-
-  E('db').style.display='block';E('rgb').style.display='block';
-  const lvbar=E('lv-bar');if(lvbar)lvbar.style.display='flex';
-  updateLvButtons();
-  updateSlideBadges();
-}
-
-function wrapWithBar(wrap, slideEl, slideId, idx, type){
-  const wrapper=document.createElement('div');
-  wrapper.style.cssText='display:flex;flex-direction:column;align-items:flex-start;gap:0';
-  wrapper.appendChild(slideEl);
-  const bar=document.createElement('div');
-  bar.style.cssText='display:flex;align-items:center;gap:6px;padding:5px 0;width:1080px;flex-wrap:wrap';
-  bar.innerHTML=`
-    <span style="font-size:10px;letter-spacing:.18em;color:rgba(200,175,120,.3)">第${slideId.replace('slide-','')}張</span>
-    <button onclick="openSlideRefine('${slideId}','${type}',${idx})"
-      style="background:transparent;border:1px solid #333;color:rgba(200,175,120,.45);
-      font-family:inherit;font-size:10px;letter-spacing:.12em;padding:4px 10px;
-      cursor:pointer;border-radius:2px"
-      onmouseover="this.style.borderColor='rgba(200,175,120,.6)';this.style.color='rgba(200,175,120,.9)'"
-      onmouseout="this.style.borderColor='#333';this.style.color='rgba(200,175,120,.45)'">
-      ↻ 重生此頁
-    </button>`;
-  wrapper.appendChild(bar);
-  wrap.appendChild(wrapper);
-}
-
-function setLayoutVariant(idx){
-  if(idx===12) idx=Math.floor(Math.random()*12);
-  window._layoutVariant=idx;
-  updateLvButtons();
-  if(currentData){
-    desel();
-    const account=E('ai')?.value.trim()||lastAccount||'@angus061855';
-    render(currentData,account,'t1');
-    // 重新套用背景
-    document.querySelectorAll('.bg-el').forEach(b=>b.style.backgroundImage=BGU);
-  }
-}
-
-function updateLvButtons(){
-  const idx=window._layoutVariant||0;
-  document.querySelectorAll('.lv-btn').forEach(btn=>{
-    const lv=parseInt(btn.dataset.lv);
-    btn.classList.toggle('on', lv===idx);
-    if(lv===12) btn.classList.remove('on');
-  });
-}
-
-/* ─── regenerate ─── */
-let regenCount = 0;
-
-async function reGen(){
-  if(!lastInput){stat('請先產生一次內容');return;}
-  regenCount++;
-  const btn=E('rgb');btn.disabled=true;
-  E('gb').disabled=true;
-  stat(`重新生成第 ${regenCount} 個版本…`);
-  desel();
-
-  // Append variation instruction to push different angle
-  const variations = [
-    '\n\n請用完全不同的切入角度、不同的標題和重點，重新規劃這個主題。',
-    '\n\n這次從「常見誤解」的角度切入，打破錯誤認知。',
-    '\n\n這次用「數字說話」，盡量加入具體數字、金額、比例。',
-    '\n\n這次從「新手常犯的錯」角度切入，列出會吃虧的決策。',
-    '\n\n這次語氣更直接犀利，用更強烈的對比和反問。',
-    '\n\n這次從「老手才知道」的內行視角切入，強調只有圈內人才懂的事。',
-  ];
-  const hint = variations[(regenCount - 1) % variations.length];
-  const modifiedInput = lastInput + hint;
-
-  const cfg = getCfg();
-  try{
-    let text = await callAPI(modifiedInput, null, 5000);
-    let data = parseJSON(text);
-    if(!data){
-      text = await callAPI(modifiedInput, buildFallbackPrompt(lastInput, cfg), 3000);
-      data = parseJSON(text);
-    }
-    if(!data){stat('⚠ 重新生成失敗，再試一次');return;}
-    window._layoutVariant=Math.floor(Math.random()*8);
-    render(data, lastAccount, 't1');
-    document.querySelectorAll('.bg-el').forEach(b=>b.style.backgroundImage=BGU);
-    stat(`✓ 第 ${regenCount} 個版本 · 不滿意繼續按「↻ 換個版本」`);
-  }catch(e){stat('錯誤：'+e.message);}
-  finally{btn.disabled=false;E('gb').disabled=false;}
-}
-
-/* ─── config helpers ─── */
-function getCfg(){
-  return { mode:'balance', intensity:0.7, revealLevel:0.5 };
-}
 function buildPrompt(topic, cfg) {
-  return `
-你是 IG 輪播貼文策略師。只輸出純 JSON，從 { 開始到 } 結束，不加任何說明文字。
+  return `你是 IG 輪播貼文策略師。只輸出純 JSON，從 { 開始到 } 結束，不加任何說明文字。
 
-【重要素材規則】
-- 根據我提供的核心論點和具體細節素材來生成，不要自己發明不相關的內容
-- 素材裡有的具體數字、案例、說法，必須完整保留在輸出裡
+【重要素材規則】根據我提供的核心論點和具體細節素材來生成，素材裡有的具體數字、案例、說法，必須完整保留。
 
-【角色設定】
-你是七年娛樂經紀人（男性），專業、誠實、說到做到，以「踢爆業界黑心手法」聞名。
-說話直接不畫大餅，是新人女孩的安全守護者。
-
-【目標受眾】
-18-30 歲想賺錢但內心不安的女生，害怕進入八大行業被騙、被限制人身自由、遇到不負責的經紀人。
-
-【任務：生成 7 頁 IG 輪播貼文（VIRAL 結構）】
-第1頁 cover    ：HOOK 鉤子，踢爆內幕或引發強烈好奇，讓人想滑下去
-第2頁 story    ：用「我做七年，見過太多...」的內行人視角說業界亂象，建立信任感
-第3頁 content①：點出問題根源，說明為什麼大多數人會被坑，tag 用「觀念①」
-第4頁 content②：給出具體方法或步驟，讓人知道怎麼保護自己，tag 用「觀念②」
-第5頁 content③：用對比或案例強化好經紀與壞經紀的差異，tag 用「觀念③」
-第6頁 summary  ：把所有重點列成清單，heading 用反問句，預告 CTA
-第7頁 cta      ：行動頁，建立信任、導向私訊，語氣直接有誠意，說清楚私訊能得到什麼
-
-【內容切入角度】
-- 知識科普：拆解新人最常踩的坑，說清楚這個產業的運作邏輯，讓人看完覺得「原來是這樣」
-- 踢爆黑心手法：點名合約陷阱、治裝費、壓薪水等具體手法，說清楚正規經紀絕對不會做什麼
-- 價值觀①：經紀人的責任是幫妳平安下岸，不是叫妳一直消費，強調務實賺錢、不畫大餅的態度
-- 價值觀②：妳的身體自主權和人身安全永遠排第一，任何讓妳不舒服的要求都有權說不，好經紀會保護這條線
-- 清單檢核：給出簽約前／面試前的自我檢查清單，讓讀者帶走一個可以馬上用的工具，收藏率高
-
-【寫作風格】
-- 語氣直接、踢爆、誠實，像業界老司機說話，不說教
-- 多用對比（你以為 vs 其實）、反問句、打臉句
-- 每頁都要有衝突感或反轉，讓人想滑下一頁
-- 禁止：空洞的勵志語、模糊的承諾、過於溫柔的口吻
+【任務：生成 7 頁 IG 輪播貼文】
+第1頁 cover：HOOK 鉤子，踢爆內幕或引發強烈好奇
+第2頁 story：內行人視角說業界亂象，建立信任感
+第3-5頁 content：給出具體方法或步驟，用對比強化
+第6頁 summary：把所有重點列成清單
+第7頁 cta：行動頁，導向私訊
 
 【文字格式規則】
-- cover title：
-  · 必須有兩行，用 \\n 分隔，第一行白字（問題），第二行紅色強調（答案或重點）
-  · 每行最多 6 個中文字，只在完整詞語結尾換行
-  · 範例：「別被騙了\\n保護妳自己」
-- story / content / summary 的 heading：每行最多 8 個中文字，換行在語意轉折處，同一個意思不強制換行
-- 每個 point.title：8～10 字，一句話說清楚
-- 每個 point.desc：15～20 字，有畫面感，說清楚細節
-- 每頁 3 個 points 全部填完，不能留空
+- cover title：必須有兩行，用 \\n 分隔，第一行白字（問題），第二行紅色強調（答案）
+- 每行最多 6 個中文字，只在完整詞語結尾換行
+- 範例：「別被騙了\\n保護妳自己」
+- story/content/summary 的 heading：每行最多 8 個中文字
 
-【風控規則】
-- 禁止明確薪資數字，改用模糊描述
-- 可使用「八大行業」「酒店業」「這個產業」等詞
-- CTA 語氣直接但不強迫，要有誠意
+【寫作風格】語氣直接、踢爆、誠實，多用對比、反問句、打臉句。
 
-【禁止重複】
-- 每一頁核心訊息只能出現一次，禁止跨頁重複相同觀念或說法
-- 同一頁的 3 個 points 不能是同一件事的不同說法
+【主題】${topic}
 
-【主題輸入說明】
-我輸入的內容可能是以下兩種形式：
-
-1. 短主題（10字以內）
-   → 先完整閱讀我提供的內容
-   → 擷取核心論點、具體案例、關鍵數字作為素材
-   → 確認理解後再生成輪播貼文
-
-2. 長文章／素材（超過10字）
-   → 先完整閱讀我提供的內容
-   → 擷取核心論點、具體案例、關鍵數字作為素材
-   → 確認理解後再生成輪播貼文
-
-【主題】
-${topic}
-
-【輸出格式】
-直接輸出純 JSON，從 { 開始，不加任何說明。結構如下：
-
-{
-  "cover": {
-    "eyebrow": string,
-    "title": string,        // 必須含 \\n，兩行
-    "subtitle": string
-  },
-  "story": {
-    "tag": string,
-    "heading": string,
-    "points": [
-      { "title": string, "desc": string },
-      { "title": string, "desc": string },
-      { "title": string, "desc": string }
-    ]
-  },
-  "content": [
-    {
-      "tag": "觀念①",
-      "heading": string,
-      "points": [
-        { "title": string, "desc": string },
-        { "title": string, "desc": string },
-        { "title": string, "desc": string }
-      ]
-    },
-    {
-      "tag": "觀念②",
-      "heading": string,
-      "points": [ ...同上 x3 ]
-    },
-    {
-      "tag": "觀念③",
-      "heading": string,
-      "points": [ ...同上 x3 ]
-    }
-  ],
-  "summary": {
-    "tag": string,
-    "heading": string,
-    "points": [
-      { "title": string, "desc": string },
-      { "title": string, "desc": string },
-      { "title": string, "desc": string }
-    ]
-  },
-  "cta": {
-    "main": string,
-    "sub": string,
-    "follow": string
-  }
-}
-`.trim();
+【輸出格式】直接輸出純 JSON，結構如下：
+{ "cover": { "eyebrow": string, "title": string, "subtitle": string },
+"story": { "tag": string, "heading": string, "points": [{ "title": string, "desc": string }, x3] },
+"content": [ x3 個內容頁 ],
+"summary": { "tag": string, "heading": string, "points": [x3] },
+"cta": { "main": string, "sub": string, "follow": string } }`.trim();
 }
 
-function buildFallbackPrompt(topic, cfg) {
-  return '你是七年娛樂經紀人（男性），踢爆業界黑心手法，說話直接誠實。只輸出JSON從{開始。\n'
-    + '主題：' + topic + '\n'
-    + '【重要】根據我提供的核心論點和具體細節素材來生成，不要自己發明不相關的內容。\n'
-    + '素材裡有的具體數字、案例、說法，必須保留在輸出裡。\n\n'
-    + '你是七年娛樂經紀人（男性），專業、誠實、說到做到，以「踢爆業界黑心手法」聞名。\n'
-    + '說話直接不畫大餅，是新人女孩的安全守護者。\n\n'
-    + '【目標受眾】18-30歲想賺錢但內心不安的女生，害怕進入八大行業被騙、被限制人身自由、遇到不負責的經紀人。\n\n'
-    + '結構：cover → story → content（觀念①②③）→ summary → cta\n'
-    + '【cover title 強制規則 - 最重要】\n'
-    + 'title 必須包含 \\n 換行，格式：第一行白字（問題/衝擊）+ \\n + 第二行紅字（答案/強調）\n'
-    + '第一行最多6字，第二行最多6字，兩行缺一不可。\n'
-    + '正確範例：{"title":"別被騙了\\n選對經紀人"}\n'
-    + '錯誤範例：{"title":"別被騙了，選對經紀人"} ← 沒有換行，紅字不會出現\n\n'
-    + '輸出純 JSON，直接從 { 開始，不加任何說明。\n'
-    + '{ "cover": { "eyebrow": string, "title": string, "subtitle": string },\n'
-    + '"story": { "tag": string, "heading": string, "points": [{ "title": string, "desc": string }, x3] },\n'
-    + '"content": [\n'
-    + '  { "tag": "觀念①", "heading": string, "points": [{ "title": string, "desc": string }, x3] },\n'
-    + '  { "tag": "觀念②", "heading": string, "points": [x3] },\n'
-    + '  { "tag": "觀念③", "heading": string, "points": [x3] } ],\n'
-    + '"summary": { "tag": string, "heading": string, "points": [x3] },\n'
-    + '"cta": { "main": string, "sub": string, "follow": string } }';
-}
-/* ─── generate ─── */
-
-function saveKey(v){
-  if(v) localStorage.setItem('groq_key', v);
-}
-function loadKey(){
-  const k=localStorage.getItem('groq_key')||'';
-  if(k){ const inp=document.getElementById('groq-key'); if(inp) inp.value=k; }
-  return k;
+function parseJSON(text){
+  const s=text.indexOf('{'),e2=text.lastIndexOf('}');
+  if(s===-1||e2===-1)return null;
+  try{ return JSON.parse(text.slice(s,e2+1)); }catch(e){return null}
 }
 
 async function callAPI(inp,sys,max){
-  const key = document.getElementById('groq-key')?.value.trim() || loadKey();
-  if(!key){
-    stat('⚠ 請先填入 Groq API Key');
-    throw new Error('No API key');
-  }
+  const key = localStorage.getItem('groq_key')||'';
+  if(!key){ stat('⚠ 請先填入 Groq API Key'); throw new Error('No API key'); }
   const systemPrompt = (sys && sys.trim()) ? sys : buildPrompt(inp, getCfg());
   const r=await fetch('https://api.groq.com/openai/v1/chat/completions',{
     method:'POST',
@@ -1428,10 +211,7 @@ async function callAPI(inp,sys,max){
     body:JSON.stringify({
       model:'meta-llama/llama-4-scout-17b-16e-instruct',
       max_tokens:max||5000,
-      messages:[
-        {role:'system', content: systemPrompt || '你是一個助手'},
-        {role:'user', content: inp}
-]
+      messages:[{role:'system',content:systemPrompt},{role:'user',content:inp}]
     })
   });
   const j=await r.json();
@@ -1439,1203 +219,106 @@ async function callAPI(inp,sys,max){
   return j.choices?.[0]?.message?.content||'';
 }
 
-function parseJSON(text){
-  const s=text.indexOf('{'),e2=text.lastIndexOf('}');
-  if(s===-1||e2===-1)return null;
-  try{
-    const cleaned=text.slice(s,e2+1).replace(/，/g,' ');
-    return JSON.parse(cleaned);
-  }catch(e){return null}
+function mkSlide(id,thm,innerHtml){
+  const s=document.createElement('div');s.className='slide';s.id=id;
+  const si=document.createElement('div');si.className='si '+thm+' lv1';
+  const tag='<div class="slide-hashtag">#AS娛樂經紀</div>';
+  const wm='<div class="slide-watermark">'+(E('ai')?.value.trim()||'@angus061855')+'</div>';
+  si.innerHTML=tag+innerHtml+wm;
+  s.appendChild(si);
+  return s;
+}
+
+function bCover(d,account,thm){
+  const parts=(d.title||'').split('\n');
+  const t1=parts[0]||'';
+  const t2=parts[1]||'';
+  const s=mkSlide('slide-1',thm,`${bgD(thm)}${ovD(thm)}<div class="cw" data-idx="1">
+    <div class="ey">${d.eyebrow||''}</div><div><span class="tt">${t1}</span>${t2?`<span class="tt ac">${t2}</span>`:''}</div>
+    <div class="sp2"></div><div class="sb">${(d.subtitle||'').replace(/\n/g,'<br>')}</div><div class="ac2">${account}</div></div>`);
+  return s;
+}
+
+function bContent(d,idx,total,thm){
+  const num=String(idx+1).padStart(2,'0')+' / '+String(total).padStart(2,'0');
+  const pts=(d.points||[]).map((p,i)=>`<li class="pi"><span class="pn">0${i+1}</span><div><div class="ph2">${p.title||''}</div><div class="pd">${p.desc||''}</div></div></li>`).join('');
+  const slideId=`slide-${idx+2}`;
+  const s=mkSlide(slideId,thm,`${bgD(thm)}${ovD(thm)}<div class="nw" data-idx="${idx+1}">
+    <div class="nm">${num}</div>${d.tag?`<div class="tg">${d.tag}</div>`:''}<div class="hd">${(d.heading||'').replace(/\n/g,'<br>')}</div>
+    <div class="dv"></div><ul class="pl">${pts}</ul></div>`);
+  return s;
+}
+
+function bCta(d,account,idx,thm){
+  const s=mkSlide(`slide-${idx+2}`,thm,`${bgD(thm)}${ovD(thm)}<div class="ctw" data-idx="${idx+2}">
+    <div class="cd">◆ ◆ ◆</div><div class="cm">${(d.main||'').replace(/\n/g,'<br>')}</div><div class="cs">${(d.sub||'').replace(/\n/g,'<br>')}</div>
+    <div class="cv"></div><div class="cb"><div class="cf">${d.follow||''}</div></div><div class="ca">${account}</div></div>`);
+  return s;
+}
+
+function render(data,account,thm){
+  currentData=data;
+  const wrap=E('wrap');wrap.innerHTML='';
+  const cnt=data.content||[];
+  
+  wrap.appendChild(bCover(data.cover,account,thm));
+  [data.story,...cnt,data.summary].forEach((d,i)=>{
+    if(d&&d.heading)wrap.appendChild(bContent(d,i,cnt.length+2,thm));
+  });
+  wrap.appendChild(bCta(data.cta,account,cnt.length+1,thm));
+  
+  E('rgb').style.display='block';
+  stat('✓ 完成');
 }
 
 async function doGen(){
   const inp = E('it').value.trim();
   const account = E('ai').value.trim() || '@your.account';
   if(!inp){ stat('請輸入主題或文章'); return; }
+  
   lastAccount = account;
+  lastInput = inp;
   E('gb').disabled = true;
-  stat('理解內容中…');
-  desel();
-
+  stat('生成中…');
+  
   try{
-    // ── 步驟一：先理解口語內容，萃取核心論點 ──
-    const understandPrompt = 
-      '你是一個內容編輯，任務是把口語文章理解後，萃取出乾淨的結構化摘要。\n\n'
-    + '規則：\n'
-    + '1. 找出核心主題（一句話）\n'
-    + '2. 找出 3~5 個核心論點（每個論點一句話說清楚）\n'
-    + '3. 找出說話者的立場和語氣（是踢爆？教學？價值觀？）\n'
-    + '4. 找出 CTA 方向（說話者希望受眾做什麼？）\n'
-    + '5. 保留所有具體細節、數字、案例（這些是最重要的素材）\n\n'
-    + '輸出格式（純 JSON）：\n'
-    + '{\n'
-    + '  "topic": "核心主題一句話",\n'
-    + '  "angle": "知識科普 或 價值觀 或 踢爆",\n'
-    + '  "points": ["論點1", "論點2", "論點3"],\n'
-    + '  "details": ["具體細節或數字1", "具體細節2"],\n'
-    + '  "cta": "希望受眾做什麼"\n'
-    + '}\n\n'
-    + '原文：\n' + inp;
-
-    const understandText = await callAPI(inp, understandPrompt, 1000);
-    const s = understandText.indexOf('{');
-    const e2 = understandText.lastIndexOf('}');
-    let understood = null;
-    if(s !== -1 && e2 !== -1){
-      try{ understood = JSON.parse(understandText.slice(s, e2+1)); }catch(e){}
-    }
-
-    // ── 步驟二：把理解結果組合成強化主題，交給輪播 prompt ──
-    let enhancedTopic = inp; // 預設直接用原文
-    if(understood){
-      enhancedTopic = 
-        '【主題】' + understood.topic + '\n'
-      + '【切入角度】' + understood.angle + '\n'
-      + '【核心論點】\n' + (understood.points||[]).map((p,i)=>`${i+1}. ${p}`).join('\n') + '\n'
-      + '【具體細節素材】\n' + (understood.details||[]).join('\n') + '\n'
-      + '【CTA方向】' + understood.cta + '\n\n'
-      + '【原始口語內容，請忠實根據這段生成，不要自己發揮不相關的內容】\n' + inp;
-    }
-
-    lastInput = enhancedTopic;
-    stat('生成輪播中…');
-
-    // ── 步驟三：正常生成 ──
-    let text = await callAPI(enhancedTopic, null, 5000);
+    let text = await callAPI(inp, null, 5000);
     let data = parseJSON(text);
-    if(!data){
-      stat('備用方案中…');
-      text = await callAPI(enhancedTopic, buildFallbackPrompt(enhancedTopic, getCfg()), 3000);
-      data = parseJSON(text);
-    }
-    if(!data){ stat('⚠ 生成失敗，請換個說法'); return; }
-
-    window._layoutVariant = Math.floor(Math.random() * 8);
+    if(!data){ stat('⚠ 生成失敗'); return; }
     render(data, account, 't1');
-    genCaption(inp); // 文案用原始輸入
-    stat('✓ 完成');
-
-  }catch(e){ stat('錯誤：' + e.message); console.error(e); }
+  }catch(e){ stat('錯誤：' + e.message); }
   finally{ E('gb').disabled = false; }
 }
 
-/* ─── download ─── */
-async function renderSlideCanvas(si){
-  si.querySelectorAll('.ed,.deco').forEach(e=>e.style.outline='none');
-  const c=await html2canvas(si,{
-    scale:1,
-    useCORS: true,      // ← 改這裡
-    allowTaint: false,  // ← 改這裡
-    width:1080,
-    height:1350,
-    backgroundColor:'#0a0a0a',
-    logging:false
-  });
-  si.querySelectorAll('.ed,.deco').forEach(e=>e.style.outline='');
-  return c;
-}
-
-// ZIP download — all at once
-async function dlAll(){
-  const slides=document.querySelectorAll('.slide');if(!slides.length)return;
-  desel();
-  const btn=E('db');btn.disabled=true;
-  stat('打包中，請稍候…');
-  try{
-    // load JSZip dynamically
-    if(!window.JSZip){
-      await new Promise((res,rej)=>{
-        const s=document.createElement('script');
-        s.src='https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';
-        s.onload=res;s.onerror=rej;document.head.appendChild(s);
-      });
-    }
-    const zip=new JSZip();
-    for(let i=0;i<slides.length;i++){
-      stat(`處理第 ${i+1} / ${slides.length} 張…`);
-      const si=slides[i].querySelector('.si');
-      const canvas=await renderSlideCanvas(si);
-      const blob=await new Promise(res=>canvas.toBlob(res,'image/png'));
-      zip.file(`slide-${i+1}.png`,blob);
-    }
-    if(captionTxt){
-      zip.file('ig_caption.txt', captionTxt);
-}
-    stat('壓縮中…');
-    const zipBlob=await zip.generateAsync({type:'blob'});
-
-    const a=document.createElement('a');
-    a.href=URL.createObjectURL(zipBlob);
-    a.download='ig_slides.zip';
-    document.body.appendChild(a);a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(a.href);
-    stat('✓ ig_slides.zip 已下載');
-  }catch(e){stat('下載失敗：'+e.message);console.error(e);}
-  finally{btn.disabled=false;}
-}
-
-
-
-/* ════ MANUAL MODE ════ */
-let currentMode = 'ai';
-let slideCount2 = 0;
-let slideIds2 = [];
-
-function setMode(mode){
-  currentMode = mode;
-  document.getElementById('ai-panel').classList.toggle('hidden', mode!=='ai');
-  document.getElementById('manual-panel').classList.toggle('hidden', mode!=='manual');
-  document.getElementById('mbtn-ai').className = 'mode-btn '+(mode==='ai'?'on':'off');
-  document.getElementById('mbtn-manual').className = 'mode-btn '+(mode==='manual'?'on':'off');
-  if(mode==='manual' && document.querySelectorAll('.slide').length===0){
-    initDefault();
-  }
-}
-
-const SLIDE_TYPES=[
-  {key:'cover',label:'封面'},
-  {key:'content',label:'內容'},
-  {key:'cta',label:'結尾CTA'},
-];
-
-const DEFAULT_CONTENT={
-  cover:{ey:'TOPIC · INSIGHT · REALITY',t1:'主題',t2:'大標',sb:'點出核心問題\n一句話說清楚',ac:'@your.account'},
-  content:{nm:'01 / 03',tg:'類別',hd:'標題',pts:[{t:'重點一',d:'說明文字'},{t:'重點二',d:'說明文字'},{t:'重點三',d:'說明文字'}]},
-  cta:{cm:'行動呼籲',cs:'說清楚私訊能得到什麼\n不要模糊',cf:'追蹤帳號獲取更多',ca:'@your.account'},
-};
-
-function bgD2(thm){return`<div class="bg-el deco" style="background-image:${BGU};opacity:${thm==='t8'?'.85':'.5'}"></div>`}
-function ovD2(thm){return`<div class="ov-el" style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(160deg,rgba(0,0,0,.88) 0%,rgba(14,10,6,.7) 50%,rgba(0,0,0,.93) 100%);opacity:${thm==='t8'?'0':'1'}"></div>`}
-
-function tDeco2(thm,type){
-  const C=`<div class="corner tl deco"></div><div class="corner tr deco"></div><div class="corner bl deco"></div><div class="corner br deco"></div>`;
-  const HL=`<div class="hl deco" style="top:130px"></div><div class="hl deco" style="bottom:130px"></div>`;
-  if(thm==='t1')return type==='content'?C+`<div class="vl deco"></div>`:C+HL;
-  if(thm==='t2')return C;
-  if(thm==='t3')return`<div class="sb2 deco"></div>`+(type==='cover'?`<div class="hl deco" style="top:60px"></div>`:'');
-  if(thm==='t4')return type==='cover'?C+`<div class="hl deco" style="top:76px"></div><div class="hl deco" style="bottom:76px"></div>`:C;
-  if(thm==='t5')return`<div class="vl deco"></div>`;
-  if(thm==='t6')return`<div class="rl deco"></div>`+(type!=='content'?`<div class="hl deco" style="top:110px"></div><div class="hl deco" style="bottom:110px"></div>`:'');
-  if(thm==='t7')return type==='content'?C+`<div class="vl deco"></div>`:C+HL;
-  if(thm==='t8')return type==='content'?C+`<div class="vl deco"></div>`:C;
-  return'';
-}
-
-function coverHTML2(thm,d){
-  d=d||DEFAULT_CONTENT.cover;
-  const extra=thm==='t3'?`<div class="ac2 ed">${d.ac}</div>`:'';
-  return`${bgD2(thm)}${ovD2(thm)}${tDeco2(thm,'cover')}${extra}
-    <div class="cw">
-      <div class="ey ed">${d.ey}</div>
-      <div><span class="tt ed">${d.t1}</span><span class="tt ac ed">${d.t2}</span></div>
-      <div class="sp2 deco"></div>
-      <div class="sb ed">${(d.sb||'').replace(/\n/g,'<br>')}</div>
-      <div class="ac2 ed">${d.ac}</div>
-    </div>`;
-}
-function contentHTML2(thm,d,idx,total){
-  d=d||DEFAULT_CONTENT.content;
-  const num=String(idx+1).padStart(2,'0')+' / '+String(total||3).padStart(2,'0');
-  const pts=(d.pts||[{t:'重點',d:'說明'},{t:'重點',d:'說明'},{t:'重點',d:'說明'}]).map((p,i)=>`
-    <li class="pi"><span class="pn deco">0${i+1}</span>
-      <div><div class="ph2 ed">${p.t}</div><div class="pd ed">${p.d}</div></div></li>`).join('');
-  return`${bgD2(thm)}${ovD2(thm)}${tDeco2(thm,'content')}
-    <div class="nw">
-      <div class="nm deco">${num}</div>
-      <div class="tg ed">${d.tg}</div>
-      <div class="hd ed">${(d.hd||'').replace(/\n/g,'<br>')}</div>
-      <div class="dv deco"></div>
-      <ul class="pl">${pts}</ul>
-    </div>`;
-}
-function ctaHTML2(thm,d){
-  d=d||DEFAULT_CONTENT.cta;
-  return`${bgD2(thm)}${ovD2(thm)}${tDeco2(thm,'cta')}
-    <div class="ctw">
-      <div class="cd deco">◆ ◆ ◆</div>
-      <div class="cm ed">${(d.cm||'').replace(/\n/g,'<br>')}</div>
-      <div class="cs ed">${(d.cs||'').replace(/\n/g,'<br>')}</div>
-      <div class="cv deco"></div>
-      <div class="cb deco"><div class="cf ed">${d.cf||''}</div></div>
-      <div class="ca ed">${d.ca||''}</div>
-    </div>`;
-}
-
-function addSlide(type,data,thm){
-  type=type||'content'; thm=thm||globalTheme;
-  slideCount2++;
-  const id='mslide-'+slideCount2;
-  slideIds2.push(id);
-
-  const outer=document.createElement('div');outer.className='slide-outer';outer.id='outer-'+id;
-
-  const bar=document.createElement('div');bar.className='slide-bar';
-  bar.innerHTML=`<span class="slbl">第${document.querySelectorAll('.slide').length+1}張</span>`;
-
-  SLIDE_TYPES.forEach(st=>{
-    const btn=document.createElement('button');
-    btn.className='slide-tc'+(st.key===type?' on':'');
-    btn.textContent=st.label;btn.dataset.stype=st.key;
-    btn.onclick=()=>changeSlideType2(id,st.key,bar);
-    bar.appendChild(btn);
-  });
-
-  const tlbl=document.createElement('span');tlbl.className='slbl';tlbl.style.marginLeft='6px';tlbl.textContent='風格';
-  bar.appendChild(tlbl);
-  THEMES.forEach(t=>{
-    const btn=document.createElement('button');
-    btn.className='slide-tc'+(t.id===thm?' on':'');
-    btn.textContent=t.name;btn.dataset.t=t.id;
-    btn.onclick=()=>{
-      const si=document.querySelector('#'+id+' .si');if(!si)return;
-      si.className='si '+t.id;
-      const ov=si.querySelector('.ov-el');if(ov)ov.style.opacity=t.id==='t8'?'0':'1';
-      bar.querySelectorAll('.slide-tc[data-t]').forEach(b=>b.classList.toggle('on',b.dataset.t===t.id));
-      desel();
-    };
-    bar.appendChild(btn);
-  });
-
-  const delBtn=document.createElement('button');delBtn.className='del-slide';delBtn.textContent='✕ 刪除此頁';
-  delBtn.onclick=()=>{outer.remove();slideIds2=slideIds2.filter(x=>x!==id);updateMCount();};
-  bar.appendChild(delBtn);
-  outer.appendChild(bar);
-
-  const slide=document.createElement('div');slide.className='slide';slide.id=id;
-  const si=document.createElement('div');si.className='si '+thm;
-  si.innerHTML=type==='cover'?coverHTML2(thm,data):type==='cta'?ctaHTML2(thm,data):contentHTML2(thm,data,0,3);
-  slide.appendChild(si);outer.appendChild(slide);
-  E('wrap').appendChild(outer);
-  att(slide);
-  updateMCount();
-  E('db').style.display='block';
-}
-
-function changeSlideType2(id,newType,bar){
-  const slide=document.getElementById(id);if(!slide)return;
-  const si=slide.querySelector('.si');
-  const thm=[...si.classList].find(c=>c.startsWith('t')&&c.length<=2)||globalTheme;
-  si.innerHTML=newType==='cover'?coverHTML2(thm):newType==='cta'?ctaHTML2(thm):contentHTML2(thm,null,0,3);
-  att(slide);
-  bar.querySelectorAll('.slide-tc[data-stype]').forEach(b=>b.classList.toggle('on',b.dataset.stype===newType));
-  desel();
-}
-
-function updateMCount(){
-  const n=document.querySelectorAll('.slide').length;
-  const el2=document.getElementById('slides-count');if(el2)el2.textContent=n+' 張';
-}
-
-function initDefault(){
-  // clear existing manual slides only
-  document.querySelectorAll('.slide-outer').forEach(o=>o.remove());
-  slideIds2=[];slideCount2=0;
-  addSlide('cover');
-  addSlide('content');
-  addSlide('content');
-  addSlide('content');
-  addSlide('cta');
-}
-
-/* ─── init ─── */
-loadKey();
-window._layoutVariant=0;
-
-  /* ════ IG 貼文文案生成 ════ */
-let captionTxt = '';
-
-async function genCaption(topic){
-  captionTxt = '';
-  const key = document.getElementById('groq-key')?.value.trim() || loadKey();
-  if(!key) return;
-
-  const prompt = `你是 AS娛樂 的 Reels 貼文文案寫手。
-
-【品牌資訊】
-我是男生 做七年酒店經紀人 我沒有親自做過小姐所以不要代入
-禁止：我也曾經歷過，被經紀當搖錢樹，用盡各種手段榨乾我，讓我更看清這個圈子有多黑暗。
-
-語氣：直接有力、專業權威、敢說敢講
-禁止：親切陪伴感、模糊說法、不必要的驚嘆號
-CTA：私訊我
-結尾 Slogan（每則必加，放最後一行）：不要讓未來的你，討厭現在的自己
-
-【目標受眾】
-18-30 歲女生，缺錢想賺錢，怕進八大行業被騙
-
-【文案結構】
-- 開頭：痛點直擊 或 反直覺型 Hook（10-20字）
-- 中段：展開內容，每段 2-3 行，段落間空一行，口語化
-- 長度：250 - 300 字
-- 結尾：CTA「私訊我」→ 空一行 → 不要讓未來的你，討厭現在的自己
-
-【範例】
-以下是一篇符合風格的範例，請模仿這個語氣和結構：
-
----
-很多女生入行前問我：「大頭，這行安全嗎？」
-
-我都說，安不安全，取決於你跟誰。
-
-黑心經紀不會在臉上寫「我要坑你」。
-他們會先對你好，讓你覺得找到靠山了，
-等你依賴他了，才開始一點一點拿走你的選擇權。
-
-我做七年，見過太多這種事。
-合約裡埋地雷、薪水被扣一半、說好的條件全部變卦。
-問他，就說「行規就是這樣」。
-
-入行前你要搞清楚三件事：
-合約有沒有違約金、薪水怎麼算、可不可以隨時走。
-這三點說不清楚的，不要簽。
-
-私訊我
-
-不要讓未來的你，討厭現在的自己
----
-
-【這次主題】
-${topic}
-
-請直接輸出文案，不需要說明。`;
-
-  try{
-    const r = await fetch('https://api.groq.com/openai/v1/chat/completions',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
-      body:JSON.stringify({
-        model:'meta-llama/llama-4-scout-17b-16e-instruct',
-        max_tokens:800,
-        messages:[{role:'user', content:prompt}]
-      })
-    });
-    const j = await r.json();
-    if(j.error) throw new Error(j.error.message);
-    captionTxt = j.choices?.[0]?.message?.content || '';
-
-    // 顯示預覽
-// 顯示預覽
-let box = document.getElementById('caption-preview');
-if(!box){
-  box = document.createElement('div');
-  box.id = 'caption-preview';
-  box.style.cssText = 'width:100%;max-width:1220px;background:#161616;border:1px solid #222;border-radius:3px;padding:16px 20px;margin-bottom:16px';
-  box.innerHTML = `
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
-      <span style="font-size:13px;letter-spacing:.2em;color:var(--g)">✦ IG 貼文文案</span>
-      <button onclick="navigator.clipboard.writeText(document.getElementById('caption-pre').value).then(()=>this.textContent='✓ 已複製').catch(()=>{})"
-        style="background:transparent;border:1px solid #333;color:rgba(200,175,120,.5);font-family:inherit;font-size:11px;letter-spacing:.1em;padding:4px 10px;cursor:pointer;border-radius:2px">⎘ 複製</button>
-      <button onclick="openCaptionRefine()"
-        style="background:transparent;border:1px solid #333;color:rgba(200,175,120,.5);font-family:inherit;font-size:11px;letter-spacing:.1em;padding:4px 10px;cursor:pointer;border-radius:2px">↻ 重生文案</button>
-    </div>
-    <textarea id="caption-pre" style="width:100%;background:#0e0e0e;border:1px solid #2a2a2a;border-radius:3px;padding:16px 20px;color:#e0d8c8;font-family:'Noto Serif TC',serif;font-size:13px;letter-spacing:.06em;line-height:2;height:400px;resize:vertical;outline:none;margin:0"></textarea>
-  `;
-  document.querySelector('#ai-panel').after(box);
-}
-document.getElementById('caption-pre').value = captionTxt;
-
-    stat('✓ 完成 · 圖片 + 貼文文案都準備好了，按下載 ZIP 一起打包');
-  }catch(e){
-    console.warn('文案生成失敗：', e.message);
-    stat('✓ 圖片完成（文案生成失敗，可重試）');
-  }
-}
-function openRefinePanel(){
-  document.getElementById('refine-panel').style.display='block';
-}
-function closeRefinePanel(){
-  document.getElementById('refine-panel').style.display='none';
-}
-function setRefine(txt){
-  document.getElementById('refine-input').value=txt;
-}
-async function doRefine(){
-  const cmd=document.getElementById('refine-input').value.trim();
-  if(!cmd){stat('請輸入指令');return;}
-  if(!lastInput){stat('請先產生一次內容');return;}
-  closeRefinePanel();
-  E('gb').disabled=true;
-  stat('根據指令重新生成…');
-  desel();
-  const modifiedInput=lastInput+'\n\n【調整指令】'+cmd;
-  try{
-    let text=await callAPI(modifiedInput,null,5000);
-    let data=parseJSON(text);
-    if(!data){
-      text=await callAPI(modifiedInput,buildFallbackPrompt(modifiedInput,getCfg()),3000);
-      data=parseJSON(text);
-    }
-    if(!data){stat('⚠ 生成失敗，請再試');return;}
-    render(data,lastAccount,'t1');
-    document.querySelectorAll('.bg-el').forEach(b=>b.style.backgroundImage=BGU);
-    stat('✓ 已根據指令更新');
-  }catch(e){stat('錯誤：'+e.message);}
-  finally{E('gb').disabled=false;}
-}
-
-/* ─── 單張重生 ─── */
-function addSlideRefineBtn(slideEl, slideId, idx, type){
-  // 建一個 wrapper 包住 slide + bar
-  const wrapper=document.createElement('div');
-  wrapper.style.cssText='display:flex;flex-direction:column;align-items:flex-start;gap:0';
+async function reGen(){
+  if(!lastInput){ stat('請先產生一次內容'); return; }
+  E('rgb').disabled = true;
+  stat('重新生成中…');
   
-  // 把 slideEl 從原本位置移到 wrapper 裡
-  slideEl.parentNode?.insertBefore(wrapper, slideEl);
-  wrapper.appendChild(slideEl);
-
-  // 建 bar
-  const bar=document.createElement('div');
-  bar.style.cssText='display:flex;align-items:center;gap:6px;padding:5px 0;width:1080px;flex-wrap:wrap';
-  bar.innerHTML=`
-    <span style="font-size:10px;letter-spacing:.18em;color:rgba(200,175,120,.3)">第${slideId.replace('slide-','')}張</span>
-    <button onclick="openSlideRefine('${slideId}','${type}',${idx})"
-      style="background:transparent;border:1px solid #333;color:rgba(200,175,120,.45);
-      font-family:inherit;font-size:10px;letter-spacing:.12em;padding:4px 10px;
-      cursor:pointer;border-radius:2px"
-      onmouseover="this.style.borderColor='rgba(200,175,120,.6)';this.style.color='rgba(200,175,120,.9)'"
-      onmouseout="this.style.borderColor='#333';this.style.color='rgba(200,175,120,.45)'">
-      ↻ 重生此頁
-    </button>`;
-  wrapper.appendChild(bar);
-}
-
-let _refineSlideId='';
-let _refineSlideIdx=0;
-let _refineSlideType='';
-
-function openSlideRefine(slideId, type, idx){
-  _refineSlideId=slideId;
-  _refineSlideIdx=idx;
-  _refineSlideType=type;
-  // 更新面板標題
-  const typeMap={cover:'封面',content:'內容頁',cta:'CTA頁'};
-  document.getElementById('slide-refine-title').textContent='✦ 調整指令 · '+(typeMap[type]||type);
-  document.getElementById('slide-refine-input').value='';
-  document.getElementById('slide-refine-panel').style.display='block';
-}
-function closeSlideRefine(){
-  document.getElementById('slide-refine-panel').style.display='none';
-}
-function setSlideRefine(txt){
-  document.getElementById('slide-refine-input').value=txt;
-}
-
-async function doSlideRefine(){
-  const cmd=document.getElementById('slide-refine-input').value.trim();
-  if(!cmd){stat('請輸入指令');return;}
-  if(!lastInput){stat('請先產生一次內容');return;}
-  closeSlideRefine();
-  stat('重生此頁中…');
-  desel();
-
-  const typeHint={
-    cover:'只重新生成 cover 頁，其他頁不動',
-    content:`只重新生成第 ${_refineSlideIdx+1} 個 content 頁（索引${_refineSlideIdx}），其他頁不動`,
-    cta:'只重新生成 cta 頁，其他頁不動'
-  };
-
-  const modifiedInput=lastInput+'\n\n【調整指令】'+cmd+'\n【範圍】'+typeHint[_refineSlideType];
-
   try{
-    let text=await callAPI(modifiedInput,null,5000);
-    let data=parseJSON(text);
-    if(!data){
-      text=await callAPI(modifiedInput,buildFallbackPrompt(modifiedInput,getCfg()),3000);
-      data=parseJSON(text);
-    }
-    if(!data){stat('⚠ 生成失敗 請再試');return;}
-
-    // 只換對應那一張
-    const oldSlide=document.getElementById(_refineSlideId);
-    if(!oldSlide){stat('找不到該張');return;}
-
-    const cnt=data.content||[];
-    const hasStory=!!(data.story&&data.story.heading);
-    const hasSummary=!!(data.summary&&data.summary.heading);
-    const totalContent=(hasStory?1:0)+cnt.length+(hasSummary?1:0);
-    const totalSlides=1+totalContent+1;
-    const pg=n=>String(n).padStart(2,'0')+' / '+String(totalSlides).padStart(2,'0');
-
-    let newSlide=null;
-    if(_refineSlideType==='cover'){
-      newSlide=bCover(data.cover,lastAccount,'t1',pg(1));
-    }else if(_refineSlideType==='cta'){
-      newSlide=bCta(data.cta,lastAccount,totalContent,'t1',pg(totalSlides));
-    }else{
-      // content：找對應 idx
-      const allContent=[];
-      if(hasStory)allContent.push(data.story);
-      (data.content||[]).forEach(c=>allContent.push(c));
-      if(hasSummary)allContent.push(data.summary);
-      const d=allContent[_refineSlideIdx]||allContent[0];
-      newSlide=bContent(d,_refineSlideIdx,totalContent,'t1',pg(_refineSlideIdx+2));
-    }
-
-    // 換掉舊的，保留背景
-    const oldWrapper=oldSlide.parentNode;
-    const wrap=oldWrapper.parentNode;
-    const newWrapper=document.createElement('div');
-    newWrapper.style.cssText='display:flex;flex-direction:column;align-items:flex-start;gap:0';
-    newWrapper.appendChild(newSlide);
-    const bar=document.createElement('div');
-    bar.style.cssText='display:flex;align-items:center;gap:6px;padding:5px 0;width:1080px;flex-wrap:wrap';
-    bar.innerHTML=`
-      <span style="font-size:10px;letter-spacing:.18em;color:rgba(200,175,120,.3)">第${_refineSlideId.replace('slide-','')}張</span>
-      <button onclick="openSlideRefine('${_refineSlideId}','${_refineSlideType}',${_refineSlideIdx})"
-        style="background:transparent;border:1px solid #333;color:rgba(200,175,120,.45);
-        font-family:inherit;font-size:10px;letter-spacing:.12em;padding:4px 10px;
-        cursor:pointer;border-radius:2px"
-        onmouseover="this.style.borderColor='rgba(200,175,120,.6)';this.style.color='rgba(200,175,120,.9)'"
-        onmouseout="this.style.borderColor='#333';this.style.color='rgba(200,175,120,.45)'">
-        ↻ 重生此頁
-      </button>`;
-    newWrapper.appendChild(bar);
-    wrap.replaceChild(newWrapper,oldWrapper);
-    newSlide.querySelector('.bg-el').style.backgroundImage=BGU;
-    stat('✓ 此頁已更新');
-  }catch(e){stat('錯誤：'+e.message);}
+    let text = await callAPI(lastInput+'\n\n請用完全不同的切入角度重新規劃。', null, 5000);
+    let data = parseJSON(text);
+    if(!data){ stat('⚠ 重新生成失敗'); return; }
+    render(data, lastAccount, 't1');
+  }catch(e){ stat('錯誤：' + e.message); }
+  finally{ E('rgb').disabled = false; }
 }
 
-/* ─── 文案重生 ─── */
-
-function openCaptionRefine(){
-  document.getElementById('caption-refine-panel').style.display='block';
-}
-function closeCaptionRefine(){
-  document.getElementById('caption-refine-panel').style.display='none';
-}
-function setCaptionRefine(txt){
-  document.getElementById('caption-refine-input').value=txt;
-}
-async function doCaptionRefine(){
-  const cmd=document.getElementById('caption-refine-input').value.trim();
-  if(!cmd){stat('請輸入指令');return;}
-  if(!lastInput){stat('請先產生一次內容');return;}
-  closeCaptionRefine();
-  stat('重生文案中…');
-  await genCaptionWithCmd(lastInput, cmd);
-}
-
-async function genCaptionWithCmd(topic, extraCmd){
-  captionTxt='';
-  const key=document.getElementById('groq-key')?.value.trim()||loadKey();
-  if(!key)return;
-
-  const prompt=`你是 AS娛樂 的 Reels 貼文文案寫手。
-
-【品牌資訊】
-我是男生 做七年酒店經紀人 我沒有親自做過小姐所以不要代入
-禁止：我也曾經歷過，被經紀當搖錢樹，用盡各種手段榨乾我，讓我更看清這個圈子有多黑暗。
-
-語氣：直接有力、專業權威、敢說敢講
-禁止：親切陪伴感、模糊說法、不必要的驚嘆號
-CTA：私訊我
-結尾 Slogan（每則必加，放最後一行）：不要讓未來的你，討厭現在的自己
-
-【目標受眾】
-18-30 歲女生，缺錢想賺錢，怕進八大行業被騙
-
-【文案結構】
-- 開頭：痛點直擊 或 反直覺型 Hook（10-20字）
-- 中段：展開內容，每段 2-3 行，段落間空一行，口語化
-- 長度：150-250 字
-- 結尾：CTA「私訊我」→ 空一行 → 不要讓未來的你，討厭現在的自己
-
-【調整指令】
-${extraCmd||'無'}
-
-【主題】
-${topic}
-
-請直接輸出文案，不需要說明。`;
-
-  try{
-    const r=await fetch('https://api.groq.com/openai/v1/chat/completions',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
-      body:JSON.stringify({
-        model:'meta-llama/llama-4-scout-17b-16e-instruct',
-        max_tokens:800,
-        messages:[{role:'user',content:prompt}]
-      })
-    });
-    const j=await r.json();
-    if(j.error)throw new Error(j.error.message);
-    captionTxt=j.choices?.[0]?.message?.content||'';
-    const pre=document.getElementById('caption-pre');
-    if(pre)pre.value=captionTxt;
-    stat('✓ 文案已更新');
-  }catch(e){
-    stat('文案生成失敗：'+e.message);
+// 存儲 API Key
+function setupKeyInput(){
+  const k = localStorage.getItem('groq_key')||'';
+  if(!k){
+    const inp = document.createElement('input');
+    inp.type = 'password';
+    inp.placeholder = '貼上 Groq API Key (gsk_...)';
+    inp.style.cssText = 'background:#111;border:1px solid #2e2e2e;color:#e0d8c8;font-family:inherit;font-size:11px;padding:6px 10px;outline:none;width:220px;flex-shrink:0;border-radius:2px;margin-right:8px';
+    inp.oninput = e => { if(e.target.value) localStorage.setItem('groq_key', e.target.value); };
+    document.querySelector('#topbar').insertBefore(inp, document.querySelector('#gb'));
   }
 }
 
-/* ── TAB SWITCH ── */
-function switchTab(tab){
-  document.querySelectorAll('.app-panel').forEach(p=>p.classList.remove('on'));
-  document.querySelectorAll('.app-tab').forEach(t=>t.classList.remove('on'));
-  document.getElementById('panel-'+tab).classList.add('on');
-  document.querySelectorAll('.app-tab')[tab==='post'?0:1].classList.add('on');
-  if(tab!=='post') desel();
-}
-
-/* ── STORY BG ── */
-let storyBGU='url("back.png")';
-function uploadStoryBg(e){
-  const f=e.target.files[0];if(!f)return;
-  const r=new FileReader();
-  r.onload=ev=>{storyBGU='url("'+ev.target.result+'")';
-    document.querySelectorAll('.s-bg').forEach(b=>b.style.backgroundImage=storyBGU);
-    document.getElementById('s-st').textContent='✓ 背景已更新'};
-  r.readAsDataURL(f);e.target.value='';
-}
-
-/* ── BUILD STORY ── */
-function buildStory(){
-  const wrap=document.getElementById('story-wrap');
-  wrap.innerHTML='';wrap.style.display='flex';
-  const slides=[buildStorySlide1(),buildStorySlide2(),buildStorySlide3()];
-  const labels=['第 1 張 · 鉤子','第 2 張 · 內容','第 3 張 · CTA'];
-  slides.forEach((html,i)=>{
-    const outer=document.createElement('div');outer.className='story-preview-outer';
-    const lbl=document.createElement('div');lbl.className='story-preview-label';lbl.textContent=labels[i];
-    const box=document.createElement('div');box.className='story-preview-box';
-    const inner=document.createElement('div');inner.className='story-full-inner';inner.id='story-inner-'+i;
-    inner.innerHTML=html;
-    inner.querySelectorAll('.s-ed').forEach(e=>{
-      e.setAttribute('contenteditable','true');
-      e.setAttribute('spellcheck','false');
-      e.addEventListener('mousedown',ev=>{ev.stopPropagation();selEl(e,'txt');});
-      e.addEventListener('mouseup',ev=>{ev.stopPropagation();setTimeout(()=>showTB(e,'txt'),0);});
-    });
-    box.appendChild(inner);
-    outer.appendChild(lbl);
-    outer.appendChild(box);
-    wrap.appendChild(outer);
-  });
-  document.getElementById('s-dl-btn').style.display='block';
-  document.getElementById('s-st').textContent='✓ 完成，可下載';
-}
-
-function sBG(){return`<div class="s-bg" style="position:absolute;inset:0;background-image:url('back.png');background-size:cover;background-position:center;opacity:1"></div>`}
-function sOV(){return`<div style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(160deg,rgba(0,0,0,.2) 0%,rgba(8,6,3,.2) 55%,rgba(0,0,0,.2) 100%)"></div>`}
-function sCorners(){return`
-  <div style="position:absolute;width:48px;height:48px;top:64px;left:64px;border-top:2px solid rgba(200,175,120,.2);border-left:2px solid rgba(200,175,120,.2)"></div>
-  <div style="position:absolute;width:48px;height:48px;top:64px;right:64px;border-top:2px solid rgba(200,175,120,.2);border-right:2px solid rgba(200,175,120,.2)"></div>
-  <div style="position:absolute;width:48px;height:48px;bottom:64px;left:64px;border-bottom:2px solid rgba(200,175,120,.2);border-left:2px solid rgba(200,175,120,.2)"></div>
-  <div style="position:absolute;width:48px;height:48px;bottom:64px;right:64px;border-bottom:2px solid rgba(200,175,120,.2);border-right:2px solid rgba(200,175,120,.2)"></div>`}
-function sLogo(){
-  return `<img src="logo.png" alt="" style="position:absolute;bottom:80px;left:80px;width:160px;height:160px;object-fit:contain;z-index:10;opacity:.92;" onerror="this.style.display='none'">`;
-}
-function sHashtag(){
-  return`<div style="position:absolute;top:80px;left:120px;font-size:26px;letter-spacing:.18em;color:rgba(200,175,120,.7);font-family:'Noto Serif TC',serif">#AS娛樂經紀 大頭</div>`;
-}
-function sWM(acct){return`<div style="position:absolute;bottom:40px;left:50%;transform:translateX(-50%);font-size:20px;letter-spacing:.28em;color:rgba(200,175,120,.3);white-space:nowrap;font-family:'Noto Serif TC',serif">${acct||'@angus061855'}</div>`}
-
-function buildStorySlide1(){
-  const v=window._storyVersion||0;
-  const ey=E('s1-ey').value||'PROTECT · YOURSELF · NOW';
-  const t1=E('s1-t1').value||'別被騙了';
-  const t2=E('s1-t2').value||'';
-  const sub=E('s1-sub').value||'';
-  if(v===0) return `<div style="position:relative;width:1080px;height:1920px;background:#0a0a0a;overflow:hidden;font-family:'Noto Serif TC',serif">
-    ${sBG()}${sOV()}${sHashtag()}${sLogo()}${sWM()}
-    <div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:180px 100px">
-      <div class="s-ed" style="font-size:28px;letter-spacing:.35em;color:rgba(200,175,120,.7);margin-bottom:40px">${ey}</div>
-      <div class="s-ed" style="font-weight:900;font-size:112px;line-height:1.05;letter-spacing:.1em;color:#fff;text-shadow:0 4px 40px rgba(0,0,0,.8);margin-bottom:12px;word-break:keep-all">${t1}</div>
-      ${t2?`<div class="s-ed" style="font-weight:900;font-size:112px;line-height:1.05;letter-spacing:.1em;color:#e8392b;text-shadow:0 4px 40px rgba(0,0,0,.8);margin-bottom:36px;word-break:keep-all">${t2}</div>`:''}
-      <div style="width:130px;height:3px;background:linear-gradient(90deg,rgba(200,175,120,.7),transparent);margin-bottom:40px"></div>
-      <div class="s-ed" style="font-size:52px;letter-spacing:.15em;color:rgba(210,205,195,.85);line-height:1.8">${sub.replace(/\n/g,'<br>')}</div>
-    </div>
-  </div>`;
-  if(v===1) return `<div style="position:relative;width:1080px;height:1920px;background:#0a0a0a;overflow:hidden;font-family:'Noto Serif TC',serif">
-    ${sBG()}${sOV()}${sHashtag()}${sLogo()}${sWM()}
-    <div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:180px 80px">
-      <div class="s-ed" style="font-size:26px;letter-spacing:.35em;color:rgba(200,175,120,.7);margin-bottom:40px">${ey}</div>
-      <div class="s-ed" style="font-weight:900;font-size:112px;line-height:1.05;letter-spacing:.1em;color:#fff;text-shadow:0 4px 40px rgba(0,0,0,.8);margin-bottom:12px;word-break:keep-all">${t1}</div>
-      ${t2?`<div class="s-ed" style="font-weight:900;font-size:112px;line-height:1.05;letter-spacing:.1em;color:#e8392b;text-shadow:0 4px 40px rgba(0,0,0,.8);margin-bottom:36px;word-break:keep-all">${t2}</div>`:''}
-      <div style="width:130px;height:3px;background:linear-gradient(90deg,transparent,rgba(200,175,120,.7),transparent);margin:0 auto 40px"></div>
-      <div class="s-ed" style="font-size:50px;letter-spacing:.15em;color:rgba(210,205,195,.85);line-height:1.8">${sub.replace(/\n/g,'<br>')}</div>
-    </div>
-  </div>`;
-  return `<div style="position:relative;width:1080px;height:1920px;background:#0d0d0d;overflow:hidden;font-family:'Noto Serif TC',serif">
-    ${sHashtag()}${sLogo()}${sWM()}
-    <div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:180px 100px">
-      <div style="width:60px;height:2px;background:rgba(200,175,120,.5);margin-bottom:48px"></div>
-      <div class="s-ed" style="font-size:22px;letter-spacing:.5em;color:rgba(200,175,120,.4);margin-bottom:52px">${ey}</div>
-      <div class="s-ed" style="font-weight:900;font-size:112px;line-height:1.05;letter-spacing:.1em;color:#fff;margin-bottom:12px;word-break:keep-all">${t1}</div>
-      ${t2?`<div class="s-ed" style="font-weight:900;font-size:112px;line-height:1.05;letter-spacing:.1em;color:#e8392b;margin-bottom:36px;word-break:keep-all">${t2}</div>`:''}
-      <div class="s-ed" style="font-size:46px;letter-spacing:.12em;color:rgba(200,175,120,.55);line-height:1.9;margin-top:40px">${sub.replace(/\n/g,'<br>')}</div>
-    </div>
-  </div>`;
-}
-
-function buildStorySlide2(){
-  const v=window._storyVersion||0;
-  const tag=E('s2-tag').value||'七年親歷';
-  const hd=E('s2-hd').value||'入行前要搞清楚';
-  const p1t=E('s2-p1t').value||'';const p1d=E('s2-p1d').value||'';
-  const p2t=E('s2-p2t').value||'';const p2d=E('s2-p2d').value||'';
-  const p3t=E('s2-p3t').value||'';const p3d=E('s2-p3d').value||'';
-  const ptsHTML=[[p1t,p1d],[p2t,p2d],[p3t,p3d]].map((p,i)=>`
-    <div style="display:flex;align-items:flex-start;gap:40px;margin-bottom:44px">
-      <div style="font-size:38px;letter-spacing:.1em;color:rgba(200,175,120,1);font-weight:900;flex-shrink:0;width:48px;padding-top:4px">0${i+1}</div>
-      <div>
-        <div class="s-ed" style="font-weight:900;font-size:46px;letter-spacing:.08em;color:#fff;line-height:1.4">${p[0]}</div>
-        <div class="s-ed" style="font-size:32px;letter-spacing:.05em;color:rgba(210,205,195,.85);line-height:1.75;margin-top:10px">${p[1].replace(/\n/g,'<br>')}</div>
-      </div>
-    </div>`).join('');
-  if(v===0) return `<div style="position:relative;width:1080px;height:1920px;background:#0a0a0a;overflow:hidden;font-family:'Noto Serif TC',serif">
-    ${sBG()}${sOV()}${sHashtag()}${sLogo()}${sWM()}
-    <div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:180px 100px 180px 136px">
-      <div class="s-ed" style="display:inline-block;font-size:30px;letter-spacing:.3em;color:rgba(200,175,120,1);border:1px solid rgba(200,175,120,.3);padding:7px 20px;margin-bottom:36px;align-self:flex-start">${tag}</div>
-      <div class="s-ed" style="font-weight:900;font-size:76px;letter-spacing:.12em;color:#fff;line-height:1.18;margin-bottom:52px;text-shadow:0 3px 30px rgba(0,0,0,.6);word-break:keep-all">${hd.replace(/\n/g,'<br>')}</div>
-      <div style="width:68px;height:1px;background:rgba(200,175,120,.55);margin-bottom:48px"></div>
-      ${ptsHTML}
-    </div>
-  </div>`;
-  if(v===1){
-    const ptsCenterHTML=[[p1t,p1d],[p2t,p2d],[p3t,p3d]].map((p,i)=>`
-      <div style="text-align:center;margin-bottom:44px">
-        <div style="font-size:34px;letter-spacing:.2em;color:rgba(200,175,120,1);margin-bottom:10px">0${i+1}</div>
-        <div class="s-ed" style="font-weight:900;font-size:46px;letter-spacing:.08em;color:#fff;line-height:1.4">${p[0]}</div>
-        <div class="s-ed" style="font-size:32px;letter-spacing:.05em;color:rgba(210,205,195,.85);line-height:1.75;margin-top:10px">${p[1].replace(/\n/g,'<br>')}</div>
-      </div>`).join('');
-    return `<div style="position:relative;width:1080px;height:1920px;background:#0a0a0a;overflow:hidden;font-family:'Noto Serif TC',serif">
-      ${sBG()}${sOV()}${sHashtag()}${sLogo()}${sWM()}
-      <div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:180px 80px">
-        <div class="s-ed" style="font-size:28px;letter-spacing:.3em;color:rgba(200,175,120,1);border:1px solid rgba(200,175,120,.3);padding:7px 20px;margin-bottom:36px">${tag}</div>
-        <div class="s-ed" style="font-weight:900;font-size:76px;letter-spacing:.12em;color:#fff;line-height:1.18;margin-bottom:52px;word-break:keep-all">${hd.replace(/\n/g,'<br>')}</div>
-        <div style="width:68px;height:1px;background:rgba(200,175,120,.55);margin-bottom:48px"></div>
-        ${ptsCenterHTML}
-      </div>
-    </div>`;
-  }
-  const ptsCardHTML=[[p1t,p1d],[p2t,p2d],[p3t,p3d]].map((p,i)=>`
-    <div style="border-left:3px solid rgba(200,175,120,.6);padding:16px 24px;margin-bottom:28px;background:rgba(200,175,120,.04)">
-      <div class="s-ed" style="font-weight:900;font-size:44px;letter-spacing:.08em;color:#fff;line-height:1.4">${p[0]}</div>
-      <div class="s-ed" style="font-size:30px;letter-spacing:.05em;color:rgba(210,205,195,.8);line-height:1.75;margin-top:8px">${p[1].replace(/\n/g,'<br>')}</div>
-    </div>`).join('');
-  return `<div style="position:relative;width:1080px;height:1920px;background:#0d0d0d;overflow:hidden;font-family:'Noto Serif TC',serif">
-    ${sHashtag()}${sLogo()}${sWM()}
-    <div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:180px 90px">
-      <div class="s-ed" style="font-size:22px;letter-spacing:.3em;color:rgba(200,175,120,.6);margin-bottom:20px">${tag}</div>
-      <div class="s-ed" style="font-weight:900;font-size:72px;letter-spacing:.1em;color:#fff;line-height:1.2;margin-bottom:48px;word-break:keep-all">${hd.replace(/\n/g,'<br>')}</div>
-      ${ptsCardHTML}
-    </div>
-  </div>`;
-}
-
-function buildStorySlide3(){
-  const v=window._storyVersion||0;
-  const main=E('s3-main').value||'找對的人才是起點';
-  const sub=E('s3-sub').value||'';
-  const follow=E('s3-follow').value||'私訊我了解更多';
-  const acct=E('s3-acct').value||'@angus061855';
-  if(v===0) return `<div style="position:relative;width:1080px;height:1920px;background:#0a0a0a;overflow:hidden;font-family:'Noto Serif TC',serif">
-    ${sBG()}${sOV()}${sHashtag()}${sLogo()}${sWM(acct)}
-    <div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:160px 100px">
-      <div style="font-size:30px;letter-spacing:.5em;color:rgba(200,175,120,.7);margin-bottom:52px">◆ ◆ ◆</div>
-      <div class="s-ed" style="font-weight:900;font-size:116px;letter-spacing:.08em;color:#fff;line-height:1.15;text-shadow:0 4px 40px rgba(0,0,0,.8);margin-bottom:36px;word-break:keep-all">${main.replace(/\n/g,'<br>')}</div>
-      <div class="s-ed" style="font-size:46px;letter-spacing:.1em;color:rgba(210,205,195,.85);line-height:1.9;margin-bottom:64px;max-width:880px;word-break:keep-all">${sub.replace(/\n/g,'<br>')}</div>
-      <div style="width:1px;height:64px;background:linear-gradient(to bottom,rgba(200,175,120,.6),transparent);margin-bottom:44px"></div>
-      <div style="border:1px solid rgba(200,175,120,.35);padding:20px 56px;margin-bottom:36px">
-        <div class="s-ed" style="font-size:42px;letter-spacing:.12em;color:rgba(200,175,120,1)">${follow}</div>
-      </div>
-      <div class="s-ed" style="font-size:32px;letter-spacing:.22em;color:rgba(200,175,120,.7)">${acct}</div>
-    </div>
-  </div>`;
-  if(v===1) return `<div style="position:relative;width:1080px;height:1920px;background:#0a0a0a;overflow:hidden;font-family:'Noto Serif TC',serif">
-    ${sBG()}${sOV()}${sHashtag()}${sLogo()}${sWM(acct)}
-    <div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:160px 80px">
-      <div class="s-ed" style="font-weight:900;font-size:128px;letter-spacing:.08em;color:#fff;line-height:1.1;text-shadow:0 4px 40px rgba(0,0,0,.8);margin-bottom:48px;word-break:keep-all">${main.replace(/\n/g,'<br>')}</div>
-      <div style="width:200px;height:2px;background:linear-gradient(90deg,transparent,rgba(200,175,120,.7),transparent);margin-bottom:48px"></div>
-      <div class="s-ed" style="font-size:46px;letter-spacing:.1em;color:rgba(210,205,195,.85);line-height:1.9;margin-bottom:72px;max-width:880px">${sub.replace(/\n/g,'<br>')}</div>
-      <div style="background:rgba(200,175,120,1);padding:22px 64px;margin-bottom:36px">
-        <div class="s-ed" style="font-size:42px;letter-spacing:.15em;color:#0a0a0a;font-weight:900">${follow}</div>
-      </div>
-      <div class="s-ed" style="font-size:30px;letter-spacing:.22em;color:rgba(200,175,120,.6)">${acct}</div>
-    </div>
-  </div>`;
-  return `<div style="position:relative;width:1080px;height:1920px;background:#0d0d0d;overflow:hidden;font-family:'Noto Serif TC',serif">
-    ${sHashtag()}${sLogo()}${sWM(acct)}
-    <div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:160px 100px">
-      <div style="width:60px;height:2px;background:rgba(200,175,120,.5);margin-bottom:48px"></div>
-      <div class="s-ed" style="font-weight:900;font-size:116px;letter-spacing:.08em;color:#fff;line-height:1.1;margin-bottom:40px;word-break:keep-all">${main.replace(/\n/g,'<br>')}</div>
-      <div class="s-ed" style="font-size:42px;letter-spacing:.1em;color:rgba(200,175,120,.6);line-height:1.9;margin-bottom:60px">${sub.replace(/\n/g,'<br>')}</div>
-      <div class="s-ed" style="font-size:40px;letter-spacing:.15em;color:rgba(200,175,120,.9);border-bottom:1px solid rgba(200,175,120,.3);padding-bottom:24px;margin-bottom:32px">${follow} →</div>
-      <div class="s-ed" style="font-size:28px;letter-spacing:.22em;color:rgba(200,175,120,.4)">${acct}</div>
-    </div>
-  </div>`;
-}
-
-/* ── DOWNLOAD STORY ── */
-async function dlStory(){
-  const btn=document.getElementById('s-dl-btn');btn.disabled=true;
-  document.getElementById('s-st').textContent='打包中…';
-  try{
-    if(!window.JSZip){
-      await new Promise((res,rej)=>{const s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';s.onload=res;s.onerror=rej;document.head.appendChild(s);});
-    }
-    const zip=new JSZip();
-    for(let i=0;i<3;i++){
-      document.getElementById('s-st').textContent=`處理第 ${i+1}/3 張…`;
-      const inner=document.getElementById('story-inner-'+i);if(!inner)continue;
-      const el = inner.firstElementChild;
-// 暫時移出到 body 以避免 overflow:hidden 和 transform 導致 canvas 為 0
-const origParent = el.parentNode;
-const origNext = el.nextSibling;
-el.style.position = 'absolute';
-el.style.left = '-9999px';
-el.style.top = '0';
-el.style.transform = 'none';
-document.body.appendChild(el);
-
-const canvas = await html2canvas(el, {
-  scale: 1,
-  useCORS: true,      // ← 改
-  allowTaint: false,  // ← 改
-  width: 1080,
-  height: 1920,
-  backgroundColor: '#0a0a0a',
-  logging: false
-});
-
-// 放回原位
-el.style.position = '';
-el.style.left = '';
-el.style.top = '';
-el.style.transform = '';
-if (origNext) origParent.insertBefore(el, origNext);
-else origParent.appendChild(el);
-      const blob=await new Promise(res=>canvas.toBlob(res,'image/png'));
-      zip.file(`story-${i+1}.png`,blob);
-    }
-    const zipBlob=await zip.generateAsync({type:'blob'});
-    const a=document.createElement('a');a.href=URL.createObjectURL(zipBlob);a.download='ig_stories.zip';document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(a.href);
-    document.getElementById('s-st').textContent='✓ ig_stories.zip 已下載';
-  }catch(e){document.getElementById('s-st').textContent='下載失敗：'+e.message;}
-  finally{btn.disabled=false;}
-}
-
-/* ── AI STORY ── */
-async function aiStory(){
-  const topic = document.getElementById('s-topic').value.trim();
-  if(!topic){ document.getElementById('s-st').textContent='請輸入主題'; return; }
-  const key = document.getElementById('groq-key')?.value.trim() || loadKey();
-  if(!key){ document.getElementById('s-st').textContent='⚠ 請先填入 Groq API Key'; return; }
-  const btn = document.getElementById('s-ai-btn');
-  btn.disabled=true;
-  document.getElementById('s-st').textContent='AI 生成中…';
-
-const prompt = `
-你是 IG 限時動態文案策略師。只輸出純 JSON，從 { 開始到 } 結束，不加任何說明、不加 markdown、不加反引號。
-
-【角色設定】
-七年娛樂經紀人（男性），專業、誠實、說到做到、什麼都敢講，以「踢爆業界黑心手法」聞名。
-說話直接、不畫大餅，是新人女孩的安全守護者。
-
-【目標受眾】
-18-30 歲想賺錢但內心不安的女生，害怕進入八大行業被騙、被限制人身自由、遇到不負責的經紀人。
-語氣：直接、踢爆、誠實，像業界老司機說話。
-
-【任務：生成 3 張限時動態】
-第1張 s1：HOOK 鉤子，踢爆內幕或引發強烈好奇
-第2張 s2：CONTENT 內容，提供價值、拆解黑心手法
-第3張 s3：CTA 行動，建立信任、導向私訊諮詢
-
-【內容切入角度】
-根據主題選擇最適合的角度切入：
-- 知識科普：踢爆黑心手法（合約陷阱、治裝費、壓薪水等），說清楚正規經紀絕對不會做什麼
-- 踢爆黑心手法：點名具體手法，說清楚正規經紀絕對不會做什麼
-- 價值觀①：經紀人的責任是幫妳平安下岸，不是叫妳一直消費，強調務實賺錢、不畫大餅的態度
-- 價值觀②：妳的身體自主權和人身安全永遠排第一，任何讓妳不舒服的要求都有權說不
-- 清單檢核：給出簽約前／面試前的自我檢查清單，讓讀者帶走一個可以馬上用的工具
-
-【主題輸入說明】
-我輸入的內容可能是以下兩種形式：
-1. 短主題（10字以內）→ 直接根據主題發揮，生成完整限時動態內容
-2. 長文章／素材（超過10字）
-   → 先完整閱讀內容，擷取核心論點、具體案例、關鍵數字
-   → 素材裡有的說法必須保留，不要自己發明不相關的內容
-   → 若有資訊不足或語意不明的地方，用「？」標記在該欄位結尾，照常輸出完整 JSON
-
-【文字格式規則】
-- s1 的 t1／t2：每行最多 6 個中文字，只在完整詞語結尾換行，用 \\n 分隔
-  ✓「找對經紀\\n保護妳自己」
-  ✗「找對經\\n紀保護妳自己」（詞語中間斷行）
-  ✗「找對經紀保\\n護妳自己」（語意被切斷）
-- s2 的 hd：每行最多 8 個中文字，換行在語意轉折處，同一個意思不強制換行
-- s2 的 p1d／p2d／p3d：每條說明 20～30 字，有畫面感，說清楚細節
-- s3 的 main／sub／follow：完整語意不換行，最多分兩行，換行點在語意轉折處
-- 所有 value 必須是合法 JSON 字串，禁止使用未跳脫的雙引號
-- 禁止使用中文引號「」，改用【】或不用引號
-
-【風控規則】
-- 禁止明確薪資數字，改用模糊描述
-- 可使用「八大行業」「酒店業」「這個產業」等詞
-- CTA 語氣直接但不強迫，要有誠意
-
-【主題】
-${topic}
-
-【輸出格式】
-直接輸出純 JSON，從 { 開始，結構如下：
-{
-  "s1": {
-    "ey": string,   // 英文關鍵詞，大寫，用點分隔
-    "t1": string,   // 大標題 4～6 字，必須含 \\n
-    "t2": string,   // 紅色第二行，可空白
-    "sub": string   // 副標，一句話說清楚痛點
-  },
-  "s2": {
-    "tag": string,  // 標籤 2～4 字
-    "hd": string,   // 標題 6～8 字
-    "p1t": string,  // 重點1 標題
-    "p1d": string,  // 重點1 說明 20～30 字
-    "p2t": string,  // 重點2 標題
-    "p2d": string,  // 重點2 說明 20～30 字
-    "p3t": string,  // 重點3 標題
-    "p3d": string   // 重點3 說明 20～30 字
-  },
-  "s3": {
-    "main": string,   // 主標題 4～8 字
-    "sub": string,    // 副文案兩行以內
-    "follow": string, // 行動按鈕文字
-    "acct": "@angus061855"
-  }
-}
-`.trim();
-
-  try{
-    const r = await fetch('https://api.groq.com/openai/v1/chat/completions',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
-      body:JSON.stringify({
-        model:'meta-llama/llama-4-scout-17b-16e-instruct',
-        max_tokens:1000,
-        messages:[
-  {role:'system',content:'你是 IG 限時動態文案策略師，只輸出純 JSON，不加任何說明。'},
-  {role:'user',content:prompt}
-]
-      })
-    });
-    const j = await r.json();
-    if(j.error) throw new Error(j.error.message);
-    const text = j.choices?.[0]?.message?.content||'';
-    const s = text.indexOf('{'), e2 = text.lastIndexOf('}');
-    if(s===-1||e2===-1) throw new Error('JSON 解析失敗');
-    let jsonStr = text.slice(s, e2+1);
-jsonStr = jsonStr
-  .replace(/[\u0000-\u001F\u007F]/g, ' ')
-  .replace(/,\s*}/g, '}')
-  .replace(/,\s*]/g, ']')
-  .replace(/「/g, '"').replace(/」/g, '"')   // 中文引號換成英文
-  .replace(/『/g, '"').replace(/』/g, '"')
-  .replace(/\t/g, ' ');                       // tab 換空格
-let d;
-try{
-  d = JSON.parse(jsonStr);
-}catch(err){
-  // 最後手段：把所有 value 裡的雙引號跳脫
-  try{
-    const safe = jsonStr.replace(/:(\s*)"((?:[^"\\]|\\.)*)"/g, (m,colon,val)=>{
-      return ':'+colon+'"'+val.replace(/"/g,'\\"')+'"';
-    });
-    d = JSON.parse(safe);
-  }catch(err2){
-    document.getElementById('s-st').textContent='JSON 解析失敗，請換短一點的主題再試';
-    throw new Error('JSON 解析失敗：'+err2.message);
-  }
-}
-
-
-    // 填入欄位
-    if(d.s1){
-      document.getElementById('s1-ey').value = d.s1.ey||'';
-      document.getElementById('s1-t1').value = d.s1.t1||'';
-      document.getElementById('s1-t2').value = d.s1.t2||'';
-      document.getElementById('s1-sub').value = d.s1.sub||'';
-    }
-    if(d.s2){
-      document.getElementById('s2-tag').value = d.s2.tag||'';
-      document.getElementById('s2-hd').value = d.s2.hd||'';
-      document.getElementById('s2-p1t').value = d.s2.p1t||'';
-      document.getElementById('s2-p1d').value = d.s2.p1d||'';
-      document.getElementById('s2-p2t').value = d.s2.p2t||'';
-      document.getElementById('s2-p2d').value = d.s2.p2d||'';
-      document.getElementById('s2-p3t').value = d.s2.p3t||'';
-      document.getElementById('s2-p3d').value = d.s2.p3d||'';
-    }
-    if(d.s3){
-      document.getElementById('s3-main').value = d.s3.main||'';
-      document.getElementById('s3-sub').value = d.s3.sub||'';
-      document.getElementById('s3-follow').value = d.s3.follow||'';
-      document.getElementById('s3-acct').value = d.s3.acct||'@angus061855';
-    }
-    document.getElementById('s-st').textContent='✓ 內容已填入，渲染中…';
-    buildStory();
-  }catch(e){
-    document.getElementById('s-st').textContent='錯誤：'+e.message;
-  }finally{
-    btn.disabled=false;
-  }
-}
-
-function switchStoryVersion(v){
-  window._storyVersion=v;
-  [0,1,2].forEach(i=>{
-    const btn=document.getElementById('sv-'+i);
-    if(!btn)return;
-    if(i===v){btn.style.background='var(--g)';btn.style.color='#0a0a0a';btn.style.border='none';}
-    else{btn.style.background='transparent';btn.style.color='rgba(200,175,120,.5)';btn.style.border='1px solid #333';}
-  });
-  buildStory();
-}
-
+window.addEventListener('load', setupKeyInput);
 </script>
 
-<!-- Refine Panel -->
-<div id="refine-panel" style="display:none;position:fixed;bottom:32px;right:32px;z-index:99999;
-  background:#1d1d1d;border:1px solid #3a3a3a;border-radius:6px;
-  box-shadow:0 12px 48px rgba(0,0,0,.9);padding:20px;width:360px">
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
-    <span style="font-size:13px;letter-spacing:.2em;color:var(--g)">✦ 調整指令</span>
-    <button onclick="closeRefinePanel()" style="background:transparent;border:none;color:rgba(200,175,120,.4);font-size:18px;cursor:pointer;line-height:1">×</button>
-  </div>
-  <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px">
-    <button class="refine-chip" onclick="setRefine('文字描述更長更詳細，每個重點的desc至少40字')">文字長一點</button>
-    <button class="refine-chip" onclick="setRefine('語氣更犀利直接，多用反問句和對比句')">語氣更犀利</button>
-    <button class="refine-chip" onclick="setRefine('標題更有衝擊感，用數字或反直覺的說法')">標題更衝擊</button>
-    <button class="refine-chip" onclick="setRefine('內容更具體，加入真實場景和細節描述')">更有畫面感</button>
-    <button class="refine-chip" onclick="setRefine('換一個完全不同的切入角度重新規劃')">換角度</button>
-  </div>
-  <textarea id="refine-input" placeholder="或自己輸入指令，例如：把觀念①改成講合約陷阱…"
-    style="width:100%;background:#111;border:1px solid #2a2a2a;border-radius:3px;
-    color:#e0d8c8;font-family:'Noto Serif TC',serif;font-size:12px;letter-spacing:.06em;
-    padding:10px;outline:none;resize:none;height:80px;line-height:1.7;margin-bottom:10px"></textarea>
-  <button onclick="doRefine()" style="width:100%;background:var(--g);color:#0a0a0a;border:none;
-    font-family:'Noto Serif TC',serif;font-size:13px;letter-spacing:.2em;padding:10px;
-    cursor:pointer;border-radius:3px">✦ 套用指令重新生成</button>
-</div>
-<!-- 單張重生面板 -->
-<div id="slide-refine-panel" style="display:none;position:fixed;bottom:32px;left:32px;z-index:99999;
-  background:#1d1d1d;border:1px solid #3a3a3a;border-radius:6px;
-  box-shadow:0 12px 48px rgba(0,0,0,.9);padding:20px;width:360px">
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
-    <span id="slide-refine-title" style="font-size:13px;letter-spacing:.2em;color:var(--g)">✦ 調整指令</span>
-    <button onclick="closeSlideRefine()" style="background:transparent;border:none;color:rgba(200,175,120,.4);font-size:18px;cursor:pointer;line-height:1">×</button>
-  </div>
-  <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px">
-    <button class="refine-chip" onclick="setSlideRefine('文字描述更長更詳細 每個重點的desc至少40字')">文字長一點</button>
-    <button class="refine-chip" onclick="setSlideRefine('語氣更犀利直接 多用反問句和對比句')">語氣更犀利</button>
-    <button class="refine-chip" onclick="setSlideRefine('標題更有衝擊感 用數字或反直覺的說法')">標題更衝擊</button>
-    <button class="refine-chip" onclick="setSlideRefine('內容更具體 加入真實場景和細節描述')">更有畫面感</button>
-    <button class="refine-chip" onclick="setSlideRefine('換一個完全不同的切入角度重新規劃')">換角度</button>
-  </div>
-  <textarea id="slide-refine-input" placeholder="自己輸入指令…"
-    style="width:100%;background:#111;border:1px solid #2a2a2a;border-radius:3px;
-    color:#e0d8c8;font-family:'Noto Serif TC',serif;font-size:12px;letter-spacing:.06em;
-    padding:10px;outline:none;resize:none;height:80px;line-height:1.7;margin-bottom:10px"></textarea>
-  <button onclick="doSlideRefine()" style="width:100%;background:var(--g);color:#0a0a0a;border:none;
-    font-family:'Noto Serif TC',serif;font-size:13px;letter-spacing:.2em;padding:10px;
-    cursor:pointer;border-radius:3px">✦ 套用指令重生此頁</button>
-</div>
-
-<!-- 文案重生面板 -->
-<div id="caption-refine-panel" style="display:none;position:fixed;bottom:32px;left:420px;z-index:99999;
-  background:#1d1d1d;border:1px solid #3a3a3a;border-radius:6px;
-  box-shadow:0 12px 48px rgba(0,0,0,.9);padding:20px;width:360px">
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
-    <span style="font-size:13px;letter-spacing:.2em;color:var(--g)">✦ 調整文案指令</span>
-    <button onclick="closeCaptionRefine()" style="background:transparent;border:none;color:rgba(200,175,120,.4);font-size:18px;cursor:pointer;line-height:1">×</button>
-  </div>
-  <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px">
-    <button class="refine-chip" onclick="setCaptionRefine('語氣更犀利 更直接打臉')">語氣更犀利</button>
-    <button class="refine-chip" onclick="setCaptionRefine('開頭換一個更有衝擊感的hook')">換開頭hook</button>
-    <button class="refine-chip" onclick="setCaptionRefine('加入更多具體細節和場景描述')">更有畫面感</button>
-    <button class="refine-chip" onclick="setCaptionRefine('換一個完全不同的切入角度')">換角度</button>
-    <button class="refine-chip" onclick="setCaptionRefine('文字更短更精煉 每段不超過兩行')">更精煉</button>
-  </div>
-  <textarea id="caption-refine-input" placeholder="自己輸入指令…"
-    style="width:100%;background:#111;border:1px solid #2a2a2a;border-radius:3px;
-    color:#e0d8c8;font-family:'Noto Serif TC',serif;font-size:12px;letter-spacing:.06em;
-    padding:10px;outline:none;resize:none;height:80px;line-height:1.7;margin-bottom:10px"></textarea>
-  <button onclick="doCaptionRefine()" style="width:100%;background:var(--g);color:#0a0a0a;border:none;
-    font-family:'Noto Serif TC',serif;font-size:13px;letter-spacing:.2em;padding:10px;
-    cursor:pointer;border-radius:3px">✦ 套用指令重生文案</button>
-</div>
-</div><!-- end panel-post -->
-
-<div id="panel-story" class="app-panel" style="margin-top:20px">
-<div id="story-version-bar" style="width:100%;max-width:1220px;display:flex;align-items:center;gap:8px;margin-bottom:12px;margin-top:16px">
-  <span style="font-size:11px;letter-spacing:.18em;color:rgba(200,175,120,.35)">版本：</span>
-  <button onclick="switchStoryVersion(0)" id="sv-0" style="background:var(--g);color:#0a0a0a;border:none;font-family:inherit;font-size:11px;letter-spacing:.12em;padding:5px 14px;cursor:pointer;border-radius:2px">① 標準</button>
-  <button onclick="switchStoryVersion(1)" id="sv-1" style="background:transparent;color:rgba(200,175,120,.5);border:1px solid #333;font-family:inherit;font-size:11px;letter-spacing:.12em;padding:5px 14px;cursor:pointer;border-radius:2px">② 置中</button>
-  <button onclick="switchStoryVersion(2)" id="sv-2" style="background:transparent;color:rgba(200,175,120,.5);border:1px solid #333;font-family:inherit;font-size:11px;letter-spacing:.12em;padding:5px 14px;cursor:pointer;border-radius:2px">③ 極簡</button>
-</div>
-<div id="story-action-bar">
-  <textarea id="s-topic" placeholder="輸入主題，例如：黑心經紀的三個套路…"
-    style="flex:1;background:#111;border:1px solid #2a2a2a;color:#e0d8c8;
-    font-family:'Noto Serif TC',serif;font-size:12px;letter-spacing:.06em;
-    padding:8px 10px;outline:none;height:40px;resize:none;line-height:1.6;
-    min-width:200px;border-radius:2px;max-width:600px"></textarea>
-  <button class="sgbtn" id="s-ai-btn" onclick="aiStory()" 
-    style="background:var(--g);color:#0a0a0a;border:none">✦ AI 產生動態</button>
-  <button class="sgbtn" id="s-gen-btn" onclick="buildStory()"
-    style="background:transparent;color:rgba(200,175,120,.5);border:1px solid #333;font-size:11px">↻ 重新渲染</button>
-  <button class="sgbtn" id="s-bg-btn" onclick="document.getElementById('story-bgf').click()">⊕ 換背景</button>
-  <input type="file" id="story-bgf" accept="image/*" onchange="uploadStoryBg(event)" style="display:none"/>
-  <button class="sgbtn" id="s-dl-btn" onclick="dlStory()">↓ 下載全部 (ZIP)</button>
-  <span id="s-st"></span>
-</div>
-
-<div class="story-input-grid">
-  <div class="story-card-input">
-    <h3>第 1 張 <span>V · 價值鉤子</span></h3>
-    <span class="story-label">眉標（英文·用·分隔）</span>
-    <input class="story-inp" id="s1-ey" type="text" value="PROTECT · YOURSELF · NOW"/>
-    <span class="story-label">大標題</span>
-    <textarea class="story-inp" id="s1-t1" rows="2">別被騙了</textarea>
-    <span class="story-label">紅色強調第二行（可空）</span>
-    <input class="story-inp" id="s1-t2" type="text" value="保護妳自己"/>
-    <span class="story-label">副標</span>
-    <textarea class="story-inp" id="s1-sub" rows="2">妳知道黑心經紀怎麼坑人嗎？</textarea>
-  </div>
-  <div class="story-card-input">
-    <h3>第 2 張 <span>I+R · 核心內容</span></h3>
-    <span class="story-label">標籤</span>
-    <input class="story-inp" id="s2-tag" type="text" value="七年親歷"/>
-    <span class="story-label">標題</span>
-    <textarea class="story-inp" id="s2-hd" rows="2">入行前要搞清楚</textarea>
-    <span class="story-label">重點 1 標題</span>
-    <input class="story-inp" id="s2-p1t" type="text" value="合約有沒有違約金"/>
-    <span class="story-label">重點 1 說明</span>
-    <textarea class="story-inp" id="s2-p1d" rows="2">說清楚再簽，跑不掉的合約最危險</textarea>
-    <span class="story-label">重點 2 標題</span>
-    <input class="story-inp" id="s2-p2t" type="text" value="薪水怎麼算"/>
-    <span class="story-label">重點 2 說明</span>
-    <textarea class="story-inp" id="s2-p2d" rows="2">口頭說的不算，要白紙黑字</textarea>
-    <span class="story-label">重點 3 標題</span>
-    <input class="story-inp" id="s2-p3t" type="text" value="可不可以隨時離開"/>
-    <span class="story-label">重點 3 說明</span>
-    <textarea class="story-inp" id="s2-p3d" rows="2">這三點說不清楚的，不要簽</textarea>
-  </div>
-  <div class="story-card-input">
-    <h3>第 3 張 <span>L · 行動呼籲</span></h3>
-    <span class="story-label">主標題</span>
-    <textarea class="story-inp" id="s3-main" rows="2">找對的人才是起點</textarea>
-    <span class="story-label">副文案</span>
-    <textarea class="story-inp" id="s3-sub" rows="3">有任何問題都可以私訊我
-有問必答，不催、不騙</textarea>
-    <span class="story-label">行動按鈕文字</span>
-    <input class="story-inp" id="s3-follow" type="text" value="私訊我了解更多"/>
-    <span class="story-label">帳號</span>
-    <input class="story-inp" id="s3-acct" type="text" value="@angus061855"/>
-  </div>
-</div>
-<div id="story-wrap"></div>
-</div><!-- end panel-story -->
 </body>
 </html>
