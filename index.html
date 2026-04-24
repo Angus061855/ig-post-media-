@@ -1068,20 +1068,33 @@ function bCover(d,account,thm,pgLabel){
   const t2=parts[1]||'';
   const pgNum=pgLabel?parseInt(pgLabel.split('/')[0])||1:1;
   const s=mkSlide('slide-1',thm,`${bgD(thm)}${ovD(thm)}${tDeco(thm,'cover')}${acctExtra(thm,account)}
-    <div class="cw" data-idx="${pgNum}">
-      <div class="ey ed">${d.eyebrow||''}</div>
-      <div><span class="tt ed">${t1}</span>${t2?`<span class="tt ac ed">${t2}</span>`:''}</div>
-      <div class="sb ed" style="font-size:30px;letter-spacing:.18em;line-height:1.85;margin-bottom:40px;color:rgba(210,205,195,.9)">${(d.subtitle||'').replace(/\n/g,'<br>')}</div>
-    <div class="bio ed" style="font-size:20px;letter-spacing:.12em;color:rgba(200,175,120,.72);line-height:2.1;margin-bottom:32px;">
-        <span style="font-size:22px;font-weight:700;color:rgba(200,175,120,.9);letter-spacing:.18em">關於 大頭｜AS娛樂經紀</span><br>
-        <span style="color:var(--g)">靠誠實與信任</span>・七年面試超過 <span style="color:var(--g)">3000+</span><br>
-        不簽合約・不壓薪水・自由排班・隱私安全<br>
-        <span style="color:rgba(200,175,120,.45);font-size:18px">不要讓未來的你 討厭現在的自己</span>
+    <div class="cw" data-idx="${pgNum}" style="justify-content:flex-end;padding:80px 80px 110px 80px">
+
+      <div style="margin-bottom:18px">
+        <span class="tt ed" style="font-size:72px;line-height:1.1;letter-spacing:.08em;display:block">${t1}</span>
+        ${t2?`<span class="tt ac ed" style="font-size:72px;line-height:1.1;letter-spacing:.08em;display:block">${t2}</span>`:''}
       </div>
+
+      <div class="sb ed" style="font-size:26px;letter-spacing:.12em;color:rgba(200,175,120,.85);line-height:1.8;margin-bottom:44px">
+        ${(d.subtitle||'').replace(/\n/g,'<br>')}
+      </div>
+
+      <div style="width:100%;height:1px;background:rgba(200,175,120,.22);margin-bottom:28px"></div>
+
+      <div class="ed" style="font-size:19px;letter-spacing:.15em;color:rgba(200,175,120,.9);margin-bottom:14px;font-weight:700">
+        ◆ 關於 大頭 · AS娛樂經紀
+      </div>
+      <div class="bio ed" style="font-size:20px;letter-spacing:.08em;color:rgba(210,205,195,.78);line-height:2;margin-bottom:0">
+        靠誠實與信任，七年面試超過 <span style="color:rgba(200,175,120,.9);font-weight:700">3000+</span><br>
+        不簽合約・不壓薪水・自由排班・隱私安全<br>
+        <span style="color:rgba(200,175,120,.42);font-size:17px">不要讓未來的你 討厭現在的自己</span>
+      </div>
+
     </div>`,pgLabel);
   addSlideRefineBtn(s,'slide-1',0,'cover');
   return s;
 }
+
 function bContent(d,idx,total,thm,pgLabel){
   const num=String(idx+1).padStart(2,'0')+' / '+String(total).padStart(2,'0');
   const pgNum=pgLabel?parseInt(pgLabel.split('/')[0])||idx+1:idx+1;
