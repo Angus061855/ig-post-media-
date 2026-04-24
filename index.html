@@ -1058,11 +1058,11 @@ function bCover(d,account,thm,pgLabel){
   const t2=parts[1]||'';
   const pgNum=pgLabel?parseInt(pgLabel.split('/')[0])||1:1;
   const s=mkSlide('slide-1',thm,`${bgD(thm)}${ovD(thm)}${tDeco(thm,'cover')}${acctExtra(thm,account)}
-    <div class="cw" data-idx="${pgNum}" style="justify-content:center!important;padding:120px 80px 100px 80px!important">
+    <div class="cw" data-idx="${pgNum}" style="justify-content:flex-start!important;padding:160px 80px 80px 90px!important">
 
       <div style="margin-bottom:18px">
-        <span class="tt ed" style="font-size:72px;line-height:1.1;letter-spacing:.08em;display:block">${t1}</span>
-        ${t2?`<span class="tt ac ed" style="font-size:72px;line-height:1.1;letter-spacing:.08em;display:block">${t2}</span>`:''}
+        <span class="tt ed" style="font-size:88px;line-height:1.05;letter-spacing:.08em;display:block">${t1}</span>
+        ${t2?`<span class="tt ac ed" style="font-size:88px;line-height:1.05;letter-spacing:.08em;display:block">${t2}</span>`:''}
       </div>
 
       <div class="sb ed" style="font-size:26px;letter-spacing:.12em;color:rgba(200,175,120,.85);line-height:1.8;margin-bottom:44px">
@@ -1089,10 +1089,13 @@ function bContent(d,idx,total,thm,pgLabel){
   const num=String(idx+1).padStart(2,'0')+' / '+String(total).padStart(2,'0');
   const pgNum=pgLabel?parseInt(pgLabel.split('/')[0])||idx+1:idx+1;
   const pts=(d.points||[]).map((p,i)=>`
-    <li class="pi">
-      <span class="pn deco">0${i+1}</span>
-      <div><div class="ph2 ed">${p.title||''}</div><div class="pd ed">${p.desc||''}</div></div>
-    </li>`).join('');
+  <li class="pi">
+    <span class="pn deco">0${i+1}</span>
+    <div>
+      <div class="ph2 ed">${p.title||''}</div>
+      <div class="pd ed" style="font-size:28px;line-height:1.7;color:rgba(210,205,195,.7);margin-top:6px">${(p.desc||'').slice(0,30)}</div>
+    </div>
+  </li>`).join('');
   const slideId=`slide-${idx+2}`;
   const s=mkSlide(slideId,thm,`${bgD(thm)}${ovD(thm)}${tDeco(thm,'content')}
     <div class="nw" data-idx="${pgNum}">
