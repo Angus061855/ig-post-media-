@@ -706,7 +706,7 @@ body{background:#0d0d0d;font-family:'Noto Serif TC','CKS','STSong',serif;display
 const THEMES=[];
 
 let SEL=null,SMODE='txt',savedSel=null;
-let BGU='url("back2.png")';
+let BGU='url("back.png")';
 let lastInput='',lastAccount='';
 let currentData=null;
 let globalTheme='t1';
@@ -1459,14 +1459,14 @@ async function doGen(){
 async function renderSlideCanvas(si){
   si.querySelectorAll('.ed,.deco').forEach(e=>e.style.outline='none');
   const c=await html2canvas(si,{
-  scale:1,
-  useCORS:false,
-  allowTaint:true,
-  width:1080,
-  height:1350,
-  backgroundColor:'#0a0a0a',
-  logging:false
-});
+    scale:1,
+    useCORS: true,      // ← 改這裡
+    allowTaint: false,  // ← 改這裡
+    width:1080,
+    height:1350,
+    backgroundColor:'#0a0a0a',
+    logging:false
+  });
   si.querySelectorAll('.ed,.deco').forEach(e=>e.style.outline='');
   return c;
 }
@@ -2017,7 +2017,7 @@ function switchTab(tab){
 }
 
 /* ── STORY BG ── */
-let storyBGU='url("back2.png")';
+let storyBGU='url("back.png")';
 function uploadStoryBg(e){
   const f=e.target.files[0];if(!f)return;
   const r=new FileReader();
@@ -2054,7 +2054,7 @@ function buildStory(){
   document.getElementById('s-st').textContent='✓ 完成，可下載';
 }
 
-function sBG(){return`<div class="s-bg" style="position:absolute;inset:0;background-image:url('back2.png');background-size:cover;background-position:center;opacity:1"></div>`}
+function sBG(){return`<div class="s-bg" style="position:absolute;inset:0;background-image:url('back.png');background-size:cover;background-position:center;opacity:1"></div>`}
 function sOV(){return`<div style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(160deg,rgba(0,0,0,.2) 0%,rgba(8,6,3,.2) 55%,rgba(0,0,0,.2) 100%)"></div>`}
 function sCorners(){return`
   <div style="position:absolute;width:48px;height:48px;top:64px;left:64px;border-top:2px solid rgba(200,175,120,.2);border-left:2px solid rgba(200,175,120,.2)"></div>
@@ -2230,8 +2230,8 @@ document.body.appendChild(el);
 
 const canvas = await html2canvas(el, {
   scale: 1,
-  useCORS: false,
-  allowTaint: true,
+  useCORS: true,      // ← 改
+  allowTaint: false,  // ← 改
   width: 1080,
   height: 1920,
   backgroundColor: '#0a0a0a',
