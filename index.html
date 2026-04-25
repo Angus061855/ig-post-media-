@@ -105,14 +105,14 @@ body{background:#0d0d0d;font-family:'Noto Serif TC','CKS','STSong',serif;display
 .t1 .bl{bottom:56px;left:56px;border-width:0 0 2px 2px}.t1 .br{bottom:56px;right:56px;border-width:0 2px 2px 0}
 .t1 .hl{position:absolute;left:56px;right:56px;height:1px;background:rgba(200,175,120,.13)}
 .t1 .vl{position:absolute;left:100px;top:56px;bottom:56px;width:1px;background:rgba(200,175,120,.18)}
-.t1 .cw{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:110px 100px}
+.t1 .cw{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:110px 120px;width:100%;overflow:hidden}
 .t1 .ey{font-size:30px;letter-spacing:.35em;color:var(--gd);margin-bottom:28px}
-.t1 .tt{font-weight:900;word-break:keep-all;overflow-wrap:anywhere;font-size:108px;line-height:1.05;letter-spacing:.12em;color:var(--cr);text-shadow:0 4px 40px rgba(0,0,0,.7);display:block}
+.t1 .tt{font-weight:900;word-break:keep-all;overflow-wrap:anywhere;white-space:normal;max-width:100%;font-size:108px;line-height:1.05;letter-spacing:.12em;color:var(--cr);text-shadow:0 4px 40px rgba(0,0,0,.7);display:block}
 .t1 .tt.ac{color:#e8392b !important;-webkit-text-fill-color:#e8392b !important}
 .t1 .sp2{width:100px;height:2px;margin:24px 0;background:linear-gradient(90deg,rgba(200,175,120,.6),transparent)}
 .t1 .sb{font-size:64px;letter-spacing:.22em;color:var(--grey);line-height:1.85;margin-bottom:64px}
 .t1 .ac2{font-size:28px;letter-spacing:.2em;color:var(--gd);border-top:1px solid rgba(200,175,120,.15);padding-top:14px}
-.t1 .nw{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:110px 100px 110px 136px}
+.t1 .nw{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:110px 120px 110px 136px;width:100%;overflow:hidden}
 .t1 .nm{font-size:28px;letter-spacing:.3em;color:var(--gd);margin-bottom:44px}
 .t1 .tg{
   display:inline-flex;
@@ -1060,7 +1060,7 @@ function bCover(d,account,thm,pgLabel){
   const t2=parts[1]||'';
   const pgNum=pgLabel?parseInt(pgLabel.split('/')[0])||1:1;
   const s=mkSlide('slide-1',thm,`${bgD(thm)}${ovD(thm)}${tDeco(thm,'cover')}${acctExtra(thm,account)}
-    <div class="cw" data-idx="${pgNum}" style="justify-content:center!important;padding:200px 90px 160px 90px!important">
+    <div class="cw" data-idx="${pgNum}" style="justify-content:center!important;padding:200px 120px 160px 120px!important">
 
       <div style="margin-bottom:18px">
         <span class="tt ed" style="font-size:68px;line-height:1.1;letter-spacing:.06em;display:block">${t1}</span>
