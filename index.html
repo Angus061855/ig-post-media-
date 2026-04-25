@@ -765,7 +765,6 @@ async function doGen(){
   }
 
   /* ══ CAPTION ══ */
-  let captionTxt='';
   async function genCaption(topic){
     captionTxt='';const key=E('groq-key')?.value.trim()||loadKey();if(!key)return;
     const prompt=`你是 AS娛樂 的 Reels 貼文文案寫手。
