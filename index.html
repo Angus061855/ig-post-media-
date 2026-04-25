@@ -8,19 +8,18 @@
 <title>IG 圖文產生器</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
-@font-face{font-family:'CKS';src:url('ChiKuSung.otf') format('opentype');font-weight:normal;font-style:normal}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{--g:rgba(200,175,120,1);--gd:rgba(200,175,120,.6);--gf:rgba(200,175,120,.18);--cr:#ffffff;--red:#e8392b;--grey:rgba(210,205,195,.85)}
-body{background:#0d0d0d;font-family:'Noto Serif TC','CKS','STSong',serif;display:flex;flex-direction:column;align-items:center;padding:28px 20px 120px;min-height:100vh}
+body{background:#0d0d0d;font-family:'Noto Serif TC',serif;display:flex;flex-direction:column;align-items:center;padding:28px 20px 120px;min-height:100vh}
 
 /* ── topbar ── */
 #topbar{width:100%;max-width:1220px;display:flex;align-items:center;gap:8px;background:#181818;border:1px solid #252525;padding:11px 16px;margin-bottom:22px;flex-wrap:wrap;border-radius:3px}
 #topbar h1{font-size:15px;letter-spacing:.22em;color:var(--g);white-space:nowrap}
-#ai{background:#111;border:1px solid #282828;color:#e0d8c8;font-family:'Noto Serif TC','CKS','STSong',serif;font-size:12px;letter-spacing:.07em;padding:6px 10px;outline:none;width:148px;flex-shrink:0;border-radius:2px}
+#ai{background:#111;border:1px solid #282828;color:#e0d8c8;font-family:'Noto Serif TC',serif;font-size:12px;letter-spacing:.07em;padding:6px 10px;outline:none;width:148px;flex-shrink:0;border-radius:2px}
 #ai:focus,#it:focus{border-color:var(--gd)}
-#it{flex:1;background:#111;border:1px solid #282828;color:#e0d8c8;font-family:'Noto Serif TC','CKS','STSong',serif;font-size:12px;letter-spacing:.06em;padding:6px 10px;outline:none;height:40px;resize:none;line-height:1.6;min-width:160px;border-radius:2px}
+#it{flex:1;background:#111;border:1px solid #282828;color:#e0d8c8;font-family:'Noto Serif TC',serif;font-size:12px;letter-spacing:.06em;padding:6px 10px;outline:none;height:40px;resize:none;line-height:1.6;min-width:160px;border-radius:2px}
 #ai::placeholder,#it::placeholder{color:rgba(200,175,120,.18)}
-.tb{font-family:'Noto Serif TC','CKS','STSong',serif;font-size:12px;letter-spacing:.15em;padding:7px 13px;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:opacity .2s,border-color .2s,color .2s;border-radius:2px}
+.tb{font-family:'Noto Serif TC',serif;font-size:12px;letter-spacing:.15em;padding:7px 13px;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:opacity .2s,border-color .2s,color .2s;border-radius:2px}
 #gb{background:var(--g);color:#0a0a0a;border:none}
 #gb:hover{opacity:.85}#gb:disabled{opacity:.35;cursor:not-allowed}
 #db{background:transparent;color:var(--gd);border:1px solid #383838;display:none}
@@ -38,7 +37,7 @@ body{background:#0d0d0d;font-family:'Noto Serif TC','CKS','STSong',serif;display
 .chip:hover{opacity:.85}
 .chip .prev{width:38px;height:48px;border-radius:2px;overflow:hidden;border:1.5px solid transparent;transition:border-color .15s;flex-shrink:0;position:relative}
 .chip.on .prev{border-color:var(--g)}
-.chip span{font-family:'Noto Serif TC','CKS','STSong',serif;font-size:9px;letter-spacing:.1em;color:rgba(200,175,120,.45);text-align:center;max-width:52px;line-height:1.4}
+.chip span{font-family:'Noto Serif TC',serif;font-size:9px;letter-spacing:.1em;color:rgba(200,175,120,.45);text-align:center;max-width:52px;line-height:1.4}
 .chip.on span{color:var(--g)}
 #tbar .note{font-size:10px;letter-spacing:.1em;color:rgba(200,175,120,.2);margin-top:8px}
 
@@ -50,7 +49,7 @@ body{background:#0d0d0d;font-family:'Noto Serif TC','CKS','STSong',serif;display
 .slide-tc{
   background:#1a1a1a;border:1px solid #2e2e2e;
   padding:3px 8px;cursor:pointer;border-radius:2px;
-  font-family:'Noto Serif TC','CKS','STSong',serif;font-size:10px;letter-spacing:.12em;
+  font-family:'Noto Serif TC',serif;font-size:10px;letter-spacing:.12em;
   color:rgba(200,175,120,.45);transition:border-color .12s,color .12s;
   white-space:nowrap;
 }
@@ -68,7 +67,7 @@ body{background:#0d0d0d;font-family:'Noto Serif TC','CKS','STSong',serif;display
 }
 #ftb.on{display:flex!important}
 .sp{width:1px;height:19px;background:#2e2e2e;flex-shrink:0;margin:0 2px}
-.fn{background:transparent;border:1px solid transparent;color:rgba(200,175,120,.52);font-family:'Noto Serif TC','CKS','STSong',serif;font-size:11px;padding:3px 6px;cursor:pointer;border-radius:3px;white-space:nowrap;transition:all .1s;display:flex;align-items:center;line-height:1.4}
+.fn{background:transparent;border:1px solid transparent;color:rgba(200,175,120,.52);font-family:'Noto Serif TC',serif;font-size:11px;padding:3px 6px;cursor:pointer;border-radius:3px;white-space:nowrap;transition:all .1s;display:flex;align-items:center;line-height:1.4}
 .fn:hover,.fn.on{background:#272727;border-color:#4a4a4a;color:var(--g)}
 .fn.on{border-color:var(--gd)}
 .fn.x{color:rgba(255,85,85,.5)}.fn.x:hover{background:rgba(255,40,40,.07);border-color:rgba(255,70,70,.3);color:#ff5555}
@@ -439,17 +438,17 @@ body{background:#0d0d0d;font-family:'Noto Serif TC','CKS','STSong',serif;display
 /* ── slide overlay labels ── */
 .slide-hashtag{
   position:absolute;top:88px;left:88px;
-  font-family:'Noto Serif TC','CKS','STSong',serif;font-size:16px;letter-spacing:.18em;
+  font-family:'Noto Serif TC',serif;font-size:16px;letter-spacing:.18em;
   color:rgba(200,175,120,.75);z-index:10;pointer-events:none;
 }
 .slide-watermark{
   position:absolute;bottom:80px;left:50%;transform:translateX(-50%);
-  font-family:'Noto Serif TC','CKS','STSong',serif;font-size:16px;letter-spacing:.28em;
+  font-family:'Noto Serif TC',serif;font-size:16px;letter-spacing:.28em;
   color:rgba(200,175,120,.35);z-index:10;pointer-events:none;white-space:nowrap;
 }
 .slide-footer{
   position:absolute;bottom:28px;right:52px;
-  font-family:'Noto Serif TC','CKS','STSong',serif;
+  font-family:'Noto Serif TC',serif;
   font-size:22px;letter-spacing:.2em;font-weight:700;
   color:rgba(200,175,120,.38);z-index:10;pointer-events:none;white-space:nowrap;
 }
@@ -527,7 +526,7 @@ body{background:#0d0d0d;font-family:'Noto Serif TC','CKS','STSong',serif;display
   color:rgba(200,175,120,.06);
   right:-40px;bottom:-100px;
   line-height:1;pointer-events:none;
-  font-family:'Noto Serif TC','CKS','STSong',serif;
+  font-family:'Noto Serif TC',serif;
   letter-spacing:-.02em;
 }
 
