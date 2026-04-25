@@ -551,7 +551,6 @@ function bLayoutB(d,slideId,pgLabel,bgNum,account){
     const si=document.createElement('div');si.className='si';
     si.innerHTML=`${bgH()}${ovH()}${olH(account,pgLabel)}
       <div class="lg">
-        <div class="lg-dots deco">◆ ◆ ◆</div>
         <div class="lg-main ed">${(d.main||'').replace(/\n/g,'<br>')}</div>
         <div class="lg-sub ed">${(d.sub||'').replace(/\n/g,'<br>')}</div>
         <div class="lg-vl deco"></div>
@@ -580,7 +579,7 @@ function bLayoutB(d,slideId,pgLabel,bgNum,account){
     const hasStory=!!(data.story&&data.story.heading);
     const hasSummary=!!(data.summary&&data.summary.heading);
     const totalSlides=7;
-    const pg=n=>String(n).padStart(2,'0')+' / '+String(totalSlides).padStart(2,'0');
+    const pg=n=>String(n);
 
     // 固定7張版型分配
     // 1:封面A  2:storyB  3:content[0]C  4:content[1]D  5:content[2]E  6:summaryF  7:ctaG
@@ -648,19 +647,72 @@ function bLayoutB(d,slideId,pgLabel,bgNum,account){
   function parseJSON(text){const s=text.indexOf('{'),e2=text.lastIndexOf('}');if(s===-1||e2===-1)return null;try{return JSON.parse(text.slice(s,e2+1))}catch(e){return null}}
 
   function buildPrompt(topic){
-    return `你是 IG 輪播貼文策略師。只輸出純 JSON，從 { 開始到 } 結束，不加任何說明文字。
-【角色設定】七年娛樂經紀人（男性），專業、誠實、說到做到，以「踢爆業界黑心手法」聞名。說話直接不畫大餅，是新人女孩的安全守護者。
-【目標受眾】18-30 歲想賺錢但內心不安的女生，害怕進入八大行業被騙、被限制人身自由、遇到不負責的經紀人。
-【任務】生成一篇 IG 輪播貼文，共 7 頁。
+  return `你是 IG 輪播貼文策略師。只輸出純 JSON，從 { 開始到 } 結束，不加任何說明文字。
+
+【重要素材規則】
+- 根據我提供的核心論點和具體細節素材來生成，不要自己發明不相關的內容
+- 素材裡有的具體數字、案例、說法，必須完整保留在輸出裡
+
+【角色設定】
+你是七年娛樂經紀人（男性），專業、誠實、說到做到，以「踢爆業界黑心手法」聞名。
+說話直接不畫大餅，是新人女孩的安全守護者。
+
+【目標受眾】
+18-30 歲想賺錢但內心不安的女生，害怕進入八大行業被騙、被限制人身自由、遇到不負責的經紀人。
+
+【任務】
+生成一篇 IG 輪播貼文，共 7 頁，結構如下：
+
+【內容切入角度】
+- 知識科普：拆解新人最常踩的坑，說清楚這個產業的運作邏輯，讓人看完覺得「原來是這樣」
+- 踢爆黑心手法：點名合約陷阱、治裝費、壓薪水等具體手法，說清楚正規經紀絕對不會做什麼
+- 價值觀①：經紀人的責任是幫妳平安下岸，不是叫妳一直消費，強調務實賺錢、不畫大餅的態度
+- 價值觀②：妳的身體自主權和人身安全永遠排第一，任何讓妳不舒服的要求都有權說不，好經紀會保護這條線
+- 清單檢核：給出簽約前／面試前的自我檢查清單，讓讀者帶走一個可以馬上用的工具，收藏率高
+
+【寫作規則】
+- 語氣：直接、踢爆、誠實，像業界老司機說話
+- 多用對比（你以為 vs 其實）、反問句、打臉句
+- 每頁都要有衝突感或反轉
+- 禁止：空洞勵志語、模糊承諾、過於溫柔的口吻
+- 禁止：明確薪資數字，改用模糊描述
+- 每頁核心訊息只出現一次，禁止跨頁重複
+
+【四大排版寫作規則】
+規則一：用六年級閱讀程度寫作，語言越簡單觸及越廣，禁止過多專業術語，每頁能在3秒內掃讀完畢
+規則二：每頁只講一個重點，最多5～7行文字，留白越多完讀率越高
+規則三：整組輪播按照「問題→代價→轉念→系統→證明→願景→決定」心理結構排序
+規則四：每頁都要回答「為什麼他們要在乎？」，沒有鋪陳，沒有廢話，只有價值
+
 【文字格式規則】
-- cover title：必須含 \\n，兩行，第一行白字問題，第二行紅色強調，每行最多 6 字
-- story/content/summary 的 heading：每行最多 8 字，換行在語意轉折處
-- 每個 point.title：8-10 字；point.desc：15-20 字，有畫面感
-- 每頁 3 個 points 全部填完
-【風控規則】禁止明確薪資數字；可使用「八大行業」「酒店業」「這個產業」等詞
+- cover title：必須有兩行，用 \\n 分隔，第一行白字（衝擊問題），第二行紅色強調（答案或重點），每行最多6字，範例：「別被騙了\\n保護妳自己」
+- story/content/summary 的 heading：每行最多8個中文字，換行在語意轉折處
+- 每個 point.title：8～10字，一句話說清楚
+- 每個 point.desc：15～20字，有畫面感，說清楚細節
+- 每頁3個 points 全部填完，不能留空
+
+【風控規則】
+- 禁止明確薪資數字，改用模糊描述
+- 可使用「八大行業」「酒店業」「這個產業」等詞
+- CTA 語氣直接但不強迫，要有誠意
+- CTA 的 follow 欄位必須是「私訊我」開頭
+
+【禁止重複】
+- 每頁核心訊息只能出現一次，禁止跨頁重複相同觀念或說法
+- 同一頁的3個 points 不能是同一件事的不同說法
+
+【7頁結構】
+第1頁封面：強鉤子大標題兩行，副標一句話點出核心痛點15～20字
+第2頁：業界真實亂象或受眾真實痛點，建立信任感，3個具體重點有畫面感
+第3頁：問題根源，3個重點，標題8～10字，說明15～20字
+第4頁：可執行的步驟，給出具體步驟讓人知道怎麼保護自己，3個重點可操作可帶走
+第5頁：補充說明或注意事項，用對比句或反問句，衝擊感強
+第6頁：總結清單，heading用反問句，預告下一步行動
+第7頁CTA：主標4～8字直接有力，副文說清楚私訊能得到什麼，結尾「私訊我」
+
 【主題】${topic}
 輸出純 JSON：{"cover":{"eyebrow":string,"title":string,"subtitle":string},"story":{"tag":string,"heading":string,"points":[{"title":string,"desc":string},{"title":string,"desc":string},{"title":string,"desc":string}]},"content":[{"tag":"觀念①","heading":string,"points":[...]},{"tag":"觀念②","heading":string,"points":[...]},{"tag":"觀念③","heading":string,"points":[...]}],"summary":{"tag":string,"heading":string,"points":[...]},"cta":{"main":string,"sub":string,"follow":string}}`.trim();
-  }
+}
 
 /* ══ GENERATE ══ */
 async function doGen(){
@@ -742,7 +794,7 @@ async function doGen(){
       if(!data){stat('⚠ 生成失敗');return}
       const account=lastAccount||'@angus061855';
       const cnt=data.content||[];const hasStory=!!(data.story&&data.story.heading);const hasSummary=!!(data.summary&&data.summary.heading);
-      const totalSlides=7;const pg=n=>String(n).padStart(2,'0')+' / '+String(totalSlides).padStart(2,'0');
+      const totalSlides=7;const pg=n=>String(n);
       let newSlide=null;
       const slideNum=parseInt(_rsId.replace('slide-',''))||1;
       if(slideNum===1)newSlide=bCover(data.cover,account,pg(1));
