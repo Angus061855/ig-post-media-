@@ -420,7 +420,7 @@ function bCover(d,account,pgLabel){
 }
 
 /* LAYOUT B · 大標置中 + 背景大數字 */
-function bLayoutB(d,slideId,pgLabel,bgNum){
+function bLayoutB(d,slideId,pgLabel,bgNum,account){
   const s=document.createElement('div');s.className='slide';s.id=slideId;
   const si=document.createElement('div');si.className='si';
   const pts=d.points||[];
@@ -446,7 +446,7 @@ function bLayoutB(d,slideId,pgLabel,bgNum){
   }
 
   /* LAYOUT C · 卡片左框 */
-  function bLayoutC(d,slideId,pgLabel){
+  function bLayoutC(d,slideId,pgLabel,account){
     const s=document.createElement('div');s.className='slide';s.id=slideId;
     const si=document.createElement('div');si.className='si';
     const cards=(d.points||[]).map((p,i)=>`
@@ -468,7 +468,7 @@ function bLayoutB(d,slideId,pgLabel,bgNum){
   }
 
   /* LAYOUT D · 數字強調 */
-  function bLayoutD(d,slideId,pgLabel){
+  function bLayoutD(d,slideId,pgLabel,account){
     const s=document.createElement('div');s.className='slide';s.id=slideId;
     const si=document.createElement('div');si.className='si';
     const statNums=['7年','3000+','0元'];
@@ -492,7 +492,7 @@ function bLayoutB(d,slideId,pgLabel,bgNum){
   }
 
   /* LAYOUT E · 對比框 */
-  function bLayoutE(d,slideId,pgLabel){
+  function bLayoutE(d,slideId,pgLabel,account){
     const s=document.createElement('div');s.className='slide';s.id=slideId;
     const si=document.createElement('div');si.className='si';
     const p0=d.points&&d.points[0]||{};
@@ -524,7 +524,7 @@ function bLayoutB(d,slideId,pgLabel,bgNum){
   }
 
   /* LAYOUT F · 分隔線清單 */
-  function bLayoutF(d,slideId,pgLabel){
+  function bLayoutF(d,slideId,pgLabel,account){
     const s=document.createElement('div');s.className='slide';s.id=slideId;
     const si=document.createElement('div');si.className='si';
     const items=(d.points||[]).map((p,i)=>`
@@ -590,44 +590,45 @@ function bLayoutB(d,slideId,pgLabel,bgNum){
     const s1=bCover(data.cover,account,pg(pgIdx++));
     wrapBar(wrap,s1,'slide-1','cover',0);
 
-    // 張2 story Layout B
+        // 張2 story Layout B
     if(hasStory){
-      const s2=bLayoutB(data.story,'slide-2',pg(pgIdx++),'02');
+      const s2=bLayoutB(data.story,'slide-2',pg(pgIdx++),'02',account);
       wrapBar(wrap,s2,'slide-2','content',0);
     } else if(cnt[0]){
-      const s2=bLayoutB(cnt[0],'slide-2',pg(pgIdx++),'02');
+      const s2=bLayoutB(cnt[0],'slide-2',pg(pgIdx++),'02',account);
       wrapBar(wrap,s2,'slide-2','content',0);
     }
 
     // 張3 content[0 or 1] Layout C
     const c3=hasStory?cnt[0]:cnt[1];
     if(c3){
-      const s3=bLayoutC(c3,'slide-3',pg(pgIdx++));
+      const s3=bLayoutC(c3,'slide-3',pg(pgIdx++),account);
       wrapBar(wrap,s3,'slide-3','content',1);
     }
 
     // 張4 content[1 or 2] Layout D
     const c4=hasStory?cnt[1]:cnt[2];
     if(c4){
-      const s4=bLayoutD(c4,'slide-4',pg(pgIdx++));
+      const s4=bLayoutD(c4,'slide-4',pg(pgIdx++),account);
       wrapBar(wrap,s4,'slide-4','content',2);
     }
 
     // 張5 content[2 or 3] Layout E
     const c5=hasStory?cnt[2]:cnt[3];
     if(c5){
-      const s5=bLayoutE(c5,'slide-5',pg(pgIdx++));
+      const s5=bLayoutE(c5,'slide-5',pg(pgIdx++),account);
       wrapBar(wrap,s5,'slide-5','content',3);
     }
 
     // 張6 summary Layout F
     if(hasSummary){
-      const s6=bLayoutF(data.summary,'slide-6',pg(pgIdx++));
+      const s6=bLayoutF(data.summary,'slide-6',pg(pgIdx++),account);
       wrapBar(wrap,s6,'slide-6','content',4);
     } else if(cnt[3]){
-      const s6=bLayoutF(cnt[3],'slide-6',pg(pgIdx++));
+      const s6=bLayoutF(cnt[3],'slide-6',pg(pgIdx++),account);
       wrapBar(wrap,s6,'slide-6','content',4);
     }
+
 
     // 張7 CTA Layout G
     const s7=bCta(data.cta,account,'slide-7',pg(pgIdx++));
@@ -700,7 +701,6 @@ function bLayoutB(d,slideId,pgLabel,bgNum){
   }
 
   /* ══ SLIDE REFINE ══ */
-  let _rsId='',_rsIdx=0,_rsType='';
   function openSlideRefine(slideId,type,idx){
     _rsId=slideId;_rsIdx=idx;_rsType=type;
     const m={cover:'封面',content:'內容頁',cta:'CTA頁'};
@@ -721,11 +721,11 @@ function bLayoutB(d,slideId,pgLabel,bgNum){
       let newSlide=null;
       const slideNum=parseInt(_rsId.replace('slide-',''))||1;
       if(slideNum===1)newSlide=bCover(data.cover,account,pg(1));
-      else if(slideNum===2)newSlide=bLayoutB(hasStory?data.story:(cnt[0]||{}),'slide-2',pg(2),'02');
-      else if(slideNum===3)newSlide=bLayoutC(hasStory?cnt[0]:(cnt[1]||{}),'slide-3',pg(3));
-      else if(slideNum===4)newSlide=bLayoutD(hasStory?cnt[1]:(cnt[2]||{}),'slide-4',pg(4));
-      else if(slideNum===5)newSlide=bLayoutE(hasStory?cnt[2]:(cnt[3]||{}),'slide-5',pg(5));
-      else if(slideNum===6)newSlide=bLayoutF(hasSummary?data.summary:(cnt[3]||{}),'slide-6',pg(6));
+      else if(slideNum===2)newSlide=bLayoutB(hasStory?data.story:(cnt[0]||{}),'slide-2',pg(2),'02',account);
+      else if(slideNum===3)newSlide=bLayoutC(hasStory?cnt[0]:(cnt[1]||{}),'slide-3',pg(3),account);
+      else if(slideNum===4)newSlide=bLayoutD(hasStory?cnt[1]:(cnt[2]||{}),'slide-4',pg(4),account);
+      else if(slideNum===5)newSlide=bLayoutE(hasStory?cnt[2]:(cnt[3]||{}),'slide-5',pg(5),account);
+      else if(slideNum===6)newSlide=bLayoutF(hasSummary?data.summary:(cnt[3]||{}),'slide-6',pg(6),account);
       else if(slideNum===7)newSlide=bCta(data.cta,account,'slide-7',pg(7));
       if(!newSlide){stat('找不到對應版型');return}
       const oldSlide=document.getElementById(_rsId);if(!oldSlide){stat('找不到該張');return}
