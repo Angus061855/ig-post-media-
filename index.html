@@ -415,19 +415,19 @@ body{background:#0d0d0d;font-family:'Noto Serif TC','CKS','STSong',serif;display
 
 /* ── slide overlay labels ── */
 .slide-logo{
-  position:absolute;top:60px;right:140px;
-  width:80px;height:80px;
+  position:absolute;top:72px;right:88px;
+  width:72px;height:72px;
   object-fit:contain;z-index:10;pointer-events:none;
   opacity:.92;
 }
 /* ── slide overlay labels ── */
 .slide-hashtag{
-  position:absolute;top:72px;left:140px;
+  position:absolute;top:88px;left:88px;
   font-family:'Noto Serif TC','CKS','STSong',serif;font-size:16px;letter-spacing:.18em;
   color:rgba(200,175,120,.75);z-index:10;pointer-events:none;
 }
 .slide-watermark{
-  position:absolute;bottom:60px;left:50%;transform:translateX(-50%);
+  position:absolute;bottom:80px;left:50%;transform:translateX(-50%);
   font-family:'Noto Serif TC','CKS','STSong',serif;font-size:16px;letter-spacing:.28em;
   color:rgba(200,175,120,.35);z-index:10;pointer-events:none;white-space:nowrap;
 }
@@ -652,6 +652,15 @@ body{background:#0d0d0d;font-family:'Noto Serif TC','CKS','STSong',serif;display
 .s-pd{font-size:32px !important}
 .s-main{font-size:116px !important}
 .s-csub{font-size:46px !important}
+
+/* ── 預覽用安全邊距參考線 ── */
+.safe-guide{
+  position:absolute;
+  top:88px;left:88px;right:88px;bottom:88px;
+  border:1px dashed rgba(100,160,255,.35);
+  pointer-events:none;
+  z-index:999;
+}
 </style>
 </head>
 <body>
@@ -1049,7 +1058,7 @@ function mkSlide(id,thm,innerHtml,pgLabel){
   const tag='<div class="slide-hashtag">#AS娛樂經紀 大頭</div>';
   const logo='<img class="slide-logo" src="logo.png" alt="logo" onerror="this.style.display=\'none\'">';
   const wm='<div class="slide-watermark">'+( document.getElementById('ai')?.value.trim()||'@angus061855' )+'</div>';
-  si.innerHTML=logo+tag+innerHtml+wm;s.appendChild(si);att(s);
+  si.innerHTML=logo+tag+innerHtml+wm+'<div class="safe-guide"></div>';s.appendChild(si);att(s);
   slideThemes[id]=thm;
   return s;
 }
@@ -1274,14 +1283,41 @@ function buildPrompt(topic, cfg) {
 【目標受眾】
 18-30 歲想賺錢但內心不安的女生，害怕進入八大行業被騙、被限制人身自由、遇到不負責的經紀人。
 
-【任務：生成 7 頁 IG 輪播貼文（VIRAL 結構）】
-第1頁 cover    ：HOOK 鉤子，踢爆內幕或引發強烈好奇，讓人想滑下去
-第2頁 story    ：用「我做七年，見過太多...」的內行人視角說業界亂象，建立信任感
-第3頁 content①：點出問題根源，說明為什麼大多數人會被坑，tag 用「觀念①」
-第4頁 content②：給出具體方法或步驟，讓人知道怎麼保護自己，tag 用「觀念②」
-第5頁 content③：用對比或案例強化好經紀與壞經紀的差異，tag 用「觀念③」
-第6頁 summary  ：把所有重點列成清單，heading 用反問句，預告 CTA
-第7頁 cta      ：行動頁，建立信任、導向私訊，語氣直接有誠意，說清楚私訊能得到什麼
+【任務】
+生成一篇 IG 輪播貼文，共 7 頁，結構如下：
+
+第1頁｜封面 HOOK
+- 大標題：兩行，第一行白字（衝擊問題），第二行紅字（答案或強調）
+- 每行最多 6 個中文字
+- 副標：一句話點出核心痛點，15～20 字，不能留空
+- 目標：讓人停下來，想繼續滑
+
+第2頁｜內行人視角
+- 用「我做七年，見過太多...」開場
+- 說業界真實亂象，建立信任感
+- 3 個具體重點，每個重點要有畫面感
+
+第3頁｜觀念① 問題根源
+- 說清楚為什麼大多數人會被坑
+- 3 個重點，標題 8～10 字，說明 15～20 字
+
+第4頁｜觀念② 保護方法
+- 給出具體步驟，讓人知道怎麼保護自己
+- 3 個重點，可操作、可帶走
+
+第5頁｜觀念③ 對比案例
+- 好經紀 vs 壞經紀的具體差異
+- 用對比句或反問句，衝擊感強
+
+第6頁｜總結清單
+- 把所有重點列成清單
+- heading 用反問句
+- 預告下一步行動
+
+第7頁｜CTA 行動頁
+- 主標：4～8 字，直接有力
+- 副文：說清楚私訊能得到什麼，不模糊
+- 結尾：私訊我
 
 【內容切入角度】
 - 知識科普：拆解新人最常踩的坑，說清楚這個產業的運作邏輯，讓人看完覺得「原來是這樣」
@@ -1290,11 +1326,13 @@ function buildPrompt(topic, cfg) {
 - 價值觀②：妳的身體自主權和人身安全永遠排第一，任何讓妳不舒服的要求都有權說不，好經紀會保護這條線
 - 清單檢核：給出簽約前／面試前的自我檢查清單，讓讀者帶走一個可以馬上用的工具，收藏率高
 
-【寫作風格】
-- 語氣直接、踢爆、誠實，像業界老司機說話，不說教
+【寫作規則】
+- 語氣：直接、踢爆、誠實，像業界老司機說話
 - 多用對比（你以為 vs 其實）、反問句、打臉句
-- 每頁都要有衝突感或反轉，讓人想滑下一頁
-- 禁止：空洞的勵志語、模糊的承諾、過於溫柔的口吻
+- 每頁都要有衝突感或反轉
+- 禁止：空洞勵志語、模糊承諾、過於溫柔的口吻
+- 禁止：明確薪資數字，改用模糊描述
+- 每頁核心訊息只出現一次，禁止跨頁重複
 
 【文字格式規則】
 - cover title：
@@ -1530,6 +1568,8 @@ async function doGen(){
 /* ─── download ─── */
 async function renderSlideCanvas(si){
   si.querySelectorAll('.ed,.deco').forEach(e=>e.style.outline='none');
+  // 隱藏參考線
+  si.querySelectorAll('.safe-guide').forEach(e=>e.style.display='none');
   const c=await html2canvas(si,{
     scale:1,
     useCORS: true,      // ← 改這裡
