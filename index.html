@@ -663,11 +663,44 @@ function bLayoutB(d,slideId,pgLabel,bgNum,account){
   }
 
   /* ══ GENERATE ══ */
-  async function doGen(){
-    const inp=E('it').value.trim();const account=E('ai-acct').value.trim()||'@angus061855';
-    if(!inp){stat('請輸入主題或文章');return}
-    lastAccount=account;E('gb').disabled=true;stat('理解內容中…');desel();
-    try{
+async function doGen(){
+  try{
+    const inp=E('it').value.trim();
+    const account=E('ai-acct').value.trim()||'@angus061855';
+    if(!inp){stat('⚠ 請先輸入主題');return}
+
+    const key=E('groq-key')?.value.trim()||loadKey();
+    if(!key){stat('⚠ 請先填入 Groq API Key');return}
+
+    lastAccount=account;
+    E('gb').disabled=true;
+    stat('生成中…');
+    desel();
+
+    lastInput=inp;
+
+    let text=await callAPI(inp,buildPrompt(inp),5000);
+    let data=parseJSON(text);
+
+    if(!data){
+      stat('備用方案中…');
+      text=await callAPI(inp,buildPrompt(inp),3000);
+      data=parseJSON(text);
+    }
+    if(!data){stat('⚠ 生成失敗，請換個說法');return}
+
+    render(data,account);
+    document.querySelectorAll('.bg-el').forEach(b=>b.style.backgroundImage=BGU);
+    genCaption(inp);
+    stat('✓ 完成');
+
+  }catch(e){
+    stat('⚠ 錯誤：'+e.message);
+    alert('發生錯誤：'+e.message);
+  }finally{
+    E('gb').disabled=false;
+  }
+}
       const uPrompt='你是內容編輯，把口語文章萃取成結構化摘要。只輸出純JSON。\n{"topic":string,"angle":string,"points":[string],"details":[string],"cta":string}\n原文：\n'+inp;
       const uText=await callAPI(inp,uPrompt,1000);
       const us=uText.indexOf('{'),ue=uText.lastIndexOf('}');
