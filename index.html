@@ -112,17 +112,23 @@ body{background:#0d0d0d;font-family:'Noto Serif TC','CKS','STSong',serif;display
 .t1 .sp2{width:100px;height:2px;margin:24px 0;background:linear-gradient(90deg,rgba(200,175,120,.6),transparent)}
 .t1 .sb{font-size:64px;letter-spacing:.22em;color:var(--grey);line-height:1.85;margin-bottom:64px}
 .t1 .ac2{font-size:28px;letter-spacing:.2em;color:var(--gd);border-top:1px solid rgba(200,175,120,.15);padding-top:14px}
-.t1 .nw{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:110px 140px;width:100%;overflow:hidden;box-sizing:border-box}
+.t1 .nw{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:110px 140px;
+  width:100%;overflow:hidden;box-sizing:border-box;
+}
 .t1 .nm{font-size:28px;letter-spacing:.3em;color:var(--gd);margin-bottom:44px}
 .t1 .tg{
   display:inline-flex;
   align-items:center;
   justify-content:center;
+  align-self:flex-start;        /* ← 加這行，不撐滿整行 */
   font-size:34px;
   letter-spacing:.3em;
   color:rgba(200,175,120,1);
   border:1px solid rgba(200,175,120,.4);
-  padding:5px 16px;
+  padding:5px 24px;
   margin-bottom:30px;
   background:rgba(200,175,120,.07);
   box-shadow:inset 0 0 20px rgba(200,175,120,.05);
@@ -150,8 +156,8 @@ body{background:#0d0d0d;font-family:'Noto Serif TC','CKS','STSong',serif;display
   background:linear-gradient(90deg, rgba(200,175,120,.9), rgba(200,175,120,.1));
 }
 
-.t1 .pl{list-style:none;display:flex;flex-direction:column;gap:40px}
-.t1 .pi{display:flex;align-items:flex-start;gap:44px}
+.t1 .pl{list-style:none;display:flex;flex-direction:column;gap:40px;width:100%}
+.t1 .pi{display:flex;align-items:flex-start;gap:44px;width:100%}
 .t1 .pn{
   font-size:26px;
   letter-spacing:.1em;
@@ -448,14 +454,14 @@ body{background:#0d0d0d;font-family:'Noto Serif TC','CKS','STSong',serif;display
 /* ══ Layout Variants — 8 種排版 ══ */
 
 /* ── lv1 (idx=0): 左對齊·內容置中偏上 ── */
-.lv1 .nw{justify-content:center;padding:100px 100px 100px 120px}
-.lv1 .cw{justify-content:center;padding:100px 100px}
+.lv1 .nw{justify-content:center;padding:100px 140px}
+.lv1 .cw{justify-content:center;padding:100px 140px}
 
 /* ── lv2 (idx=1): 置中·所有元素居中 ── */
-.lv2 .cw{align-items:center;text-align:center;padding:110px 90px}
+.lv2 .cw{align-items:center;text-align:center;padding:110px 140px}
 .lv2 .tt,.lv2 .sb,.lv2 .ey,.lv2 .ac2,.lv2 .bio{text-align:center}
 .lv2 .sp2{margin:24px auto}
-.lv2 .nw{align-items:center;text-align:center;padding:100px 90px}
+.lv2 .nw{align-items:center;text-align:center;padding:100px 140px}
 .lv2 .hd,.lv2 .tg,.lv2 .nm{text-align:center}
 .lv2 .dv{margin:0 auto 44px}
 .lv2 .pl{align-items:center}
@@ -464,15 +470,15 @@ body{background:#0d0d0d;font-family:'Noto Serif TC','CKS','STSong',serif;display
 .lv2 .ph2,.lv2 .pd{text-align:center}
 
 /* ── lv3 (idx=2): 左對齊·標題在上·內容靠頂 ── */
-.lv3 .cw{justify-content:flex-start;padding-top:160px;padding-left:100px;padding-right:100px}
+.lv3 .cw{justify-content:flex-start;padding-top:160px;padding-left:140px;padding-right:140px}
 .lv3 .bio{margin-bottom:18px}
-.lv3 .nw{justify-content:flex-start;padding-top:140px;padding-left:120px;padding-right:100px}
+.lv3 .nw{justify-content:flex-start;padding-top:140px;padding-left:140px;padding-right:140px}
 .lv3 .hd{font-size:64px!important;margin-bottom:52px}
 .lv3 .dv{display:none}
 .lv3 .nm{margin-bottom:28px}
 
 /* ── lv4 (idx=3): 左對齊·卡片式points ── */
-.lv4 .nw{padding:80px 70px 80px 90px}
+.lv4 .nw{padding:80px 140px}
 .lv4 .hd{font-size:52px!important;margin-bottom:36px}
 .lv4 .dv{display:none}
 .lv4 .pl{gap:0}
@@ -482,7 +488,7 @@ body{background:#0d0d0d;font-family:'Noto Serif TC','CKS','STSong',serif;display
 .lv4 .pd{font-size:24px!important;margin-top:4px}
 
 /* ── lv5 (idx=4): 置中·大標題·超衝擊 ── */
-.lv5 .nw{align-items:center;text-align:center;padding:80px 80px;justify-content:center}
+.lv5 .nw{align-items:center;text-align:center;padding:80px 140px;justify-content:center}
 .lv5 .hd{font-size:72px!important;line-height:1.1;text-align:center;margin-bottom:52px}
 .lv5 .tg{text-align:center}
 .lv5 .nm{text-align:center}
@@ -493,13 +499,13 @@ body{background:#0d0d0d;font-family:'Noto Serif TC','CKS','STSong',serif;display
 .lv5 .ph2,.lv5 .pd{text-align:center}
 
 /* ── lv6 (idx=5): 左對齊·內容靠底 ── */
-.lv6 .nw{justify-content:flex-end;padding-bottom:110px;padding-left:120px;padding-right:100px;padding-top:80px}
+.lv6 .nw{justify-content:flex-end;padding-bottom:110px;padding-left:140px;padding-right:140px;padding-top:80px}
 .lv6 .nm{position:absolute;top:100px;left:120px;margin-bottom:0}
 .lv6 .tg{position:absolute;top:155px;left:120px;margin-bottom:0}
 .lv6 .hd{font-size:60px!important;margin-bottom:40px;border-top:2px solid rgba(200,175,120,.2);padding-top:32px}
 .lv6 .dv{display:none}
 .lv6 .pl{gap:28px}
-.lv6 .cw{justify-content:flex-end;padding-bottom:140px;padding-left:100px;padding-right:100px}
+.lv6 .cw{justify-content:flex-end;padding-bottom:140px;padding-left:140px;padding-right:140px}
 
 /* ── 全版型：大數字頁碼浮水印（所有版本都有）── */
 .t1 .nw::before,
@@ -517,12 +523,12 @@ body{background:#0d0d0d;font-family:'Noto Serif TC','CKS','STSong',serif;display
 
 /* ── lv7 (idx=6): 左對齊·大數字更明顯 ── */
 .lv7 .nw::before{font-size:560px;color:rgba(200,175,120,.08);right:-60px;bottom:-130px}
-.lv7 .nw{padding:100px 100px 100px 120px;justify-content:center}
+.lv7 .nw{padding:100px 140px;justify-content:center}
 .lv7 .hd{font-size:60px!important;margin-bottom:44px}
 .lv7 .pn{font-size:38px!important;color:rgba(200,175,120,.85)!important;font-weight:900}
 
 /* ── lv8 (idx=7): 置中·標題特大·底留白 ── */
-.lv8 .nw{align-items:center;text-align:center;justify-content:flex-start;padding:160px 80px 80px}
+.lv8 .nw{align-items:center;text-align:center;justify-content:flex-start;padding:160px 140px 80px}
 .lv8 .nm{text-align:center;margin-bottom:20px}
 .lv8 .tg{text-align:center;margin-bottom:24px}
 .lv8 .hd{font-size:76px!important;line-height:1.12;text-align:center;margin-bottom:56px;letter-spacing:.1em}
@@ -533,7 +539,7 @@ body{background:#0d0d0d;font-family:'Noto Serif TC','CKS','STSong',serif;display
 .lv8 .ph2,.lv8 .pd{text-align:center}
 
 /* ── lv9 (idx=8): 卡片·置中·上下等分 ── */
-.lv9 .nw{align-items:center;text-align:center;padding:80px 80px}
+.lv9 .nw{align-items:center;text-align:center;padding:80px 140px}
 .lv9 .hd{font-size:54px!important;margin-bottom:36px;text-align:center}
 .lv9 .tg,.lv9 .nm{text-align:center}
 .lv9 .dv{display:none}
@@ -544,7 +550,7 @@ body{background:#0d0d0d;font-family:'Noto Serif TC','CKS','STSong',serif;display
 .lv9 .pd{font-size:24px!important;margin-top:4px}
 
 /* ── lv10 (idx=9): 卡片·靠底·號碼大且金色 ── */
-.lv10 .nw{justify-content:flex-end;padding-bottom:100px;padding-left:100px;padding-right:80px;padding-top:80px}
+.lv10 .nw{justify-content:flex-end;padding-bottom:100px;padding-left:140px;padding-right:140px;padding-top:80px}
 .lv10 .nm{position:absolute;top:100px;left:100px;margin-bottom:0}
 .lv10 .tg{position:absolute;top:155px;left:100px;margin-bottom:0}
 .lv10 .hd{font-size:56px!important;margin-bottom:36px}
@@ -556,7 +562,7 @@ body{background:#0d0d0d;font-family:'Noto Serif TC','CKS','STSong',serif;display
 .lv10 .pd{font-size:22px!important;margin-top:4px}
 
 /* ── lv11 (idx=10): 卡片·分隔線取代左邊框·簡潔 ── */
-.lv11 .nw{padding:90px 90px 90px 110px;justify-content:center}
+.lv11 .nw{padding:90px 140px;justify-content:center}
 .lv11 .hd{font-size:56px!important;margin-bottom:40px}
 .lv11 .dv{display:none}
 .lv11 .pl{gap:0}
@@ -566,7 +572,7 @@ body{background:#0d0d0d;font-family:'Noto Serif TC','CKS','STSong',serif;display
 .lv11 .pd{font-size:24px!important;margin-top:6px}
 
 /* ── lv12 (idx=11): 卡片·全框·暗底·最強存在感 ── */
-.lv12 .nw{padding:70px 70px 70px 90px;justify-content:center}
+.lv12 .nw{padding:70px 140px;justify-content:center}
 .lv12 .hd{font-size:50px!important;margin-bottom:32px}
 .lv12 .dv{display:none}
 .lv12 .pl{gap:16px}
