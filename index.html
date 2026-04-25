@@ -119,11 +119,12 @@ body{background:#0d0d0d;font-family:'Noto Serif TC','CKS','STSong',serif;display
   width:100%;overflow:hidden;box-sizing:border-box;
 }
 .t1 .nm{font-size:28px;letter-spacing:.3em;color:var(--gd);margin-bottom:44px}
-.t1 .tg{
+.tg{
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  align-self:flex-start;        /* ← 加這行，不撐滿整行 */
+  align-self:center;           /* ← 置中 */
+  width:fit-content;           /* ← 只包住文字，不撐滿 */
   font-size:34px;
   letter-spacing:.3em;
   color:rgba(200,175,120,1);
