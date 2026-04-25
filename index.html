@@ -662,63 +662,55 @@ function bLayoutB(d,slideId,pgLabel,bgNum,account){
 輸出純 JSON：{"cover":{"eyebrow":string,"title":string,"subtitle":string},"story":{"tag":string,"heading":string,"points":[{"title":string,"desc":string},{"title":string,"desc":string},{"title":string,"desc":string}]},"content":[{"tag":"觀念①","heading":string,"points":[...]},{"tag":"觀念②","heading":string,"points":[...]},{"tag":"觀念③","heading":string,"points":[...]}],"summary":{"tag":string,"heading":string,"points":[...]},"cta":{"main":string,"sub":string,"follow":string}}`.trim();
   }
 
-  /* ══ GENERATE ══ */
+/* ══ GENERATE ══ */
 async function doGen(){
-  try{
-    const inp=E('it').value.trim();
-    const account=E('ai-acct').value.trim()||'@angus061855';
-    if(!inp){stat('⚠ 請先輸入主題');return}
-
-    const key=E('groq-key')?.value.trim()||loadKey();
-    if(!key){stat('⚠ 請先填入 Groq API Key');return}
-
-    lastAccount=account;
-    E('gb').disabled=true;
-    stat('生成中…');
-    desel();
-
-    lastInput=inp;
-
-    let text=await callAPI(inp,buildPrompt(inp),5000);
-    let data=parseJSON(text);
-
+  const inp = E('it').value.trim();
+  const account = E('ai-acct').value.trim() || '@angus061855';
+  if(!inp){ stat('⚠ 請先輸入主題'); return; }
+  const key = E('groq-key')?.value.trim() || loadKey();
+  if(!key){ stat('⚠ 請先填入 Groq API Key'); return; }
+  lastAccount = account;
+  E('gb').disabled = true;
+  stat('理解內容中…');
+  desel();
+  try {
+    const uPrompt = '你是內容編輯，把口語文章萃取成結構化摘要。只輸出純JSON。\n{"topic":string,"angle":string,"points":[string],"details":[string],"cta":string}\n原文：\n' + inp;
+    const uText = await callAPI(inp, uPrompt, 1000);
+    const us = uText.indexOf('{'), ue = uText.lastIndexOf('}');
+    let understood = null;
+    if(us !== -1 && ue !== -1){
+      try{ understood = JSON.parse(uText.slice(us, ue+1)); } catch(e){}
+    }
+    let enhanced = inp;
+    if(understood){
+      enhanced = '【主題】' + understood.topic +
+        '\n【切入角度】' + understood.angle +
+        '\n【核心論點】\n' + (understood.points||[]).map((p,i)=>`${i+1}. ${p}`).join('\n') +
+        '\n【具體細節素材】\n' + (understood.details||[]).join('\n') +
+        '\n【CTA方向】' + understood.cta +
+        '\n\n【原始內容】\n' + inp;
+    }
+    lastInput = enhanced;
+    stat('生成輪播中…');
+    let text = await callAPI(enhanced, buildPrompt(enhanced), 5000);
+    let data = parseJSON(text);
     if(!data){
       stat('備用方案中…');
-      text=await callAPI(inp,buildPrompt(inp),3000);
-      data=parseJSON(text);
+      text = await callAPI(enhanced, buildPrompt(enhanced), 3000);
+      data = parseJSON(text);
     }
-    if(!data){stat('⚠ 生成失敗，請換個說法');return}
-
-    render(data,account);
-    document.querySelectorAll('.bg-el').forEach(b=>b.style.backgroundImage=BGU);
+    if(!data){ stat('⚠ 生成失敗，請換個說法'); return; }
+    render(data, account);
+    document.querySelectorAll('.bg-el').forEach(b => b.style.backgroundImage = BGU);
     genCaption(inp);
     stat('✓ 完成');
-
-  }catch(e){
-    stat('⚠ 錯誤：'+e.message);
-    alert('發生錯誤：'+e.message);
-  }finally{
-    E('gb').disabled=false;
+  } catch(e){
+    stat('⚠ 錯誤：' + e.message);
+    console.error(e);
+  } finally {
+    E('gb').disabled = false;
   }
 }
-      const uPrompt='你是內容編輯，把口語文章萃取成結構化摘要。只輸出純JSON。\n{"topic":string,"angle":string,"points":[string],"details":[string],"cta":string}\n原文：\n'+inp;
-      const uText=await callAPI(inp,uPrompt,1000);
-      const us=uText.indexOf('{'),ue=uText.lastIndexOf('}');
-      let understood=null;
-      if(us!==-1&&ue!==-1){try{understood=JSON.parse(uText.slice(us,ue+1))}catch(e){}}
-      let enhanced=inp;
-      if(understood){enhanced='【主題】'+understood.topic+'\n【切入角度】'+understood.angle+'\n【核心論點】\n'+(understood.points||[]).map((p,i)=>`${i+1}. ${p}`).join('\n')+'\n【具體細節素材】\n'+(understood.details||[]).join('\n')+'\n【CTA方向】'+understood.cta+'\n\n【原始內容】\n'+inp}
-      lastInput=enhanced;stat('生成輪播中…');
-      let text=await callAPI(enhanced,null,5000);
-      let data=parseJSON(text);
-      if(!data){stat('備用方案中…');text=await callAPI(enhanced,buildPrompt(enhanced),3000);data=parseJSON(text)}
-      if(!data){stat('⚠ 生成失敗，請換個說法');return}
-      render(data,account);
-      document.querySelectorAll('.bg-el').forEach(b=>b.style.backgroundImage=BGU);
-      genCaption(inp);stat('✓ 完成');
-    }catch(e){stat('錯誤：'+e.message);console.error(e)}
-    finally{E('gb').disabled=false}
-  }
 
   /* ══ REFINE ══ */
   async function doRefine(){
