@@ -76,16 +76,16 @@ body{background:#0d0d0d;font-family:"Noto Serif TC",serif;display:flex;flex-dire
   position:absolute;bottom:-40px;right:-20px;
   font-family:"Noto Serif TC",serif;
   font-weight:900;font-size:480px;line-height:1;
-  color:rgba(200,175,120,0.042);
+  color:rgba(200,175,120,0.08);
   pointer-events:none;user-select:none;z-index:0;letter-spacing:-.04em;
 }
 .slide-hashtag{
   position:absolute;top:80px;left:88px;
   font-family:"Noto Serif TC",serif;
-  font-size:15px;letter-spacing:.16em;color:rgba(200,175,120,.6);
+  font-size:20px;letter-spacing:.16em;color:rgba(200,175,120,.6);
   z-index:10;pointer-events:none;font-weight:300
 }
-.slide-logo{position:absolute;top:68px;right:88px;width:64px;height:64px;object-fit:contain;z-index:10;pointer-events:none;opacity:.88}
+.slide-logo{position:absolute;top:60px;right:88px;width:88px;height:88px;object-fit:contain;z-index:10;pointer-events:none;opacity:.88}
 .slide-pgnum{
   position:absolute;bottom:72px;right:88px;
   font-family:"Noto Serif TC",serif;
@@ -95,7 +95,7 @@ body{background:#0d0d0d;font-family:"Noto Serif TC",serif;display:flex;flex-dire
 .slide-watermark{
   position:absolute;bottom:72px;left:50%;transform:translateX(-50%);
   font-family:"Noto Serif TC",serif;
-  font-size:14px;letter-spacing:.28em;color:rgba(200,175,120,.28);
+  font-size:20px;letter-spacing:.28em;color:rgba(200,175,120,.45);
   z-index:10;pointer-events:none;white-space:nowrap;font-weight:300
 }
 
@@ -116,8 +116,8 @@ body{background:#0d0d0d;font-family:"Noto Serif TC",serif;display:flex;flex-dire
 .la-div{width:72px;height:2px;background:linear-gradient(90deg,rgba(200,175,120,.8),transparent);margin:0 auto 24px}
 .la-sub{font-family:"Noto Serif TC",serif;font-size:32px;letter-spacing:.1em;color:var(--tm);line-height:1.9;margin-bottom:40px}
 .la-bio{border-top:1px solid rgba(200,175,120,.15);padding-top:22px}
-.la-bio-lbl{font-family:"Noto Serif TC",serif;font-size:15px;letter-spacing:.38em;color:rgba(200,175,120,.48);margin-bottom:10px;font-weight:300}
-.la-bio-txt{font-family:"Noto Serif TC",serif;font-size:26px;letter-spacing:.07em;color:rgba(220,215,205,.65);line-height:2.1}
+.la-bio-lbl{font-family:"Noto Serif TC",serif;font-size:18px;letter-spacing:.38em;color:rgba(200,175,120,.55);margin-bottom:12px;font-weight:400}
+.la-bio-txt{font-family:"Noto Serif TC",serif;font-size:28px;letter-spacing:.07em;color:rgba(220,215,205,.75);line-height:2.1}
 
 /* ══════════════════════════════════
    LAYOUT B · 大標置中 + 背景大數字
@@ -433,6 +433,7 @@ function olH(acct, pgNum){
     <img class="slide-logo" src="logo.png" alt="" onerror="this.style.display='none'">
     <div class="slide-watermark">${a}</div>
     <div class="slide-bgnum">${n}</div>
+    <div style="position:absolute;bottom:72px;right:88px;font-family:'Noto Serif TC',serif;font-size:15px;letter-spacing:.22em;color:rgba(200,175,120,.38);z-index:10;pointer-events:none;font-weight:300">向右觀看 →</div>
   `;
 }
 
@@ -589,14 +590,19 @@ function bLayoutF(d, slideId, pgNum, account){
 
 /* LAYOUT G — CTA，移除 lg-dots */
 function bCta(d, account, slideId, pgNum){
-  const s = document.createElement('div'); s.className = 'slide'; s.id = slideId;
+  const s = document.createElement('div');
+  s.className = 'slide'; s.id = slideId;
   const si = document.createElement('div'); si.className = 'si';
   si.innerHTML = `${bgH()}${ovH()}${olH(account, pgNum)}
     <div class="lg">
-      <div class="lg-main ed">${(d.main||'').replace(/\n/g,'<br>')}</div>
-      <div class="lg-sub ed">${(d.sub||'').replace(/\n/g,'<br>')}</div>
+      <div style="font-family:'Noto Serif TC',serif;font-size:18px;letter-spacing:.5em;color:rgba(200,175,120,.45);margin-bottom:36px;font-weight:300">◆ 最後一句話 ◆</div>
+      <div class="lg-main ed">${(d.main||'私訊我\n就是第一步').replace(/\n/g,'<br>')}</div>
+      <div class="lg-sub ed">${(d.sub||'不用準備什麼\n不用想太多\n只要你還在猶豫\n就先來問我').replace(/\n/g,'<br>')}</div>
       <div class="lg-vl deco"></div>
-      <div class="lg-cta deco"><div class="lg-ctatxt ed">${d.follow||''}</div></div>
+      <div class="lg-cta deco">
+        <div class="lg-ctatxt ed">${d.follow||'私訊我，我親自回覆'}</div>
+      </div>
+      <div style="font-family:'Noto Serif TC',serif;font-size:20px;letter-spacing:.18em;color:rgba(200,175,120,.35);margin-top:20px;margin-bottom:8px;font-weight:300">不要讓未來的你，討厭現在的自己</div>
       <div class="lg-acct ed">${account}</div>
     </div>
     <div class="safe-guide"></div>`;
