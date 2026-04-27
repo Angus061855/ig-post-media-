@@ -600,7 +600,7 @@ function wrapBar(wrap, slideEl, slideId, type, idx){
 }
 
 /* ══ RENDER ══ 7張固定版型 */
-function render(data, account){
+function render(cleanData(data), account{
   currentData = data; lastAccount = account;
   const wrap = E('wrap'); wrap.innerHTML = '';
   const cnt = data.content||[];
@@ -654,7 +654,11 @@ async function callAPI(inp, sys, max){
   return j.choices?.[0]?.message?.content||'';
 }
 function parseJSON(text){const s=text.indexOf('{'),e2=text.lastIndexOf('}');if(s===-1||e2===-1)return null;try{return JSON.parse(text.slice(s,e2+1))}catch(e){return null}}
-
+function cleanPunct(str){
+  if(!str)return str;
+  return str.replace(/[，。！？；：「」『』（）【】、]/g,'');
+}
+  
 function buildPrompt(topic){
   return `你是 IG 輪播貼文策略師。只輸出純 JSON，從 { 開始到 } 結束，不加任何說明文字。
 
@@ -754,7 +758,7 @@ async function doGen(){
       data = parseJSON(text);
     }
     if(!data){stat('⚠ 生成失敗，請換個說法');return}
-    render(data, account);
+    render(cleanData(data), account;
     document.querySelectorAll('.bg-el').forEach(b=>b.style.backgroundImage=BGU);
     genCaption(inp); stat('✓ 完成');
   }catch(e){stat('⚠ 錯誤：'+e.message);console.error(e)}
@@ -770,7 +774,7 @@ async function doRefine(){
     let data = parseJSON(text);
     if(!data){text=await callAPI(lastInput+'\n\n【調整指令】'+cmd, buildPrompt(lastInput), 3000);data=parseJSON(text)}
     if(!data){stat('⚠ 生成失敗');return}
-    render(data, lastAccount); document.querySelectorAll('.bg-el').forEach(b=>b.style.backgroundImage=BGU); stat('✓ 已根據指令更新');
+    render(cleanData(data), lastAccount); document.querySelectorAll('.bg-el').forEach(b=>b.style.backgroundImage=BGU); stat('✓ 已根據指令更新');
   }catch(e){stat('錯誤：'+e.message)}finally{E('gb').disabled=false}
 }
 
