@@ -514,9 +514,6 @@ function bLayoutD(d, slideId, pgNum, account){
     <div class="ld">
       ${d.tag?`<div class="ld-tag ed">${d.tag}</div>`:''}
       <div class="ld-heading ed">${(d.heading||'').replace(/\n/g,'<br>')}</div>
-      <div class="ld-stats">
-        ${statNums.map((n,i)=>`<div class="ld-stat"><div class="ld-sn">${n}</div><div class="ld-sl">${statLbls[i]}</div></div>`).join('')}
-      </div>
       <div class="ld-pts">${pts}</div>
     </div>
     <div class="safe-guide"></div>`;
@@ -549,7 +546,7 @@ function bLayoutE(d, slideId, pgNum, account){
           <div class="le-citem ed">${fmtDesc(p2.desc||'')}</div>
         </div>
       </div>
-      <div class="le-ft ed">${d.footer||d.tag||''}</div>
+      <div class="le-ft ed">${d.footer||''}</div>
     </div>
     <div class="safe-guide"></div>`;
   s.appendChild(si); att(s); return s;
