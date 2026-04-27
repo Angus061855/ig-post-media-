@@ -420,7 +420,6 @@ function olH(acct, pgNum){
   return `
     <div class="slide-hashtag">#AS娛樂經紀 大頭</div>
     <img class="slide-logo" src="logo.png" alt="" onerror="this.style.display='none'">
-    <div class="slide-pgnum">${n}</div>
     <div class="slide-watermark">${a}</div>
     <div class="slide-bgnum">${n}</div>
   `;
@@ -508,7 +507,7 @@ function bLayoutD(d, slideId, pgNum, account){
   const pts = (d.points||[]).map(p=>`
     <div class="ld-pt">
       <div class="ld-dot deco"></div>
-      <div class="ld-ptxt ed">${p.title||''}${p.desc?'　<span style="opacity:.65;font-size:20px">'+fmtDesc(p.desc)+'</span>':''}</div>
+      <div class="ld-ptxt ed">${p.title||''}<br><span style="opacity:.65;font-size:20px">${fmtDesc(p.desc)}</span></div>
     </div>`).join('');
   si.innerHTML = `${bgH()}${ovH()}${olH(account, pgNum)}
     <div class="ld">
