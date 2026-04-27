@@ -592,9 +592,9 @@ function bLayoutC(d, slideId, pgNum, account){
 function bLayoutD(d, slideId, pgNum, account){
   const s = document.createElement('div'); s.className = 'slide'; s.id = slideId;
   const si = document.createElement('div'); si.className = 'si';
-  const pts = (d.points||[]).map(p=>`
+  const pts = (d.points||[]).map((p,i)=>`
     <div class="ld-pt">
-      <div class="ld-num deco">${pts.indexOf(p)+1}</div>
+      <div class="ld-num deco">${i+1}</div>
       <div style="flex:1">
         <div class="ld-ptxt ed" style="font-weight:700;font-size:42px;color:rgba(200,175,120,1);margin-bottom:6px">${p.title||''}</div>
         <div class="ld-ptxt ed">${fmtDesc(p.desc||'')}</div>
