@@ -425,7 +425,7 @@ function att(slideEl){
 function bgH(){return`<div class="bg-el deco" style="background-image:${BGU};opacity:0.88;background-size:cover;background-position:center"></div>`}
 function ovH(){return`<div class="ov-el" style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(160deg,rgba(0,0,0,.2) 0%,rgba(6,4,2,.18) 55%,rgba(0,0,0,.22) 100%)"></div>`}
 
-function olH(acct, pgNum){
+function olH(acct, pgNum, hideArrow){
   const a = acct || E('ai-acct')?.value.trim() || '@angus061855';
   const n = pgNum || '';
   return `
@@ -433,7 +433,7 @@ function olH(acct, pgNum){
     <img class="slide-logo" src="logo.png" alt="" onerror="this.style.display='none'">
     <div class="slide-watermark">${a}</div>
     <div class="slide-bgnum">${n}</div>
-    <div style="position:absolute;bottom:72px;right:88px;font-family:'Noto Serif TC',serif;font-size:15px;letter-spacing:.22em;color:rgba(200,175,120,.38);z-index:10;pointer-events:none;font-weight:300">向右觀看 →</div>
+    ${hideArrow ? '' : `<div style="position:absolute;bottom:72px;right:88px;font-family:'Noto Serif TC',serif;font-size:15px;letter-spacing:.22em;color:rgba(200,175,120,.38);z-index:10;pointer-events:none;font-weight:300">向右觀看 →</div>`}
   `;
 }
 
@@ -593,9 +593,8 @@ function bCta(d, account, slideId, pgNum){
   const s = document.createElement('div');
   s.className = 'slide'; s.id = slideId;
   const si = document.createElement('div'); si.className = 'si';
-  si.innerHTML = `${bgH()}${ovH()}${olH(account, pgNum)}
+  si.innerHTML = `${bgH()}${ovH()}${olH(account, pgNum, true)}
     <div class="lg">
-      <div style="font-family:'Noto Serif TC',serif;font-size:18px;letter-spacing:.5em;color:rgba(200,175,120,.45);margin-bottom:36px;font-weight:300">◆ 最後一句話 ◆</div>
       <div class="lg-main ed">${(d.main||'私訊我\n就是第一步').replace(/\n/g,'<br>')}</div>
       <div class="lg-sub ed">${(d.sub||'不用準備什麼\n不用想太多\n只要你還在猶豫\n就先來問我').replace(/\n/g,'<br>')}</div>
       <div class="lg-vl deco"></div>
@@ -718,6 +717,7 @@ function buildPrompt(topic){
 - 每個 point.title：8～10字，一句話說清楚，第2頁可以更直白有衝擊感
 - 每個 point.desc：必須15字以上，有畫面感，說清楚細節，第2頁每個desc至少20字
 - 每頁3個 points 全部填完，不能留空，不能只有一兩個字
+-【格式規則】每頁的 tag 欄位只寫2-4個字的標題，例如「核心觀念」「行業現狀」「我的承諾」，禁止加數字編號、禁止加圓圈數字符號如①②③
 
 【風控規則】
 - 禁止明確薪資數字，改用模糊描述
