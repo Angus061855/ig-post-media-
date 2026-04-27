@@ -600,7 +600,7 @@ function wrapBar(wrap, slideEl, slideId, type, idx){
 }
 
 /* ══ RENDER ══ 7張固定版型 */
-function render(cleanData(data), account{
+function render(data, account){
   currentData = data; lastAccount = account;
   const wrap = E('wrap'); wrap.innerHTML = '';
   const cnt = data.content||[];
@@ -657,6 +657,16 @@ function parseJSON(text){const s=text.indexOf('{'),e2=text.lastIndexOf('}');if(s
 function cleanPunct(str){
   if(!str)return str;
   return str.replace(/[，。！？；：「」『』（）【】、]/g,'');
+}
+function cleanData(d){
+  const c=s=>typeof s==='string'?cleanPunct(s):s;
+  const cp=arr=>(arr||[]).map(p=>({title:c(p.title),desc:c(p.desc)}));
+  if(d.cover){d.cover.eyebrow=c(d.cover.eyebrow);d.cover.title=c(d.cover.title);d.cover.subtitle=c(d.cover.subtitle)}
+  if(d.story){d.story.tag=c(d.story.tag);d.story.heading=c(d.story.heading);d.story.points=cp(d.story.points)}
+  (d.content||[]).forEach(ct=>{ct.tag=c(ct.tag);ct.heading=c(ct.heading);ct.points=cp(ct.points)});
+  if(d.summary){d.summary.tag=c(d.summary.tag);d.summary.heading=c(d.summary.heading);d.summary.points=cp(d.summary.points)}
+  if(d.cta){d.cta.main=c(d.cta.main);d.cta.sub=c(d.cta.sub);d.cta.follow=c(d.cta.follow)}
+  return d;
 }
   
 function buildPrompt(topic){
@@ -758,7 +768,7 @@ async function doGen(){
       data = parseJSON(text);
     }
     if(!data){stat('⚠ 生成失敗，請換個說法');return}
-    render(cleanData(data), account;
+    render(cleanData(data), account);
     document.querySelectorAll('.bg-el').forEach(b=>b.style.backgroundImage=BGU);
     genCaption(inp); stat('✓ 完成');
   }catch(e){stat('⚠ 錯誤：'+e.message);console.error(e)}
