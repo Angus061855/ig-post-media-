@@ -156,9 +156,9 @@ body{background:#0d0d0d;font-family:"Noto Serif TC",serif;display:flex;flex-dire
 .lb-pts{display:flex;flex-direction:column;gap:0;position:relative;z-index:1;width:100%}
 .lb-pt{display:flex;align-items:stretch;gap:0;padding:18px 0;border-bottom:1px solid rgba(200,175,120,.09)}
 .lb-pt:first-child{border-top:1px solid rgba(200,175,120,.09)}
-.lb-ptnum{font-family:"Noto Serif TC",serif;font-weight:900;font-size:14px;letter-spacing:.05em;color:rgba(200,175,120,.4);flex-shrink:0;padding-top:4px;width:36px}
+.lb-ptnum{font-family:"Noto Serif TC",serif;font-weight:900;font-size:36px;letter-spacing:.05em;color:rgba(200,175,120,.4);flex-shrink:0;padding-top:4px;width:36px}
 .lb-ptbody{}
-.lb-ptt{font-family:"Noto Serif TC",serif;font-weight:700;font-size:36px;letter-spacing:.06em;color:var(--tw);line-height:1.3;margin-bottom:8px}
+.lb-ptt{font-family:"Noto Serif TC",serif;font-weight:700;font-size:36px;letter-spacing:.06em;color:rgba(200,175,120,1);line-height:1.3;margin-bottom:8px}
 .lb-ptd{font-family:"Noto Serif TC",serif;font-size:26px;letter-spacing:.05em;color:var(--tm);line-height:1.8}
 
 /* ══ LAYOUT C ══ */
@@ -176,10 +176,11 @@ body{background:#0d0d0d;font-family:"Noto Serif TC",serif;display:flex;flex-dire
 .lc-heading{font-family:"Noto Serif TC",serif;font-weight:900;font-size:76px;line-height:1.1;letter-spacing:.05em;color:var(--tw);word-break:break-all;text-shadow:0 2px 20px rgba(0,0,0,.5);margin-bottom:36px}
 .lc-cards{display:flex;flex-direction:column;gap:14px}
 .lc-card{display:flex;align-items:stretch;background:rgba(200,175,120,.035);border:1px solid rgba(200,175,120,.09);border-left:3px solid rgba(200,175,120,.55);border-radius:0 4px 4px 0}
-.lc-num{font-family:"Noto Serif TC",serif;font-weight:900;font-size:16px;letter-spacing:.05em;color:rgba(200,175,120,.48);padding:20px 16px 20px 20px;flex-shrink:0;min-width:64px;text-align:center;border-right:1px solid rgba(200,175,120,.07);display:flex;align-items:center;justify-content:center}
+.lc-num{font-family:"Noto Serif TC",serif;font-weight:900;font-size:36px;letter-spacing:.05em;color:rgba(200,175,120,.48);padding:20px 16px 20px 20px;flex-shrink:0;min-width:64px;text-align:center;border-right:1px solid rgba(200,175,120,.07);display:flex;align-items:center;justify-content:center}
 .lc-body{padding:18px 22px}
-.lc-title{font-family:"Noto Serif TC",serif;font-weight:700;font-size:36px;letter-spacing:.06em;color:var(--tw);line-height:1.3;margin-bottom:8px}
+.lc-title{font-family:"Noto Serif TC",serif;font-weight:700;font-size:36px;letter-spacing:.06em;color:rgba(200,175,120,1);line-height:1.3;margin-bottom:8px}
 .lc-desc{font-family:"Noto Serif TC",serif;font-size:26px;letter-spacing:.05em;color:var(--tm);line-height:1.85}
+
 
 /* ══ LAYOUT D ══ */
 .ld{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:120px 120px}
@@ -254,8 +255,8 @@ body{background:#0d0d0d;font-family:"Noto Serif TC",serif;display:flex;flex-dire
 .lf-list{display:flex;flex-direction:column}
 .lf-item{display:flex;align-items:flex-start;gap:28px;padding:20px 0;border-bottom:1px solid rgba(200,175,120,.09)}
 .lf-item:first-child{border-top:1px solid rgba(200,175,120,.09)}
-.lf-idx{font-family:"Noto Serif TC",serif;font-weight:900;font-size:14px;letter-spacing:.08em;color:rgba(200,175,120,.35);flex-shrink:0;padding-top:5px;width:28px}
-.lf-it{font-family:"Noto Serif TC",serif;font-weight:700;font-size:36px;letter-spacing:.06em;color:var(--tw);line-height:1.3;margin-bottom:8px}
+.lf-idx{font-family:"Noto Serif TC",serif;font-weight:900;font-size:36px;letter-spacing:.08em;color:rgba(200,175,120,.35);flex-shrink:0;padding-top:5px;width:28px}
+.lf-it{font-family:"Noto Serif TC",serif;font-weight:700;font-size:36px;letter-spacing:.06em;color:rgba(200,175,120,1);line-height:1.3;margin-bottom:8px}
 .lf-id{font-family:"Noto Serif TC",serif;font-size:24px;letter-spacing:.05em;color:var(--tm);line-height:1.85}
 
 /* ══ LAYOUT G CTA ══ */
@@ -594,7 +595,7 @@ function bLayoutD(d, slideId, pgNum, account){
     <div class="ld-pt">
       <div class="ld-dot deco"></div>
       <div style="flex:1">
-        <div class="ld-ptxt ed" style="font-weight:700;font-size:42px;color:var(--tw);margin-bottom:6px">${p.title||''}</div>
+        <div class="ld-ptxt ed" style="font-weight:700;font-size:42px;color:rgba(200,175,120,1);margin-bottom:6px">${p.title||''}</div>
         <div class="ld-ptxt ed">${fmtDesc(p.desc||'')}</div>
       </div>
     </div>`).join('');
