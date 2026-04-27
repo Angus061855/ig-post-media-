@@ -1,60 +1,3 @@
-
-Claude finished the response
-You said: 第一張圖的字讓他置中 置中 置中 往上移到中線
-
-<!DOCTYPE html> <html lang="zh-TW"> <head> <meta charset="UTF-8"> <link rel="preconnect" href="https://fonts.googleapis.com"> <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500;700;900&family=Noto+S
-
-pasted
-
-第一張圖的字讓他置中 置中 置中 往上移到中線   
-
-第二張圖叫你要給我有意義的字 他沒有按照我的prompt啊 
- 而且還不是有那個02？ 我不是說我不要0? 
-甚至其他圖都沒有那個陰影序列？  頁碼是全部頁面都要有而且只要1.2.3.4.5.6.7 陰影的那個
-
-而且其他文的字都太少了 多一點 他完全都沒有按照我的prompt啊
-
-prompt 加上 【7頁結構】 第1頁封面：強鉤子大標題兩行，副標一句話點出核心痛點15～20字 第2頁：業界真實亂象或受眾真實痛點，建立信任感，3個具體重點有畫面感 第3頁：問題根源，3個重點，標題8～10字，說明15～20字 第4頁：可執行的步驟，給出具體步驟讓人知道怎麼保護自己，3個重點可操作可帶走 第5頁：補充說明或注意事項，用對比句或反問句，衝擊感強 第6頁：總結清單，heading用反問句，預告下一步行動 第7頁CTA：主標4～8字直接有力，副文說清楚私訊能得到什麼，結尾「私訊我」
-
-Show more
-下午4:34
-Claude responded: 好，我來分析你說的所有問題：
-
-Read the frontend design skill
-Read the frontend design skill
-好，我來分析你說的所有問題：
-
-第1張：標題文字置中，往上移到中線
-第2張：背景大數字不要有"0"前綴（改成純數字 2、3、4...），而且要所有頁面都有陰影大數字
-頁碼：所有頁面都要有 1-7 的陰影大數字
-文字內容太少：加強 prompt 要求字數更多
-Prompt 中的 【7頁結構】 要完整且更嚴格執行
-
-Created a file, read a file
-Created a file, read a file
-修好了，這次改了以下幾個地方：
-
-第1張封面 — padding-bottom:160px 讓整個內容區塊視覺上往上移，達到「偏上中線」的效果。
-
-背景陰影大數字（全頁統一） — 改成在 olH() 這個共用函式裡直接輸出 <div class="slide-bgnum">${n}</div>，所有 7 張都會自動帶入。數字純粹用頁碼 1 2 3 4 5 6 7，不再有 02 這種帶零的格式。
-
-頁碼 — 同樣透過 olH(account, pgNum) 統一，傳入的是純數字 1~7。
-
-第2張版型 — 改成 lb 清單版，直接列出 3 個重點（title + desc），而不是原本只顯示一個 desc，內容更豐富。
-
-Prompt 強化 — 每個 desc 至少 15 字以上，第2頁 desc 至少 20 字，明確要求每頁不能只有幾個字，並加了完整的 7 頁結構說明給 AI 參考。
-
-
-Index
-Code · HTML 
-
-
-
-
-Claude is AI and can make mistakes. Please double-check responses.
-Index · HTML
-Copy
-
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
@@ -68,7 +11,7 @@ Copy
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{--gold:rgba(200,175,120,1);--gold-d:rgba(200,175,120,.6);--red:#c8392b;--bg:#0a0a0a;--bg2:#181818;--border:#252525;--tw:#f5f2ec;--tm:rgba(240,235,225,.82);--ts:rgba(220,215,205,.55)}
 body{background:#0d0d0d;font-family:"Noto Serif TC",serif;display:flex;flex-direction:column;align-items:center;padding:24px 20px 120px;min-height:100vh}
- 
+
 /* ── TABS ── */
 #app-tabs{width:100%;max-width:1220px;display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:0}
 .app-tab{font-family:"Noto Serif TC",serif;font-size:12px;letter-spacing:.2em;padding:9px 24px;cursor:pointer;border:1px solid transparent;border-bottom:none;border-radius:3px 3px 0 0;color:rgba(200,175,120,.4);background:transparent;transition:all .15s;margin-bottom:-1px}
@@ -76,7 +19,7 @@ body{background:#0d0d0d;font-family:"Noto Serif TC",serif;display:flex;flex-dire
 .app-tab:hover:not(.on){color:var(--gold-d)}
 .app-panel{display:none;width:100%;flex-direction:column;align-items:center}
 .app-panel.on{display:flex}
- 
+
 /* ── TOPBAR ── */
 #topbar{width:100%;max-width:1220px;display:flex;align-items:center;gap:8px;background:var(--bg2);border:1px solid var(--border);padding:10px 16px;margin-bottom:12px;flex-wrap:wrap;border-radius:0 0 3px 3px}
 #topbar h1{font-size:14px;letter-spacing:.28em;color:var(--gold);white-space:nowrap;font-weight:500}
@@ -91,7 +34,7 @@ body{background:#0d0d0d;font-family:"Noto Serif TC",serif;display:flex;flex-dire
 #bgf{display:none}
 #bg-btn{background:transparent;color:rgba(200,175,120,.4);border:1px solid #2a2a2a;font-size:11px}#bg-btn:hover{border-color:var(--gold-d);color:var(--gold)}
 #st{font-size:11px;letter-spacing:.1em;color:rgba(200,175,120,.4);white-space:nowrap}
- 
+
 /* ── FLOATING TOOLBAR ── */
 #ftb{position:fixed;z-index:9999;display:none;background:#1d1d1d;border:1px solid #363636;box-shadow:0 8px 36px rgba(0,0,0,.85);padding:4px 7px;gap:1px;align-items:center;flex-wrap:wrap;max-width:760px;border-radius:4px;pointer-events:auto}
 #ftb.on{display:flex!important}
@@ -108,7 +51,7 @@ body{background:#0d0d0d;font-family:"Noto Serif TC",serif;display:flex;flex-dire
 .fsl{display:flex;align-items:center;gap:3px}.fsl input[type=range]{width:65px;accent-color:var(--gold);height:3px;cursor:pointer}.fsl span{font-size:9px;color:rgba(200,175,120,.38);min-width:24px}
 #gtx,#gdc,#gbg{display:none;align-items:center;gap:1px;flex-wrap:wrap}
 #gtx.on,#gdc.on,#gbg.on{display:flex}
- 
+
 /* ── SLIDES ── */
 #wrap{display:flex;flex-direction:column;align-items:center;gap:48px;width:100%;margin-top:16px}
 .slide-outer{display:flex;flex-direction:column;align-items:flex-start;gap:0}
@@ -124,7 +67,7 @@ body{background:#0d0d0d;font-family:"Noto Serif TC",serif;display:flex;flex-dire
 .slide-bar{display:flex;align-items:center;gap:6px;padding:5px 0;width:1080px;flex-wrap:wrap}
 .regen-btn{background:transparent;border:1px solid #333;color:rgba(200,175,120,.45);font-family:inherit;font-size:10px;letter-spacing:.12em;padding:4px 10px;cursor:pointer;border-radius:2px;transition:all .12s}
 .regen-btn:hover{border-color:rgba(200,175,120,.6);color:rgba(200,175,120,.9)}
- 
+
 /* ── SHARED OVERLAY ELEMENTS ── */
 /* 陰影大背景頁碼 — 所有頁面通用，純數字不加0 */
 .slide-bgnum{
@@ -146,7 +89,7 @@ body{background:#0d0d0d;font-family:"Noto Serif TC",serif;display:flex;flex-dire
 /* 頁碼 → 右下角，純數字 1-7 */
 .slide-pgnum{position:absolute;bottom:72px;right:88px;font-family:"Noto Sans TC",sans-serif;font-size:13px;letter-spacing:.2em;color:rgba(200,175,120,.32);z-index:10;pointer-events:none;font-weight:300}
 .slide-watermark{position:absolute;bottom:72px;left:50%;transform:translateX(-50%);font-family:"Noto Sans TC",sans-serif;font-size:14px;letter-spacing:.28em;color:rgba(200,175,120,.28);z-index:10;pointer-events:none;white-space:nowrap;font-weight:300}
- 
+
 /* ══════════════════════════════════
    LAYOUT A · 封面 · 標題置中 往上至中線
 ══════════════════════════════════ */
@@ -163,7 +106,7 @@ body{background:#0d0d0d;font-family:"Noto Serif TC",serif;display:flex;flex-dire
 .la-bio{border-top:1px solid rgba(200,175,120,.15);padding-top:22px}
 .la-bio-lbl{font-family:"Noto Sans TC",sans-serif;font-size:12px;letter-spacing:.38em;color:rgba(200,175,120,.48);margin-bottom:10px;font-weight:300}
 .la-bio-txt{font-family:"Noto Serif TC",serif;font-size:19px;letter-spacing:.07em;color:rgba(220,215,205,.65);line-height:2.1}
- 
+
 /* ══════════════════════════════════
    LAYOUT B · 大標置中 + 背景大數字
 ══════════════════════════════════ */
@@ -179,7 +122,7 @@ body{background:#0d0d0d;font-family:"Noto Serif TC",serif;display:flex;flex-dire
 .lb-ptbody{}
 .lb-ptt{font-family:"Noto Serif TC",serif;font-weight:700;font-size:30px;letter-spacing:.06em;color:var(--tw);line-height:1.3;margin-bottom:8px}
 .lb-ptd{font-family:"Noto Serif TC",serif;font-size:22px;letter-spacing:.05em;color:var(--tm);line-height:1.8}
- 
+
 /* ══════════════════════════════════
    LAYOUT C · 卡片左框
 ══════════════════════════════════ */
@@ -192,7 +135,7 @@ body{background:#0d0d0d;font-family:"Noto Serif TC",serif;display:flex;flex-dire
 .lc-body{padding:18px 22px}
 .lc-title{font-family:"Noto Serif TC",serif;font-weight:700;font-size:29px;letter-spacing:.06em;color:var(--tw);line-height:1.3;margin-bottom:8px}
 .lc-desc{font-family:"Noto Serif TC",serif;font-size:21px;letter-spacing:.05em;color:var(--tm);line-height:1.85}
- 
+
 /* ══════════════════════════════════
    LAYOUT D · 數字強調
 ══════════════════════════════════ */
@@ -208,7 +151,7 @@ body{background:#0d0d0d;font-family:"Noto Serif TC",serif;display:flex;flex-dire
 .ld-pt:last-child{border-bottom:none}
 .ld-dot{width:5px;height:5px;background:rgba(200,175,120,.55);border-radius:50%;flex-shrink:0;margin-top:10px}
 .ld-ptxt{font-family:"Noto Serif TC",serif;font-size:23px;letter-spacing:.06em;color:var(--tm);line-height:1.7}
- 
+
 /* ══════════════════════════════════
    LAYOUT E · 對比框
 ══════════════════════════════════ */
@@ -224,7 +167,7 @@ body{background:#0d0d0d;font-family:"Noto Serif TC",serif;display:flex;flex-dire
 .le-clbl2{font-family:"Noto Sans TC",sans-serif;font-size:12px;letter-spacing:.3em;color:rgba(200,175,120,.45);margin-bottom:10px;font-weight:300}
 .le-citem{font-family:"Noto Serif TC",serif;font-size:22px;letter-spacing:.05em;color:var(--tm);line-height:2}
 .le-ft{font-family:"Noto Serif TC",serif;font-size:22px;letter-spacing:.07em;color:rgba(200,175,120,.45);line-height:1.8;border-top:1px solid rgba(200,175,120,.1);padding-top:20px}
- 
+
 /* ══════════════════════════════════
    LAYOUT F · 分隔線清單
 ══════════════════════════════════ */
@@ -237,7 +180,7 @@ body{background:#0d0d0d;font-family:"Noto Serif TC",serif;display:flex;flex-dire
 .lf-idx{font-family:"Noto Sans TC",sans-serif;font-weight:900;font-size:13px;letter-spacing:.08em;color:rgba(200,175,120,.35);flex-shrink:0;padding-top:5px;width:28px}
 .lf-it{font-family:"Noto Serif TC",serif;font-weight:700;font-size:29px;letter-spacing:.06em;color:var(--tw);line-height:1.3;margin-bottom:8px}
 .lf-id{font-family:"Noto Serif TC",serif;font-size:22px;letter-spacing:.05em;color:var(--tm);line-height:1.85}
- 
+
 /* ══════════════════════════════════
    LAYOUT G · CTA 結尾
 ══════════════════════════════════ */
@@ -249,7 +192,7 @@ body{background:#0d0d0d;font-family:"Noto Serif TC",serif;display:flex;flex-dire
 .lg-cta{border:1px solid rgba(200,175,120,.28);padding:17px 52px;margin-bottom:28px}
 .lg-ctatxt{font-family:"Noto Serif TC",serif;font-size:30px;letter-spacing:.16em;color:var(--gold)}
 .lg-acct{font-family:"Noto Sans TC",sans-serif;font-size:21px;letter-spacing:.26em;color:rgba(200,175,120,.5);font-weight:300}
- 
+
 /* ── CAPTION ── */
 #caption-box{width:100%;max-width:1220px;background:var(--bg2);border:1px solid var(--border);border-radius:3px;padding:14px 18px;margin-bottom:16px;display:none}
 #caption-box.on{display:block}
@@ -258,7 +201,7 @@ body{background:#0d0d0d;font-family:"Noto Serif TC",serif;display:flex;flex-dire
 .cap-btn{background:transparent;border:1px solid #333;color:rgba(200,175,120,.5);font-family:inherit;font-size:11px;letter-spacing:.1em;padding:4px 10px;cursor:pointer;border-radius:2px;transition:all .12s}
 .cap-btn:hover{border-color:var(--gold-d);color:var(--gold)}
 #caption-pre{width:100%;background:#0e0e0e;border:1px solid #2a2a2a;border-radius:2px;padding:14px 18px;color:#e0d8c8;font-family:"Noto Serif TC",serif;font-size:13px;letter-spacing:.06em;line-height:2;height:360px;resize:vertical;outline:none}
- 
+
 /* ── REFINE PANELS ── */
 .rpanel{display:none;position:fixed;z-index:99999;background:#1d1d1d;border:1px solid #3a3a3a;border-radius:6px;box-shadow:0 12px 48px rgba(0,0,0,.9);padding:20px;width:360px}
 .rp-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
@@ -270,7 +213,7 @@ body{background:#0d0d0d;font-family:"Noto Serif TC",serif;display:flex;flex-dire
 .rp-ta{width:100%;background:#111;border:1px solid #2a2a2a;border-radius:3px;color:#e0d8c8;font-family:"Noto Serif TC",serif;font-size:12px;letter-spacing:.06em;padding:10px;outline:none;resize:none;height:80px;line-height:1.7;margin-bottom:10px}
 .rp-sub{width:100%;background:var(--gold);color:#0a0a0a;border:none;font-family:"Noto Serif TC",serif;font-size:13px;letter-spacing:.2em;padding:10px;cursor:pointer;border-radius:3px;font-weight:700}
 #rp-main{bottom:32px;right:32px}#rp-slide{bottom:32px;left:32px}#rp-cap{bottom:32px;left:420px}
- 
+
 /* ── STORY ── */
 #story-action-bar{width:100%;max-width:1220px;display:flex;align-items:center;gap:8px;margin-bottom:16px;flex-wrap:wrap;margin-top:16px}
 .sgbtn{font-family:"Noto Serif TC",serif;font-size:11px;letter-spacing:.18em;padding:8px 16px;cursor:pointer;border-radius:2px;transition:all .15s}
@@ -289,12 +232,12 @@ body{background:#0d0d0d;font-family:"Noto Serif TC",serif;display:flex;flex-dire
 </style>
 </head>
 <body>
- 
+
 <div id="app-tabs">
   <button class="app-tab on" onclick="switchTab('post')">🎠 IG 輪播貼文</button>
   <button class="app-tab" onclick="switchTab('story')">⚡ 限時動態</button>
 </div>
- 
+
 <!-- ══ POST PANEL ══ -->
 <div id="panel-post" class="app-panel on">
 <div id="topbar">
@@ -309,7 +252,7 @@ body{background:#0d0d0d;font-family:"Noto Serif TC",serif;display:flex;flex-dire
   <button class="tb-btn" id="db" onclick="dlAll()">↓ 下載 ZIP</button>
   <span id="st"></span>
 </div>
- 
+
 <div id="caption-box">
   <div class="cap-hd">
     <span class="cap-title">✦ IG 貼文文案</span>
@@ -318,7 +261,7 @@ body{background:#0d0d0d;font-family:"Noto Serif TC",serif;display:flex;flex-dire
   </div>
   <textarea id="caption-pre"></textarea>
 </div>
- 
+
 <!-- Floating Toolbar -->
 <div id="ftb">
   <span id="gtx">
@@ -350,10 +293,10 @@ body{background:#0d0d0d;font-family:"Noto Serif TC",serif;display:flex;flex-dire
     <div class="fsl"><input type="range" id="fov" min="0" max="100" step="1" value="100" oninput="ba('ov',this.value)"/><span id="vov">100%</span></div>
   </span>
 </div>
- 
+
 <div id="wrap"><div class="ph-empty">輸入內容後按「✦ 產生」</div></div>
 </div>
- 
+
 <!-- ══ STORY PANEL ══ -->
 <div id="panel-story" class="app-panel" style="margin-top:16px">
 <div class="sv-bar">
@@ -373,7 +316,7 @@ body{background:#0d0d0d;font-family:"Noto Serif TC",serif;display:flex;flex-dire
 </div>
 <div id="story-wrap"></div>
 </div>
- 
+
 <!-- ══ REFINE PANELS ══ -->
 <div id="rp-main" class="rpanel">
   <div class="rp-hd"><span class="rp-title">✦ 調整整組</span><button class="rp-close" onclick="this.closest('.rpanel').style.display='none'">×</button></div>
@@ -411,7 +354,7 @@ body{background:#0d0d0d;font-family:"Noto Serif TC",serif;display:flex;flex-dire
   <textarea class="rp-ta" id="rp-cap-ta" placeholder="自己輸入指令…"></textarea>
   <button class="rp-sub" onclick="doCaptionRefine()">✦ 套用指令重生文案</button>
 </div>
- 
+
 <script>
 /* ══ STATE ══ */
 let SEL=null,SMODE='txt',savedSel=null;
@@ -422,15 +365,15 @@ const E=id=>document.getElementById(id);
 const SS=(id,v)=>{const el=E(id);if(el)el.textContent=v};
 const SG=(id,v)=>{const el=E(id);if(el)el.value=v};
 const stat=m=>{const el=E('st');if(el)el.textContent=m};
- 
+
 /* ══ KEY ══ */
 function saveKey(v){if(v)localStorage.setItem('groq_key',v)}
 function loadKey(){const k=localStorage.getItem('groq_key')||'';if(k){const i=E('groq-key');if(i)i.value=k}return k}
- 
+
 /* ══ BG ══ */
 function uploadBg(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{BGU=`url("${ev.target.result}")`;document.querySelectorAll('.bg-el').forEach(b=>b.style.backgroundImage=BGU);stat('✓ 背景已更新')};r.readAsDataURL(f);e.target.value=''}
 function uploadStoryBg(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{storyBGU=`url("${ev.target.result}")`;document.querySelectorAll('.s-bg').forEach(b=>b.style.backgroundImage=storyBGU);E('s-st').textContent='✓ 背景已更新'};r.readAsDataURL(f);e.target.value=''}
- 
+
 /* ══ TOOLBAR ══ */
 function posTB(e){const tb=E('ftb');const r=e.getBoundingClientRect();let top=r.top-48;if(top<8)top=r.bottom+6;let left=r.left;if(left+760>window.innerWidth-8)left=window.innerWidth-768;if(left<8)left=8;tb.style.top=top+'px';tb.style.left=left+'px';tb.classList.add('on')}
 function hideTB(){E('ftb').classList.remove('on')}
@@ -452,7 +395,7 @@ document.addEventListener('mousedown',e=>{if(!e.target.closest('.slide')&&!e.tar
 window.addEventListener('scroll',repTB);
 document.addEventListener('keydown',e=>{if(!SEL)return;if(e.key!=='Delete'&&e.key!=='Backspace')return;const inEd=document.activeElement?.getAttribute('contenteditable')==='true';if(!inEd){e.preventDefault();delEl()}});
 function setRef(id,txt){E(id).value=txt}
- 
+
 /* ══ ATTACH ══ */
 function att(slideEl){
   const si=slideEl.querySelector('.si');
@@ -465,11 +408,11 @@ function att(slideEl){
   });
   si.querySelectorAll('.deco').forEach(e=>{e.addEventListener('mousedown',ev=>{ev.stopPropagation();selEl(e,e.classList.contains('bg-el')?'bg':'deco')})});
 }
- 
+
 /* ══ HTML HELPERS ══ */
 function bgH(){return`<div class="bg-el deco" style="background-image:${BGU};opacity:0.88;background-size:cover;background-position:center"></div>`}
 function ovH(){return`<div class="ov-el" style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(160deg,rgba(0,0,0,.2) 0%,rgba(6,4,2,.18) 55%,rgba(0,0,0,.22) 100%)"></div>`}
- 
+
 /* 通用 overlay：hashtag + logo + 頁碼(純數字) + watermark + 陰影大數字 */
 function olH(acct, pgNum){
   const a = acct || E('ai-acct')?.value.trim() || '@angus061855';
@@ -482,11 +425,11 @@ function olH(acct, pgNum){
     <div class="slide-bgnum">${n}</div>
   `;
 }
- 
+
 function fmtDesc(desc){if(!desc)return'';return desc.replace(/\n/g,'<br>')}
- 
+
 /* ══ 7 LAYOUT BUILDERS ══ */
- 
+
 /* LAYOUT A · 封面 · 置中 往上偏移 */
 function bCover(d, account, pgNum){
   const parts = (d.title||'').split('\n');
@@ -510,7 +453,7 @@ function bCover(d, account, pgNum){
     <div class="safe-guide"></div>`;
   s.appendChild(si); att(s); return s;
 }
- 
+
 /* LAYOUT B · 3重點清單版 */
 function bLayoutB(d, slideId, pgNum, account){
   const s = document.createElement('div'); s.className = 'slide'; s.id = slideId;
@@ -533,7 +476,7 @@ function bLayoutB(d, slideId, pgNum, account){
     <div class="safe-guide"></div>`;
   s.appendChild(si); att(s); return s;
 }
- 
+
 /* LAYOUT C · 卡片左框 */
 function bLayoutC(d, slideId, pgNum, account){
   const s = document.createElement('div'); s.className = 'slide'; s.id = slideId;
@@ -555,7 +498,7 @@ function bLayoutC(d, slideId, pgNum, account){
     <div class="safe-guide"></div>`;
   s.appendChild(si); att(s); return s;
 }
- 
+
 /* LAYOUT D · 數字強調 */
 function bLayoutD(d, slideId, pgNum, account){
   const s = document.createElement('div'); s.className = 'slide'; s.id = slideId;
@@ -579,7 +522,7 @@ function bLayoutD(d, slideId, pgNum, account){
     <div class="safe-guide"></div>`;
   s.appendChild(si); att(s); return s;
 }
- 
+
 /* LAYOUT E · 對比框 */
 function bLayoutE(d, slideId, pgNum, account){
   const s = document.createElement('div'); s.className = 'slide'; s.id = slideId;
@@ -611,7 +554,7 @@ function bLayoutE(d, slideId, pgNum, account){
     <div class="safe-guide"></div>`;
   s.appendChild(si); att(s); return s;
 }
- 
+
 /* LAYOUT F · 分隔線清單 */
 function bLayoutF(d, slideId, pgNum, account){
   const s = document.createElement('div'); s.className = 'slide'; s.id = slideId;
@@ -633,7 +576,7 @@ function bLayoutF(d, slideId, pgNum, account){
     <div class="safe-guide"></div>`;
   s.appendChild(si); att(s); return s;
 }
- 
+
 /* LAYOUT G · CTA */
 function bCta(d, account, slideId, pgNum){
   const s = document.createElement('div'); s.className = 'slide'; s.id = slideId;
@@ -649,7 +592,7 @@ function bCta(d, account, slideId, pgNum){
     <div class="safe-guide"></div>`;
   s.appendChild(si); att(s); return s;
 }
- 
+
 /* ══ WRAP WITH BAR ══ */
 function wrapBar(wrap, slideEl, slideId, type, idx){
   const outer = document.createElement('div'); outer.className = 'slide-outer';
@@ -659,7 +602,7 @@ function wrapBar(wrap, slideEl, slideId, type, idx){
     <button class="regen-btn" onclick="openSlideRefine('${slideId}','${type}',${idx})">↻ 重生此頁</button>`;
   outer.appendChild(bar); wrap.appendChild(outer);
 }
- 
+
 /* ══ RENDER ══ 7張固定版型 */
 function render(data, account){
   currentData = data; lastAccount = account;
@@ -669,43 +612,43 @@ function render(data, account){
   const hasSummary = !!(data.summary && data.summary.heading);
   // 純數字頁碼 1-7
   const pg = n => String(n);
- 
+
   // 張1 封面 Layout A
   const s1 = bCover(data.cover, account, pg(1));
   wrapBar(wrap, s1, 'slide-1', 'cover', 0);
- 
+
   // 張2 story/content[0] Layout B (3重點清單)
   const d2 = hasStory ? data.story : (cnt[0]||{});
   const s2 = bLayoutB(d2, 'slide-2', pg(2), account);
   wrapBar(wrap, s2, 'slide-2', 'content', 0);
- 
+
   // 張3 content[0 or 1] Layout C
   const d3 = hasStory ? (cnt[0]||{}) : (cnt[1]||{});
   const s3 = bLayoutC(d3, 'slide-3', pg(3), account);
   wrapBar(wrap, s3, 'slide-3', 'content', 1);
- 
+
   // 張4 content[1 or 2] Layout D
   const d4 = hasStory ? (cnt[1]||{}) : (cnt[2]||{});
   const s4 = bLayoutD(d4, 'slide-4', pg(4), account);
   wrapBar(wrap, s4, 'slide-4', 'content', 2);
- 
+
   // 張5 content[2 or 3] Layout E
   const d5 = hasStory ? (cnt[2]||{}) : (cnt[3]||{});
   const s5 = bLayoutE(d5, 'slide-5', pg(5), account);
   wrapBar(wrap, s5, 'slide-5', 'content', 3);
- 
+
   // 張6 summary/content[3] Layout F
   const d6 = hasSummary ? data.summary : (cnt[3]||cnt[hasStory?3:4]||{});
   const s6 = bLayoutF(d6, 'slide-6', pg(6), account);
   wrapBar(wrap, s6, 'slide-6', 'content', 4);
- 
+
   // 張7 CTA Layout G
   const s7 = bCta(data.cta, account, 'slide-7', pg(7));
   wrapBar(wrap, s7, 'slide-7', 'cta', 5);
- 
+
   E('db').style.display = 'block'; E('rgb').style.display = 'block';
 }
- 
+
 /* ══ API ══ */
 async function callAPI(inp, sys, max){
   const key = E('groq-key')?.value.trim()||loadKey();
@@ -715,24 +658,24 @@ async function callAPI(inp, sys, max){
   return j.choices?.[0]?.message?.content||'';
 }
 function parseJSON(text){const s=text.indexOf('{'),e2=text.lastIndexOf('}');if(s===-1||e2===-1)return null;try{return JSON.parse(text.slice(s,e2+1))}catch(e){return null}}
- 
+
 function buildPrompt(topic){
   return `你是 IG 輪播貼文策略師。只輸出純 JSON，從 { 開始到 } 結束，不加任何說明文字。
- 
+
 【重要素材規則】
 - 根據我提供的核心論點和具體細節素材來生成，不要自己發明不相關的內容
 - 素材裡有的具體數字、案例、說法，必須完整保留在輸出裡
- 
+
 【角色設定】
 你是七年娛樂經紀人（男性），專業、誠實、說到做到，以「踢爆業界黑心手法」聞名。
 說話直接不畫大餅，是新人女孩的安全守護者。
- 
+
 【目標受眾】
 18-30 歲想賺錢但內心不安的女生，害怕進入八大行業被騙、被限制人身自由、遇到不負責的經紀人。
- 
+
 【任務】
 生成一篇 IG 輪播貼文，共 7 頁，嚴格按照以下結構：
- 
+
 【7頁結構 — 嚴格執行，每頁主題不能重複】
 第1頁封面：強鉤子大標題兩行（每行最多6字，第一行白字衝擊問題，第二行紅色答案/重點），副標一句話直擊核心痛點15～20字，讓讀者馬上想往下滑
 第2頁：業界真實亂象或受眾真實痛點，建立信任感，3個具體重點有畫面感，要讓讀者覺得「他說的是真的！」，每個desc必須20字以上有細節
@@ -741,7 +684,7 @@ function buildPrompt(topic){
 第5頁：補充說明或注意事項，用對比句（你以為 vs 其實）或反問句，3個衝擊感強的點，標題用對比或反問句8～10字，desc有反轉感15～20字
 第6頁：總結清單，heading必須用反問句點出核心問題，3個檢核清單可帶走，標題10字以內說清楚，desc預告下一步行動或提醒15字以上
 第7頁CTA：主標4～8字直接有力（禁止模糊說法），副文說清楚私訊能得到什麼具體幫助，結尾必須是「私訊我」
- 
+
 【寫作規則】
 - 語氣：直接、踢爆、誠實，像業界老司機說話
 - 多用對比（你以為 vs 其實）、反問句、打臉句
@@ -749,35 +692,35 @@ function buildPrompt(topic){
 - 禁止：空洞勵志語、模糊承諾、過於溫柔的口吻
 - 禁止：明確薪資數字，改用模糊描述
 - 每頁核心訊息只出現一次，禁止跨頁重複
- 
+
 【四大排版寫作規則】
 規則一：用六年級閱讀程度寫作，語言越簡單觸及越廣，禁止過多專業術語
 規則二：每頁只講一個重點，每個desc至少15字，必須有具體畫面或細節
 規則三：整組輪播按照「問題→代價→轉念→系統→證明→願景→決定」心理結構排序
 規則四：每頁都要回答「為什麼他們要在乎？」，沒有鋪陳，沒有廢話，只有價值
- 
+
 【文字格式規則】
 - cover title：必須有兩行，用 \\n 分隔，第一行白字（衝擊問題），第二行紅色強調（答案或重點），每行最多6字
 - story/content/summary 的 heading：每行最多8個中文字，換行在語意轉折處，用 \\n 分隔
 - 每個 point.title：8～10字，一句話說清楚，第2頁可以更直白有衝擊感
 - 每個 point.desc：必須15字以上，有畫面感，說清楚細節，第2頁每個desc至少20字
 - 每頁3個 points 全部填完，不能留空，不能只有一兩個字
- 
+
 【風控規則】
 - 禁止明確薪資數字，改用模糊描述
 - 可使用「八大行業」「酒店業」「這個產業」等詞
 - CTA 語氣直接但不強迫，要有誠意
 - CTA 的 follow 欄位必須是「私訊我」開頭
- 
+
 【禁止重複】
 - 每頁核心訊息只能出現一次，禁止跨頁重複相同觀念或說法
 - 同一頁的3個 points 不能是同一件事的不同說法
- 
+
 【主題】${topic}
- 
+
 輸出純 JSON：{"cover":{"eyebrow":string,"title":string,"subtitle":string},"story":{"tag":string,"heading":string,"points":[{"title":string,"desc":string},{"title":string,"desc":string},{"title":string,"desc":string}]},"content":[{"tag":"觀念①","heading":string,"points":[{"title":string,"desc":string},{"title":string,"desc":string},{"title":string,"desc":string}]},{"tag":"觀念②","heading":string,"points":[{"title":string,"desc":string},{"title":string,"desc":string},{"title":string,"desc":string}]},{"tag":"觀念③","heading":string,"points":[{"title":string,"desc":string},{"title":string,"desc":string},{"title":string,"desc":string}]}],"summary":{"tag":string,"heading":string,"points":[{"title":string,"desc":string},{"title":string,"desc":string},{"title":string,"desc":string}]},"cta":{"main":string,"sub":string,"follow":string}}`.trim();
 }
- 
+
 /* ══ GENERATE ══ */
 async function doGen(){
   const inp = E('it').value.trim();
@@ -817,7 +760,7 @@ async function doGen(){
   }catch(e){stat('⚠ 錯誤：'+e.message);console.error(e)}
   finally{E('gb').disabled=false}
 }
- 
+
 /* ══ REFINE ══ */
 async function doRefine(){
   const cmd = E('rp-main-ta').value.trim(); if(!cmd||!lastInput){stat('請先產生一次內容');return}
@@ -830,7 +773,7 @@ async function doRefine(){
     render(data, lastAccount); document.querySelectorAll('.bg-el').forEach(b=>b.style.backgroundImage=BGU); stat('✓ 已根據指令更新');
   }catch(e){stat('錯誤：'+e.message)}finally{E('gb').disabled=false}
 }
- 
+
 /* ══ SLIDE REFINE ══ */
 function openSlideRefine(slideId, type, idx){
   _rsId=slideId; _rsIdx=idx; _rsType=type;
@@ -869,7 +812,7 @@ async function doSlideRefine(){
     newSlide.querySelector('.bg-el').style.backgroundImage = BGU; stat('✓ 此頁已更新');
   }catch(e){stat('錯誤：'+e.message)}
 }
- 
+
 /* ══ CAPTION ══ */
 async function genCaption(topic){
   captionTxt=''; const key=E('groq-key')?.value.trim()||loadKey(); if(!key)return;
@@ -905,7 +848,7 @@ async function doCaptionRefine(){
     E('caption-pre').value=captionTxt; stat('✓ 文案已更新');
   }catch(e){stat('文案生成失敗：'+e.message)}
 }
- 
+
 /* ══ DOWNLOAD ══ */
 async function renderSlideCanvas(si){
   si.querySelectorAll('.ed,.deco').forEach(e=>e.style.outline='none');
@@ -934,7 +877,7 @@ async function dlAll(){
     stat('✓ ig_slides.zip 已下載');
   }catch(e){stat('下載失敗：'+e.message);console.error(e)}finally{btn.disabled=false}
 }
- 
+
 /* ══ TAB ══ */
 function switchTab(tab){
   document.querySelectorAll('.app-panel').forEach(p=>p.classList.remove('on'));
@@ -943,7 +886,7 @@ function switchTab(tab){
   document.querySelectorAll('.app-tab')[tab==='post'?0:1].classList.add('on');
   if(tab!=='post')desel();
 }
- 
+
 /* ══ STORY ══ */
 let _sv=0;
 function switchStoryVersion(v){_sv=v;[0,1,2].forEach(i=>{const b=E('sv-'+i);if(!b)return;if(i===v){b.style.background='var(--gold)';b.style.color='#0a0a0a';b.style.border='none'}else{b.style.background='transparent';b.style.color='rgba(200,175,120,.5)';b.style.border='1px solid #333'}});buildStory()}
@@ -982,7 +925,7 @@ function buildS3(){
   return`<div style="position:relative;width:1080px;height:1920px;background:#0a0a0a;overflow:hidden;font-family:'Noto Serif TC',serif">${sBG()}${sOV()}${sTag()}${sLogo()}${sWM(acct)}<div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:160px 100px"><div style="font-size:30px;letter-spacing:.6em;color:rgba(200,175,120,.5);margin-bottom:52px">◆ ◆ ◆</div><div class="s-ed" style="font-weight:900;font-size:116px;letter-spacing:.08em;color:#fff;line-height:1.1;text-shadow:0 4px 40px rgba(0,0,0,.8);margin-bottom:36px;word-break:keep-all">${main.replace(/\n/g,'<br>')}</div><div class="s-ed" style="font-size:46px;letter-spacing:.1em;color:rgba(210,205,195,.85);line-height:1.9;margin-bottom:64px;max-width:880px">${sub.replace(/\n/g,'<br>')}</div><div style="width:1px;height:64px;background:linear-gradient(to bottom,rgba(200,175,120,.6),transparent);margin-bottom:44px"></div><div style="border:1px solid rgba(200,175,120,.3);padding:20px 56px;margin-bottom:36px"><div class="s-ed" style="font-size:42px;letter-spacing:.15em;color:rgba(200,175,120,1)">${follow}</div></div><div class="s-ed" style="font-family:'Noto Sans TC',sans-serif;font-size:30px;letter-spacing:.25em;color:rgba(200,175,120,.55);font-weight:300">${acct}</div></div></div>`;
 }
 function _sval(id){const el=document.getElementById(id);return el?el.value:''}
- 
+
 /* ══ AI STORY ══ */
 async function aiStory(){
   const topic=E('s-topic').value.trim(); if(!topic){E('s-st').textContent='請輸入主題';return}
@@ -1005,7 +948,7 @@ async function aiStory(){
     E('s-st').textContent='✓ 內容已填入，渲染中…'; buildStory();
   }catch(e){E('s-st').textContent='錯誤：'+e.message}finally{btn.disabled=false}
 }
- 
+
 /* ══ DOWNLOAD STORY ══ */
 async function dlStory(){
   const btn=E('s-dl-btn');btn.disabled=true;E('s-st').textContent='打包中…';
@@ -1029,16 +972,15 @@ async function dlStory(){
     E('s-st').textContent='✓ ig_stories.zip 已下載';
   }catch(e){E('s-st').textContent='下載失敗：'+e.message}finally{btn.disabled=false}
 }
- 
+
 /* ══ STORY HIDDEN INPUTS ══ */
 (function(){
   const fields=[['s1-ey','PROTECT · YOURSELF · NOW'],['s1-t1','別被騙了'],['s1-t2','保護妳自己'],['s1-sub','妳知道黑心經紀怎麼坑人嗎？'],['s2-tag','七年親歷'],['s2-hd','入行前要搞清楚'],['s2-p1t','合約有沒有違約金'],['s2-p1d','說清楚再簽，跑不掉的合約最危險'],['s2-p2t','薪水怎麼算'],['s2-p2d','口頭說的不算，要白紙黑字'],['s2-p3t','可不可以隨時離開'],['s2-p3d','這三點說不清楚的，不要簽'],['s3-main','找對的人才是起點'],['s3-sub','有任何問題都可以私訊我\n有問必答，不催、不騙'],['s3-follow','私訊我了解更多'],['s3-acct','@angus061855']];
   fields.forEach(([id,val])=>{const inp=document.createElement('input');inp.type='hidden';inp.id=id;inp.value=val;document.body.appendChild(inp)});
 })();
- 
+
 /* ══ INIT ══ */
 loadKey();
 </script>
 </body>
 </html>
- 
