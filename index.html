@@ -110,20 +110,46 @@ body{background:#0d0d0d;font-family:"Noto Serif TC",serif;display:flex;flex-dire
   padding:0 120px;
   margin-top:-60px; /* 視覺重心略往上，但保持真正置中 */
 }
-.la-ey{font-family:"Noto Serif TC",serif;font-size:14px;letter-spacing:.5em;font-weight:300;color:rgba(200,175,120,.5);margin-bottom:20px}
+/* ══ LAYOUT A 封面 ══ */
+.la{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;
+  justify-content:center;align-items:center;text-align:center;
+  padding:0 120px;
+  margin-top:-60px;
+}
+.la-ey{
+  font-family:"Noto Serif TC",serif;
+  font-size:26px;          /* 原本14px → 改成26px，清楚可見 */
+  letter-spacing:.4em;
+  font-weight:500;
+  color:rgba(200,175,120,.85);   /* 原本.5 → 改成.85，更亮更清楚 */
+  margin-bottom:20px;
+}
 .la-t1{font-family:"Noto Serif TC",serif;font-weight:900;font-size:96px;line-height:1.0;letter-spacing:.04em;color:var(--tw);display:block;text-shadow:0 4px 40px rgba(0,0,0,.7);word-break:break-all;margin-bottom:4px}
 .la-t2{font-family:"Noto Serif TC",serif;font-weight:900;font-size:96px;line-height:1.0;letter-spacing:.04em;color:var(--red);display:block;text-shadow:0 4px 40px rgba(0,0,0,.7);word-break:break-all;margin-bottom:28px}
 .la-div{width:72px;height:2px;background:linear-gradient(90deg,rgba(200,175,120,.8),transparent);margin:0 auto 24px}
 .la-sub{font-family:"Noto Serif TC",serif;font-size:32px;letter-spacing:.1em;color:var(--tm);line-height:1.9;margin-bottom:40px}
 .la-bio{border-top:1px solid rgba(200,175,120,.15);padding-top:22px}
-.la-bio-lbl{font-family:"Noto Serif TC",serif;font-size:18px;letter-spacing:.38em;color:rgba(200,175,120,.55);margin-bottom:12px;font-weight:400}
+.la-bio-lbl{
+  font-family:"Noto Serif TC",serif;
+  font-size:22px;          /* 原本18px → 改成22px */
+  letter-spacing:.38em;
+  color:rgba(200,175,120,.75);   /* 原本.55 → 改成.75 */
+  margin-bottom:12px;font-weight:500;
+}
 .la-bio-txt{font-family:"Noto Serif TC",serif;font-size:28px;letter-spacing:.07em;color:rgba(220,215,205,.75);line-height:2.1}
 
-/* ══════════════════════════════════
-   LAYOUT B · 大標置中 + 背景大數字
-══════════════════════════════════ */
+/* ══ LAYOUT B ══ */
 .lb{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;text-align:left;padding:140px 120px}
-.lb-tag{font-family:"Noto Serif TC",serif;font-size:14px;letter-spacing:.4em;font-weight:300;color:rgba(200,175,120,.5);margin-bottom:28px;position:relative;z-index:1}
+.lb-tag{
+  font-family:"Noto Serif TC",serif;
+  font-size:26px;          /* 原本14px → 改成26px，超重要！ */
+  letter-spacing:.35em;
+  font-weight:600;
+  color:rgba(200,175,120,.9);    /* 原本.5 → 改成.9 */
+  margin-bottom:28px;position:relative;z-index:1;
+}
 .lb-heading{font-family:"Noto Serif TC",serif;font-weight:900;font-size:100px;line-height:1.1;letter-spacing:.05em;color:var(--tw);word-break:break-all;text-shadow:0 3px 30px rgba(0,0,0,.6);margin-bottom:36px;position:relative;z-index:1}
 .lb-accent{color:var(--red)}
 .lb-line{width:56px;height:1px;background:rgba(200,175,120,.4);margin:0 0 32px;position:relative;z-index:1}
@@ -135,11 +161,18 @@ body{background:#0d0d0d;font-family:"Noto Serif TC",serif;display:flex;flex-dire
 .lb-ptt{font-family:"Noto Serif TC",serif;font-weight:700;font-size:44px;letter-spacing:.06em;color:var(--tw);line-height:1.3;margin-bottom:8px}
 .lb-ptd{font-family:"Noto Serif TC",serif;font-size:34px;letter-spacing:.05em;color:var(--tm);line-height:1.8}
 
-/* ══════════════════════════════════
-   LAYOUT C · 卡片左框
-══════════════════════════════════ */
+/* ══ LAYOUT C ══ */
 .lc{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:120px 120px}
-.lc-tag{display:inline-block;font-family:"Noto Serif TC",serif;font-size:13px;letter-spacing:.38em;font-weight:300;color:rgba(200,175,120,.6);border:1px solid rgba(200,175,120,.22);padding:5px 16px;margin-bottom:18px;align-self:flex-start}
+.lc-tag{
+  display:inline-block;
+  font-family:"Noto Serif TC",serif;
+  font-size:24px;          /* 原本13px → 改成24px */
+  letter-spacing:.35em;
+  font-weight:600;
+  color:rgba(200,175,120,.9);    /* 原本.6 → 改成.9 */
+  border:1px solid rgba(200,175,120,.4);
+  padding:7px 20px;margin-bottom:18px;align-self:flex-start;
+}
 .lc-heading{font-family:"Noto Serif TC",serif;font-weight:900;font-size:90px;line-height:1.1;letter-spacing:.05em;color:var(--tw);word-break:break-all;text-shadow:0 2px 20px rgba(0,0,0,.5);margin-bottom:36px}
 .lc-cards{display:flex;flex-direction:column;gap:14px}
 .lc-card{display:flex;align-items:stretch;background:rgba(200,175,120,.035);border:1px solid rgba(200,175,120,.09);border-left:3px solid rgba(200,175,120,.55);border-radius:0 4px 4px 0}
@@ -148,13 +181,18 @@ body{background:#0d0d0d;font-family:"Noto Serif TC",serif;display:flex;flex-dire
 .lc-title{font-family:"Noto Serif TC",serif;font-weight:700;font-size:44px;letter-spacing:.06em;color:var(--tw);line-height:1.3;margin-bottom:8px}
 .lc-desc{font-family:"Noto Serif TC",serif;font-size:34px;letter-spacing:.05em;color:var(--tm);line-height:1.85}
 
-/* ══════════════════════════════════
-   LAYOUT D · 數字強調
-   修正：heading 字級統一，整體 padding 與其他頁一致
-══════════════════════════════════ */
+/* ══ LAYOUT D ══ */
 .ld{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:120px 120px}
-.ld-tag{display:inline-block;font-family:"Noto Serif TC",serif;font-size:13px;letter-spacing:.38em;font-weight:300;color:rgba(200,175,120,.6);border:1px solid rgba(200,175,120,.22);padding:5px 16px;margin-bottom:20px;align-self:flex-start}
-/* 修正：font-size 從 58px 改為 90px，與其他頁 heading 統一 */
+.ld-tag{
+  display:inline-block;
+  font-family:"Noto Serif TC",serif;
+  font-size:24px;          /* 原本13px → 改成24px */
+  letter-spacing:.35em;
+  font-weight:600;
+  color:rgba(200,175,120,.9);    /* 原本.6 → 改成.9 */
+  border:1px solid rgba(200,175,120,.4);
+  padding:7px 20px;margin-bottom:20px;align-self:flex-start;
+}
 .ld-heading{font-family:"Noto Serif TC",serif;font-weight:900;font-size:90px;line-height:1.1;letter-spacing:.05em;color:var(--tw);word-break:break-all;margin-bottom:36px}
 .ld-pts{display:flex;flex-direction:column}
 .ld-pt{display:flex;align-items:flex-start;gap:14px;padding:18px 0;border-bottom:1px solid rgba(200,175,120,.07)}
@@ -162,27 +200,56 @@ body{background:#0d0d0d;font-family:"Noto Serif TC",serif;display:flex;flex-dire
 .ld-dot{width:5px;height:5px;background:rgba(200,175,120,.55);border-radius:50%;flex-shrink:0;margin-top:14px}
 .ld-ptxt{font-family:"Noto Serif TC",serif;font-size:34px;letter-spacing:.06em;color:var(--tm);line-height:1.7}
 
-/* ══════════════════════════════════
-   LAYOUT E · 對比框
-══════════════════════════════════ */
+/* ══ LAYOUT E ══ */
 .le{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:120px 120px}
-.le-ey{font-family:"Noto Serif TC",serif;font-size:13px;letter-spacing:.42em;font-weight:300;color:rgba(200,175,120,.38);margin-bottom:8px}
-.le-step{font-family:"Noto Serif TC",serif;font-weight:900;font-size:18px;letter-spacing:.1em;color:rgba(200,175,120,.62);margin-bottom:18px}
+.le-ey{
+  font-family:"Noto Serif TC",serif;
+  font-size:22px;          /* 原本13px → 改成22px */
+  letter-spacing:.38em;
+  font-weight:400;
+  color:rgba(200,175,120,.75);   /* 原本.38 → 改成.75 */
+  margin-bottom:8px;
+}
+.le-step{
+  font-family:"Noto Serif TC",serif;
+  font-weight:700;
+  font-size:26px;          /* 原本18px → 改成26px */
+  letter-spacing:.15em;
+  color:rgba(200,175,120,.9);    /* 原本.62 → 改成.9 */
+  margin-bottom:18px;
+}
 .le-heading{font-family:"Noto Serif TC",serif;font-weight:900;font-size:90px;line-height:1.08;letter-spacing:.04em;color:var(--tw);word-break:break-all;text-shadow:0 3px 30px rgba(0,0,0,.6);margin-bottom:28px}
 .le-core{background:rgba(200,175,120,.05);border:1px solid rgba(200,175,120,.16);border-radius:4px;padding:20px 24px;margin-bottom:22px}
-.le-clbl{font-family:"Noto Serif TC",serif;font-size:12px;letter-spacing:.38em;color:rgba(200,175,120,.42);margin-bottom:10px;font-weight:300}
+.le-clbl{
+  font-family:"Noto Serif TC",serif;
+  font-size:18px;          /* 原本12px → 改成18px */
+  letter-spacing:.38em;
+  color:rgba(200,175,120,.7);    /* 原本.42 → 改成.7 */
+  margin-bottom:10px;font-weight:400;
+}
 .le-ctxt{font-family:"Noto Serif TC",serif;font-size:34px;letter-spacing:.07em;color:var(--tw);line-height:1.85}
 .le-cmp{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:22px}
 .le-col{background:rgba(0,0,0,.25);border:1px solid rgba(200,175,120,.09);border-radius:4px;padding:16px 18px}
-.le-clbl2{font-family:"Noto Serif TC",serif;font-size:13px;letter-spacing:.3em;color:rgba(200,175,120,.45);margin-bottom:10px;font-weight:300}
+.le-clbl2{
+  font-family:"Noto Serif TC",serif;
+  font-size:20px;          /* 原本13px → 改成20px */
+  letter-spacing:.25em;
+  color:rgba(200,175,120,.75);   /* 原本.45 → 改成.75 */
+  margin-bottom:10px;font-weight:500;
+}
 .le-citem{font-family:"Noto Serif TC",serif;font-size:32px;letter-spacing:.05em;color:var(--tm);line-height:2}
-.le-ft{font-family:"Noto Serif TC",serif;font-size:28px;letter-spacing:.07em;color:rgba(200,175,120,.45);line-height:1.8;border-top:1px solid rgba(200,175,120,.1);padding-top:18px}
-.lf-id{font-family:"Noto Serif TC",serif;font-size:34px;letter-spacing:.05em;color:var(--tm);line-height:1.85}
-/* ══════════════════════════════════
-   LAYOUT F · 分隔線清單
-══════════════════════════════════ */
+.le-ft{font-family:"Noto Serif TC",serif;font-size:28px;letter-spacing:.07em;color:rgba(200,175,120,.55);line-height:1.8;border-top:1px solid rgba(200,175,120,.1);padding-top:18px}
+
+/* ══ LAYOUT F ══ */
 .lf{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:120px 120px}
-.lf-tag{font-family:"Noto Serif TC",serif;font-size:13px;letter-spacing:.42em;font-weight:300;color:rgba(200,175,120,.48);margin-bottom:12px}
+.lf-tag{
+  font-family:"Noto Serif TC",serif;
+  font-size:26px;          /* 原本13px → 改成26px */
+  letter-spacing:.38em;
+  font-weight:600;
+  color:rgba(200,175,120,.9);    /* 原本.48 → 改成.9 */
+  margin-bottom:12px;
+}
 .lf-heading{font-family:"Noto Serif TC",serif;font-weight:900;font-size:90px;line-height:1.1;letter-spacing:.05em;color:var(--tw);word-break:break-all;margin-bottom:32px}
 .lf-list{display:flex;flex-direction:column}
 .lf-item{display:flex;align-items:flex-start;gap:28px;padding:20px 0;border-bottom:1px solid rgba(200,175,120,.09)}
@@ -190,6 +257,15 @@ body{background:#0d0d0d;font-family:"Noto Serif TC",serif;display:flex;flex-dire
 .lf-idx{font-family:"Noto Serif TC",serif;font-weight:900;font-size:14px;letter-spacing:.08em;color:rgba(200,175,120,.35);flex-shrink:0;padding-top:5px;width:28px}
 .lf-it{font-family:"Noto Serif TC",serif;font-weight:700;font-size:44px;letter-spacing:.06em;color:var(--tw);line-height:1.3;margin-bottom:8px}
 .lf-id{font-family:"Noto Serif TC",serif;font-size:30px;letter-spacing:.05em;color:var(--tm);line-height:1.85}
+
+/* ══ LAYOUT G CTA ══ */
+.lg{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:120px 120px}
+.lg-main{font-family:"Noto Serif TC",serif;font-weight:900;font-size:90px;line-height:1.08;letter-spacing:.06em;color:var(--tw);word-break:break-all;text-shadow:0 4px 40px rgba(0,0,0,.7);margin-bottom:28px}
+.lg-sub{font-family:"Noto Serif TC",serif;font-size:34px;letter-spacing:.08em;color:var(--tm);line-height:1.95;margin-bottom:48px;max-width:820px}
+.lg-vl{width:1px;height:52px;background:linear-gradient(to bottom,rgba(200,175,120,.55),transparent);margin:0 auto 36px}
+.lg-cta{border:1px solid rgba(200,175,120,.28);padding:17px 52px;margin-bottom:28px}
+.lg-ctatxt{font-family:"Noto Serif TC",serif;font-size:30px;letter-spacing:.16em;color:var(--gold)}
+.lg-acct{font-family:"Noto Serif TC",serif;font-size:22px;letter-spacing:.26em;color:rgba(200,175,120,.5);font-weight:300}
 
 /* ══════════════════════════════════
    LAYOUT G · CTA 結尾
