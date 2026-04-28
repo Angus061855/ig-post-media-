@@ -766,7 +766,7 @@ function render(data, account){
 async function callAPI(inp, sys, max){
   const key = E('groq-key')?.value.trim()||loadKey();
   if(!key){stat('⚠ 請先填入 Groq API Key');throw new Error('No API key')}
-  const r = await fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},body:JSON.stringify({model:'llama-3.1-8b-instant',max_tokens:max||5000,messages:[{role:'system',content:sys||buildPrompt(inp)},{role:'user',content:inp}]})});
+  const r = await fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},body:JSON.stringify({model:'meta-llama/llama-4-scout-17b-16e-instruct',max_tokens:max||5000,messages:[{role:'system',content:sys||buildPrompt(inp)},{role:'user',content:inp}]})});
   const j = await r.json(); if(j.error) throw new Error(j.error.message||'Groq error');
   return j.choices?.[0]?.message?.content||'';
 }
@@ -967,7 +967,7 @@ CTA：私訊我
 【主題】${topic}
 請直接輸出文案，不需要說明。`;
   try{
-    const r=await fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},body:JSON.stringify({model:'llama-3.1-8b-instant',max_tokens:800,messages:[{role:'user',content:prompt}]})});
+    const r=await fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},body:JSON.stringify({model:'meta-llama/llama-4-scout-17b-16e-instruct',max_tokens:800,messages:[{role:'user',content:prompt}]})});
     const j=await r.json(); if(j.error)throw new Error(j.error.message);
     captionTxt=j.choices?.[0]?.message?.content||'';
     E('caption-box').classList.add('on'); E('caption-pre').value=captionTxt;
@@ -980,7 +980,7 @@ async function doCaptionRefine(){
   const key=E('groq-key')?.value.trim()||loadKey(); if(!key)return;
   const prompt=`你是 AS娛樂 的 Reels 貼文文案寫手。語氣：直接有力、專業權威、敢說敢講。禁止：親切陪伴感、模糊說法。CTA：私訊我。結尾 Slogan：不要讓未來的你，討厭現在的自己\n【調整指令】${cmd}\n【主題】${lastInput}\n請直接輸出文案，不需要說明。`;
   try{
-    const r=await fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},body:JSON.stringify({model:'llama-3.1-8b-instant',max_tokens:800,messages:[{role:'user',content:prompt}]})});
+    const r=await fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},body:JSON.stringify({model:'meta-llama/llama-4-scout-17b-16e-instruct',max_tokens:800,messages:[{role:'user',content:prompt}]})});
     const j=await r.json(); if(j.error)throw new Error(j.error.message);
     captionTxt=j.choices?.[0]?.message?.content||'';
     E('caption-pre').value=captionTxt; stat('✓ 文案已更新');
@@ -1077,7 +1077,7 @@ async function aiStory(){
 【主題】${topic}
 輸出格式：{"s1":{"ey":string,"t1":string,"t2":string,"sub":string},"s2":{"tag":string,"hd":string,"p1t":string,"p1d":string,"p2t":string,"p2d":string,"p3t":string,"p3d":string},"s3":{"main":string,"sub":string,"follow":string,"acct":"@angus061855"}}`;
   try{
-    const r=await fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},body:JSON.stringify({model:'llama-3.1-8b-instant',max_tokens:1000,messages:[{role:'system',content:'你是 IG 限時動態文案策略師，只輸出純 JSON，不加任何說明。'},{role:'user',content:prompt}]})});
+    const r=await fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},body:JSON.stringify({model:'meta-llama/llama-4-scout-17b-16e-instruct',max_tokens:1000,messages:[{role:'system',content:'你是 IG 限時動態文案策略師，只輸出純 JSON，不加任何說明。'},{role:'user',content:prompt}]})});
     const j=await r.json(); if(j.error)throw new Error(j.error.message);
     const text=j.choices?.[0]?.message?.content||'';
     const s=text.indexOf('{'),e2=text.lastIndexOf('}'); if(s===-1||e2===-1)throw new Error('JSON 解析失敗');
