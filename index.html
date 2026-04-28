@@ -446,6 +446,34 @@ body{background:#0d0d0d;font-family:"Noto Serif TC",serif;display:flex;flex-dire
 </div>
 
 <script>
+function forceFormat(text) {
+  if (!text || typeof text !== 'string') return text;
+  const qKeywords = ['嗎','呢','為什麼','怎麼','有沒有','是不是','你知道','妳知道','哪裡','幾個','多少','如何'];
+  const isQuestion = qKeywords.some(kw => text.includes(kw));
+  text = text.replace(/[，,、]/g, ' ');
+  text = text.replace(/[。！；：「」『』（）【】〔〕《》〈〉]/g, '');
+  text = text.replace(/[!;:"'()]/g, '');
+  text = text.replace(/[.．]+$/, '').trim();
+  text = text.replace(/ {2,}/g, ' ').trim();
+  text = text.replace(/[?？]+$/, '').trim();
+  if (isQuestion) text = text + '？';
+  return text;
+}
+function forceFormatData(obj) {
+  if (!obj || typeof obj !== 'object') return obj;
+  if (Array.isArray(obj)) return obj.map(forceFormatData);
+  const result = {};
+  for (const key of Object.keys(obj)) {
+    const val = obj[key];
+    if (typeof val === 'string') {
+      result[key] = val.split('\\n').map(forceFormat).join('\\n');
+    } else {
+      result[key] = forceFormatData(val);
+    }
+  }
+  return result;
+}
+
 /* ══ STATE ══ */
 let SEL=null,SMODE='txt',savedSel=null;
 let BGU='url("back.png")',storyBGU='url("back.png")';
@@ -860,6 +888,7 @@ async function doGen(){
       data = parseJSON(text);
     }
     if(!data){stat('⚠ 生成失敗，請換個說法');return}
+    data = forceFormatData(data);
     render(data, account);
     document.querySelectorAll('.bg-el').forEach(b=>b.style.backgroundImage=BGU);
     genCaption(inp); stat('✓ 完成');
@@ -896,6 +925,7 @@ async function doSlideRefine(){
     let data = parseJSON(text);
     if(!data){text=await callAPI(lastInput+'\n\n【調整指令】'+cmd, buildPrompt(lastInput), 3000);data=parseJSON(text)}
     if(!data){stat('⚠ 生成失敗');return}
+    data = forceFormatData(data);
     const account = lastAccount||'@angus061855';
     const cnt = data.content||[]; const hasStory = !!(data.story&&data.story.heading); const hasSummary = !!(data.summary&&data.summary.heading);
     const pg = n => String(n);
