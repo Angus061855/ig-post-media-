@@ -738,7 +738,7 @@ function render(data, account){
 async function callAPI(inp, sys, max){
   const key = E('groq-key')?.value.trim()||loadKey();
   if(!key){stat('⚠ 請先填入 Groq API Key');throw new Error('No API key')}
-  const r = await fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},body:JSON.stringify({model:'meta-llama/llama-4-scout-17b-16e-instruct',max_tokens:max||5000,messages:[{role:'system',content:sys||buildPrompt(inp)},{role:'user',content:inp}]})});
+  const r = await fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},body:JSON.stringify({model:'meta-llama/llama-3.3-70b-versatile',max_tokens:max||5000,messages:[{role:'system',content:sys||buildPrompt(inp)},{role:'user',content:inp}]})});
   const j = await r.json(); if(j.error) throw new Error(j.error.message||'Groq error');
   return j.choices?.[0]?.message?.content||'';
 }
@@ -768,7 +768,7 @@ function buildPrompt(topic){
 【7頁結構 — 嚴格執行，每頁主題不能重複】
 【鐵則】所有heading和title只要是問句結尾必須是？不能是空格也不能省略
 
-第1頁封面：強鉤子大標題兩行（每行最多6字，第一行白字衝擊問題，第二行答案/重點），副標一句話直擊核心痛點15～20字，讓讀者馬上想往下滑
+第1頁封面：強鉤子大標題兩行（每行最多8字，第一行白字衝擊問題，第二行答案/重點），副標一句話直擊核心痛點15～20字，讓讀者馬上想往下滑
 第2頁：業界真實亂象或受眾真實痛點，建立信任感，3個具體重點有畫面感，要讓讀者覺得「他說的是真的！」，每個desc必須20字以上有細節
 第3頁：問題根源，點出為什麼這些事情會發生，3個重點，標題8～10字說清楚根本原因，desc說明15～20字帶具體案例或場景
 第4頁：可執行的步驟，給出3個具體步驟讓讀者知道怎麼保護自己，標題動詞開頭8～10字，desc說明如何做15～20字可操作可帶走
@@ -793,7 +793,7 @@ function buildPrompt(topic){
 規則四：每頁都要回答「為什麼他們要在乎？」，沒有鋪陳，沒有廢話，只有價值
 
 【文字格式規則】
-- cover title：必須有兩行，用 \\n 分隔，第一行白字（衝擊問題），第二行紅色強調（答案或重點），每行最多6字
+- cover title：必須有兩行，用 \\n 分隔，第一行白字（衝擊問題），第二行紅色強調（答案或重點），每行最多8字
 - story/content/summary 的 heading：每行最多8個中文字，換行在語意轉折處，用 \\n 分隔
 - 每個 point.title：8～10字，一句話說清楚，第2頁可以更直白有衝擊感
 - 每個 point.desc：必須15字以上，有畫面感，說清楚細節，第2頁每個desc至少20字
@@ -876,6 +876,7 @@ async function doRefine(){
     let data = parseJSON(text);
     if(!data){text=await callAPI(lastInput+'\n\n【調整指令】'+cmd, buildPrompt(lastInput), 3000);data=parseJSON(text)}
     if(!data){stat('⚠ 生成失敗');return}
+    data = forceFormatData(data);
     render(data, lastAccount); document.querySelectorAll('.bg-el').forEach(b=>b.style.backgroundImage=BGU); stat('✓ 已根據指令更新');
   }catch(e){stat('錯誤：'+e.message)}finally{E('gb').disabled=false}
 }
@@ -936,7 +937,7 @@ CTA：私訊我
 【主題】${topic}
 請直接輸出文案，不需要說明。`;
   try{
-    const r=await fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},body:JSON.stringify({model:'meta-llama/llama-4-scout-17b-16e-instruct',max_tokens:800,messages:[{role:'user',content:prompt}]})});
+    const r=await fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},body:JSON.stringify({model:'meta-llama/llama-3.3-70b-versatile',max_tokens:800,messages:[{role:'user',content:prompt}]})});
     const j=await r.json(); if(j.error)throw new Error(j.error.message);
     captionTxt=j.choices?.[0]?.message?.content||'';
     E('caption-box').classList.add('on'); E('caption-pre').value=captionTxt;
@@ -949,7 +950,7 @@ async function doCaptionRefine(){
   const key=E('groq-key')?.value.trim()||loadKey(); if(!key)return;
   const prompt=`你是 AS娛樂 的 Reels 貼文文案寫手。語氣：直接有力、專業權威、敢說敢講。禁止：親切陪伴感、模糊說法。CTA：私訊我。結尾 Slogan：不要讓未來的你，討厭現在的自己\n【調整指令】${cmd}\n【主題】${lastInput}\n請直接輸出文案，不需要說明。`;
   try{
-    const r=await fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},body:JSON.stringify({model:'meta-llama/llama-4-scout-17b-16e-instruct',max_tokens:800,messages:[{role:'user',content:prompt}]})});
+    const r=await fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},body:JSON.stringify({model:'meta-llama/llama-3.3-70b-versatile',max_tokens:800,messages:[{role:'user',content:prompt}]})});
     const j=await r.json(); if(j.error)throw new Error(j.error.message);
     captionTxt=j.choices?.[0]?.message?.content||'';
     E('caption-pre').value=captionTxt; stat('✓ 文案已更新');
@@ -1046,7 +1047,7 @@ async function aiStory(){
 【主題】${topic}
 輸出格式：{"s1":{"ey":string,"t1":string,"t2":string,"sub":string},"s2":{"tag":string,"hd":string,"p1t":string,"p1d":string,"p2t":string,"p2d":string,"p3t":string,"p3d":string},"s3":{"main":string,"sub":string,"follow":string,"acct":"@angus061855"}}`;
   try{
-    const r=await fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},body:JSON.stringify({model:'meta-llama/llama-4-scout-17b-16e-instruct',max_tokens:1000,messages:[{role:'system',content:'你是 IG 限時動態文案策略師，只輸出純 JSON，不加任何說明。'},{role:'user',content:prompt}]})});
+    const r=await fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},body:JSON.stringify({model:'meta-llama/llama-3.3-70b-versatile',max_tokens:1000,messages:[{role:'system',content:'你是 IG 限時動態文案策略師，只輸出純 JSON，不加任何說明。'},{role:'user',content:prompt}]})});
     const j=await r.json(); if(j.error)throw new Error(j.error.message);
     const text=j.choices?.[0]?.message?.content||'';
     const s=text.indexOf('{'),e2=text.lastIndexOf('}'); if(s===-1||e2===-1)throw new Error('JSON 解析失敗');
