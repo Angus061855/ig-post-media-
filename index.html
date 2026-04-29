@@ -877,7 +877,6 @@ async function doGen(){
         '\n【核心論點】\n'+(understood.points||[]).map((p,i)=>`${i+1}. ${p}`).join('\n')+
         '\n【具體細節素材】\n'+(understood.details||[]).join('\n')+
         '\n【CTA方向】'+understood.cta+
-        '\n\n【原始內容】\n'+inp;
     }
     lastInput = enhanced; stat('生成輪播中…');
     let text = await callAPI(enhanced, buildPrompt(enhanced), 5000);
