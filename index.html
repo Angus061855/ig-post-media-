@@ -448,7 +448,7 @@ body{background:#0d0d0d;font-family:"Noto Serif TC",serif;display:flex;flex-dire
 <script>
 function forceFormat(text) {
   if (!text || typeof text !== 'string') return text;
-  const qKeywords = ['嗎','呢','為什麼','怎麼','有沒有','是不是','你知道','妳知道','哪裡','幾個','多少','如何'];
+  const qKeywords = ['嗎','呢'];
   const isQuestion = qKeywords.some(kw => text.includes(kw));
   text = text.replace(/[，,、]/g, ' ');
   text = text.replace(/[。！；：「」『』（）【】〔〕《》〈〉]/g, '');
